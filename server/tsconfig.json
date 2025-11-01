@@ -1,32 +1,24 @@
 {
   "compilerOptions": {
-    // File Layout
+    "target": "ES2020",
+    "module": "commonjs",
     "rootDir": "./src",
     "outDir": "./dist",
-
-    // Module system
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es2020",
-
-    // Types
-    "types": ["node"],
-
-    // Source Maps & Declarations
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-
-    // Strictness
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-
-    // JS features
+    "baseUrl": "./src",
+    "paths": {
+      "@application/*": ["application/*"],
+      "@domain/*": ["domain/*"],
+      "@infrastructure/*": ["infrastructure/*"],
+      "@presentation/*": ["presentation/*"],
+      "@shared/*": ["shared/*"]
+    },
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-
-    // Skip type check of libraries
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strict": true,
+    // "incremental": true,
+    // "removeComments": true,
     "skipLibCheck": true
   },
   "include": ["src"],
