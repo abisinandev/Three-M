@@ -1,4 +1,4 @@
-import AppError from "@presentation/express/utils/errors/app.error";
+import AppError from "@presentation/express/utils/error-handling/app.error";
 import { inject, injectable } from "inversify";
 import { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
 import { IVerificationService } from "@application/interfaces/services/user-verfication.service.interface";

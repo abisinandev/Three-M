@@ -25,7 +25,7 @@ export class UserMapper {
       email: user.email,
       phone: user.phone,
       password: user.password,
-      role: user.role,
+      role: "user",
       isEmailVerified: user.isEmailVerified,
       isVerified: user.isVerified,
       isBlocked: user.isBlocked,

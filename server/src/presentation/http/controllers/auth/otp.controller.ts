@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { IBaseUseCase } from "@application/use_cases/interfaces/base-usercase.interface";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
+import { HttpStatus } from "@domain/enum/express/status-code";
 
 @injectable()
 export class OtpController {
@@ -17,7 +18,7 @@ export class OtpController {
     async verifyOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const response = await this._verifyOtpUseCase.execute(req.body);
-            res.status(200).json(response);
+            res.status(HttpStatus.OK).json(response);
 
         } catch (err) {
             next(err)
@@ -30,7 +31,7 @@ export class OtpController {
             const { email } = req.body;
 
             const response = await this._resendOtpUseCase.execute(email)
-            res.status(200).json(response)
+            res.status(HttpStatus.OK).json(response)
 
         } catch (err) {
             next(err)

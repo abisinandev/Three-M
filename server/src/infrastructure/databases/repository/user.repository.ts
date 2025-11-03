@@ -2,7 +2,7 @@ import { IUserRepository } from "@application/interfaces/repositories/user-repos
 import { UserEntity } from "@domain/entities/user.entity";
 import {
   UserDocument,
-  UserSchema,
+  UserModel,
 } from "@infrastructure/databases/mongo_db/models/user.schema";
 import { UserMapper } from "@infrastructure/mappers/user.mapper";
 import { BaseRepository } from "./base.repository";
@@ -14,7 +14,7 @@ export class UserRepository
   implements IUserRepository
 {
   constructor() {
-    super(UserSchema, UserMapper);
+    super(UserModel, UserMapper);
   }
 
   async findByField(

@@ -5,13 +5,12 @@ import { validateDTO } from "@presentation/express/middlewares/validation-dto.mi
 import { container } from "@infrastructure/inversify_di/inversify.di";
 import { Router } from "express";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import { asyncHandler } from "@presentation/express/utils/async-handler";
-
+ 
 const router = Router();
 
 const otpController = container.get<OtpController>(AUTH_TYPES.OtpController);
 
-router.post("/verify-otp", validateDTO(VerifyOtpDTO),asyncHandler(otpController.verifyOtp.bind(otpController)));
-router.post("/resend-otp",validateDTO(ResendOtpDTO),asyncHandler(otpController.resendOtp.bind(otpController)));
+router.post("/verify-otp", validateDTO(VerifyOtpDTO),otpController.verifyOtp.bind(otpController));
+router.post("/resend-otp",validateDTO(ResendOtpDTO),otpController.resendOtp.bind(otpController));
 
 export default router;

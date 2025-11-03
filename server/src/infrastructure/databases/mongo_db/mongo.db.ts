@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import AppError from "@presentation/express/utils/errors/app.error";
+import AppError from "@presentation/express/utils/error-handling/app.error";
 import { env } from "@presentation/express/configs/env.constants";
 
 const connectDB = async () => {

@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import { otpEmailTemplate } from "./templates/otp-email-template";
 import { IEmailService } from "@application/interfaces/services/email.service.interface";
 import { env } from "@presentation/express/configs/env.constants";
+import { success } from "zod";
 
 export class NodeMailerService implements IEmailService {
   private transporter;

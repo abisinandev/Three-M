@@ -18,15 +18,13 @@ export class GenerateOtpUseCase { //IBaseUseCase not implemented;📌📌📌
         await this._emailServiceRepository.sendOtpEmail(email, otp)
 
         const exists = await this._otpRepository.getOtp(email);
-        console.log('exists otp ',exists)
-        // let savedOtp;
+        console.log('exists otp ', exists)
+        
         if (exists?.email) {
             return await this._otpRepository.updateResendInfo(email, otp.toString())
         } else {
             return await this._otpRepository.saveOtp(email, otp, 300);
         }
 
-        // console.log('GenrateOtpUsecase : ', savedOtp)
-        // return savedOtp;
     }
 } 
