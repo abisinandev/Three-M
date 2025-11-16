@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "@tanstack/react-router";
+import api from "@lib/axios";
 
 interface UseOTPOptions {
     email: string;
@@ -53,7 +54,7 @@ export const useOTP = ({
     const verifyOtpMutation = useMutation({
         mutationFn: async (otp: string) => {
             setIsVerifying(true);
-            const response = await axios.post(verifyUrl, { email, otp });
+            const response = await api.post(verifyUrl, { email, otp });
             return response;
         },
         onSuccess: (res) => {
@@ -73,7 +74,7 @@ export const useOTP = ({
     // ========== Resend OTP ==========
     const resendOtpMutation = useMutation({
         mutationFn: async () => {
-            const response = await axios.post(resendUrl, { email });
+            const response = await api.post(resendUrl, { email });
             return response;
         },
         onSuccess: (res) => {

@@ -1,40 +1,45 @@
-import { Button } from '@shared/common/auth/ButtonField'
-import { InputField } from '@shared/common/auth/InputFields'
-import { RightSidePanel } from '@shared/common/auth/RightSidePanel'
-import { useNavigate } from '@tanstack/react-router';
-import { useLogin } from '../hooks/useLogin';
-import type { LoginType } from '@shared/types/user/LoginTypes';
-import { useState } from 'react';
-import { ValidationSchema } from '@utils/validation/zodFormValidation';
-import z from 'zod';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { toast } from "sonner";
+import z from "zod";
+import { useNavigate } from "@tanstack/react-router";
+import { Button } from "@shared/common/auth/ButtonField";
+import { InputField } from "@shared/common/auth/InputFields";
+import { RightSidePanel } from "@shared/common/auth/RightSidePanel";
+import { LoginValidationSchema } from "@utils/validation/zodFormValidation";
+import type { LoginType } from "@shared/types/user/LoginTypes";
+import { useLogin } from "../hooks/useLogin";
+import { useVerify2FA } from "@shared/services/user/useVerify2FA";
+import { TwoFAModal } from "@shared/common/modals/TwoFaModal";
+
 
 const LoginComponent = () => {
     const navigate = useNavigate();
-    const LoginMutation = useLogin();
+    const loginMutation = useLogin();
+    const verify2faMutation = useVerify2FA();
 
     const [formData, setFormData] = useState<LoginType>({
-        fullName: "",
-        password: "",
-    })
-    const [formErrors, setFormErrors] = useState<Record<keyof LoginType, string>>({
-        fullName: "",
+        email: "",
         password: "",
     });
 
+    const [formErrors, setFormErrors] = useState<Record<keyof LoginType, string>>({
+        email: "",
+        password: "",
+    });
+
+    const [is2faModalOpen, setIs2faModalOpen] = useState(false);
+    const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
+
     const handleChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-
         setFormData((prev) => ({ ...prev, [name]: value }));
 
         try {
-            const singleFieldSchema = ValidationSchema.pick({ [name]: true });
+            const singleFieldSchema = LoginValidationSchema.pick({ [name]: true });
             singleFieldSchema.parse({ [name]: value });
-
             setFormErrors((prev) => ({ ...prev, [name]: "" }));
         } catch (err: any) {
             if (err instanceof z.ZodError) {
-
                 const fieldError = err.issues[0]?.message || "";
                 setFormErrors((prev) => ({ ...prev, [name]: fieldError }));
             }
@@ -42,15 +47,9 @@ const LoginComponent = () => {
     };
 
     const handleLogin = () => {
-        const result = ValidationSchema.safeParse(formData);
-
+        const result = LoginValidationSchema.safeParse(formData);
         if (!result.success) {
-
-            const errors: typeof formErrors = {
-                fullName: "",
-                password: "",
-            };
-
+            const errors: typeof formErrors = { email: "", password: "" };
             result.error.issues.forEach((issue) => {
                 const field = issue.path[0] as keyof typeof errors;
                 if (field) errors[field] = issue.message;
@@ -59,65 +58,85 @@ const LoginComponent = () => {
             return;
         }
 
-
-        setFormErrors({
-            fullName: "",
-            password: "",
-        });
-
-        LoginMutation.mutate(result.data, {
-            onSuccess: () => {
-                navigate({
-                    to: `/auth/verify-otp`,
-                    search: { email: formData.fullName }
-                })
+        loginMutation.mutate(result.data, {
+            onSuccess: (res) => {
+                setQrCodeUrl(res.data.qrCode);
+                setIs2faModalOpen(true);
+                toast.info("Scan QR Code and verify your 2FA");
             },
-            onError: (err: any) => toast.error(err.response?.data?.message || "Verification failed"),
+            onError: (err: any) => {
+                toast.error(err.response?.data?.message || "Login failed");
+            },
         });
-        toast.success("Logged successfully")
+    };
 
+    const handleVerify2FA = (code: string) => {
+        verify2faMutation.mutate(
+            { email: formData.email, code },
+            {
+                onSuccess: (res) => {
+                    toast.success(res.data?.message || "2FA verified successfully!");
+                    setIs2faModalOpen(false);
+                    navigate({ to: "/profile", replace: true });
+                },
+                onError: (err) => {
+                    console.log('Handle verify Error: ', err.message)
+                    toast.error("Invalid 2FA code")
+                }
+            }
+        );
     };
 
     return (
         <div className="bg-deep-charcoal min-h-screen flex items-center justify-center px-4 text-text-primary">
-            <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
-
-                <div className="w-full max-w-sm mx-auto">
-                    <h1 className="text-white text-center text-3xl lg:text-4xl font-bold mb-8 tracking-wide">
-                        PLEASE LOGIN
+            <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                {/* Left Section */}
+                <div className="w-full max-w-sm mx-auto border border-neutral-800 rounded-2xl p-6">
+                    <h1 className="text-white text-center text-3xl lg:text-4xl font-extrabold mb-8 tracking-wide">
+                        Welcome Back
                     </h1>
-                    <div className="space-y-4">
-                        <InputField
-                            label="Full name"
-                            name="fullName"
-                            type="text"
-                            placeholder="Enter your full name"
-                            value={formData.fullName}
-                            onChange={handleChanges}
-                            error={formErrors.fullName}
-                        />
+
+                    <div className="space-y-5">
                         <InputField
                             label="Email"
                             name="email"
+                            type="email"
+                            placeholder="Enter your email"
+                            value={formData.email}
+                            onChange={handleChanges}
+                            error={formErrors.email}
+                        />
+                        <InputField
+                            label="Password"
+                            name="password"
                             type="password"
                             placeholder="Enter your password"
                             value={formData.password}
                             onChange={handleChanges}
                             error={formErrors.password}
                         />
-                        <div className="text-xs text-center">
-                            <span className="text-white">Already have an account? </span>
-                            <a onClick={() => navigate({ to: '/auth/signup' })} className="text-teal-green hover:underline font-medium">Signup</a>
+
+                        <div className="flex justify-between items-center text-[12px]">
+                            <a
+                                onClick={() => navigate({ to: "/" })}
+                                className="text-teal-green hover:underline cursor-pointer"
+                            >
+                                Forgot password?
+                            </a>
                         </div>
 
                         <Button
                             text="Login"
                             onClick={handleLogin}
-                            loading={LoginMutation.isPending}
-                            disabled={false}
+                            loading={loginMutation.isPending}
                         />
 
-                        {/* Google Sign In */}
+                        <div className="flex items-center gap-2 my-3">
+                            <hr className="flex-1 border-neutral-700" />
+                            <span className="text-gray-400 text-[10px]">OR</span>
+                            <hr className="flex-1 border-neutral-700" />
+                        </div>
+
                         <button
                             type="button"
                             className="w-full border border-border-gray-dark hover:border-text-secondary text-white hover:text-deep-charcoal font-semibold text-sm py-2.5 rounded flex items-center justify-center gap-2 transition-all duration-200 hover:bg-cool-white"
@@ -128,16 +147,35 @@ const LoginComponent = () => {
                                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                             </svg>
-                            Sign in with Google
+                            Continue with Google
                         </button>
+
+                        <p className="text-center text-[12px] text-neutral-500">
+                            Don’t have an account?{" "}
+                            <a
+                                onClick={() => navigate({ to: "/auth/signup" })}
+                                className="text-teal-green font-medium hover:underline cursor-pointer"
+                            >
+                                Sign up
+                            </a>
+                        </p>
                     </div>
                 </div>
 
-                {/* LogoRightSide */}
+                {/* Right Side Panel (Illustration / Branding) */}
                 <RightSidePanel />
             </div>
-        </div>
-    )
-}
 
-export default LoginComponent
+            {/* Two-Factor Authentication Modal */}
+            <TwoFAModal
+                isOpen={is2faModalOpen}
+                onClose={() => setIs2faModalOpen(false)}
+                onVerify={handleVerify2FA}
+                loading={verify2faMutation.isPending}
+                qrCodeUrl={qrCodeUrl || ""}
+            />
+        </div>
+    );
+};
+
+export default LoginComponent;

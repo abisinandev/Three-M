@@ -1,16 +1,18 @@
-import { env } from "@presentation/express/configs/env.constants";
 import connectDB from "@infrastructure/databases/mongo_db/mongo.db";
+import { env } from "@presentation/express/utils/constants/env.constants";
 import app from "./app";
+import { logger } from "@infrastructure/providers/logger/winston.logger";
+
 
 const bootstrap = async () => {
   try {
     await connectDB();
 
     app.listen(env.PORT, () => {
-      console.log(`Server running on PORT: ${env.PORT}`);
+      logger.info(`Server running on PORT: ${env.PORT}`);
     });
   } catch (error) {
-    console.error("❌ Server startup failed:", error);
+    logger.error("❌ Server startup failed:", error);
     process.exit(1);
   }
 };

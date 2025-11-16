@@ -1,5 +1,6 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+// tailwind.config.ts
+
+export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -8,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'deep-charcoal': { DEFAULT: '#1B1B1B', dark: '#1B1B1B', light: '#F9FAFB' },
+        'deep-charcoal': { DEFAULT: '#000000', dark: '#1B1B1B', light: '#F9FAFB' },
         'card-dark': { DEFAULT: '#2D3748', dark: '#2D3748', light: '#FFFFFF' },
         'near-black': { DEFAULT: '#1A202C', dark: '#1A202C', light: '#E5E7EB' },
         'cool-white': { DEFAULT: '#FFFFFF', dark: '#FFFFFF', light: '#FFFFFF' },
@@ -16,16 +17,24 @@ module.exports = {
         'electric-orange': { DEFAULT: '#FF9800', dark: '#FF9800', light: '#F97316' },
         'text-primary': { DEFAULT: '#E2E8F0', dark: '#E2E8F0', light: '#111827' },
         'text-secondary': { DEFAULT: '#A0AEC0', dark: '#A0AEC0', light: '#6B7280' },
-        'border-gray-dark': '#393939', // 👈 Added global border color
+        'border-gray-dark': '#393939',
       },
       keyframes: {
         'slide-down': {
           '0%': { opacity: '0', transform: 'translateY(-10%)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        'draw-line': {
+          from: { 'stroke-dasharray': '0 1000', 'stroke-dashoffset': '1000' },
+          to: { 'stroke-dasharray': '1000 1000', 'stroke-dashoffset': '0' },
+        },
       },
       animation: {
         'slide-down': 'slide-down 0.25s ease-out',
+        'draw-line': 'draw-line 2s ease-out forwards',
+      },
+      perspective: {
+        '1000': '1000px',
       },
     },
   },

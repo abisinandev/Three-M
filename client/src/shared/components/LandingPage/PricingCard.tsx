@@ -1,8 +1,9 @@
-import { CheckCircle } from "lucide-react";
+import type React from "react";
 
 interface PricingCardProps {
   title: string;
   price: string;
+  period?: string;
   description: string;
   features: string[];
   buttonText: string;
@@ -13,47 +14,58 @@ interface PricingCardProps {
 export const PricingCard: React.FC<PricingCardProps> = ({
   title,
   price,
+  period = "",
   description,
   features,
   buttonText,
   buttonStyle,
   popular,
-}) => (
-  <div
-    className={`relative bg-card-dark/70 backdrop-blur-md rounded-2xl p-6 border ${
-      popular ? "border-teal-green shadow-lg" : "border-cool-white/10"
-    } hover:shadow-xl hover:-translate-y-1 transition-all duration-300`}
-  >
-    {popular && (
-      <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-        <span className="bg-teal-green text-deep-charcoal px-4 py-1 rounded-full text-xs font-bold tracking-wide">
-          MOST POPULAR
-        </span>
-      </div>
-    )}
+}) => {
+  return (
+    <div
+      className={`
+        relative backdrop-blur-xl bg-deep-charcoal/40 border border-cool-white/10 
+        rounded-3xl p-8 transition-all duration-500 group
+        ${popular ? "ring-2 ring-teal-green/50 shadow-2xl shadow-teal-green/10 scale-105" : "hover:shadow-xl hover:shadow-teal-green/5"}
+        hover:-translate-y-2 hover:border-teal-green/30
+      `}
+    >
+      {/* Optional Glow */}
+      {popular && (
+        <div className="absolute inset-0 bg-teal-green/10 rounded-3xl blur-3xl -z-10 animate-pulse" />
+      )}
 
-    <div className="text-center">
-      <h3 className="text-2xl font-bold mb-2">{title}</h3>
-      <p className="text-cool-white/70 text-sm mb-6">{description}</p>
-      <div className="text-4xl font-extrabold mb-6">
-        {price}
-        <span className="text-sm text-cool-white/50 font-medium"> /month</span>
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-2xl font-bold text-cool-white mb-2">{title}</h3>
+          <p className="text-cool-white/60 text-sm">{description}</p>
+        </div>
+
+        <div className="flex items-baseline gap-1">
+          <span className="text-4xl sm:text-5xl font-bold text-cool-white">{price}</span>
+          <span className="text-cool-white/60">{period}</span>
+        </div>
+
+        <ul className="space-y-3">
+          {features.map((feature, idx) => (
+            <li key={idx} className="flex items-start gap-3 text-cool-white/80 text-sm">
+              <svg className="w-5 h-5 text-teal-green flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span>{feature}</span>
+            </li>
+          ))}
+        </ul>
+
+        <button
+          className={`
+            w-full py-3.5 rounded-xl font-semibold text-sm transition-all duration-300
+            ${buttonStyle}
+          `}
+        >
+          {buttonText}
+        </button>
       </div>
     </div>
-
-    <ul className="space-y-3 mb-8">
-      {features.map((feature, index) => (
-        <li key={index} className="flex items-start">
-          <CheckCircle className="w-4 h-4 text-teal-green mr-2 mt-0.5 flex-shrink-0" />
-          <span className="text-cool-white/90 text-sm leading-relaxed">{feature}</span>
-        </li>
-      ))}
-    </ul>
-
-    <button
-      className={`w-full py-3 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-105 ${buttonStyle}`}
-    >
-      {buttonText}
-    </button>
-  </div>
-);
+  );
+};

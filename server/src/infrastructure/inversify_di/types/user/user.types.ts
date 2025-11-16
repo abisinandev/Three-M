@@ -1,5 +1,12 @@
 export const USER_TYPES = {
+  // Repository
   IUserRepository: Symbol.for("IUserRepository"),
+
+  //Usecases
   UserSignupUseCase: Symbol.for("UserSignupUseCase"),
-  UserAuthController: Symbol.for("UserAuthController"),
+  UserLoginUseCase: Symbol.for("UserLoginUseCase"),
+  GetUserProfileUseCase: Symbol.for("GetUserProfileUseCase"),
+
+  //Controller
+  UserController: Symbol.for("UserController"),
 };

@@ -1,25 +1,26 @@
-import express, { NextFunction, Request, Response } from "express";
-import morgan from "morgan";
-import { env } from "@presentation/express/configs/env.constants";
+import { env } from "@presentation/express/utils/constants/env.constants";
+import { errorMiddleware } from "@presentation/express/middlewares/error-middleware";
+import cookieParser from "cookie-parser";
+
 import cors from "cors";
-import { ErrorMiddleware } from "@presentation/express/middlewares/error-middleware";
-import { RegisterRoutes } from "@presentation/express/routes";
+import express from "express";
+import morgan from "morgan";
 
 const app = express();
 
 //middlewares configs
 app.use(morgan("dev"));
-app.use((req, res, next) => {
-  console.log("running", req.method, req.originalUrl);
-  next();
-});
-app.use(cors({ origin: env.FRONTEND_URL }));
+
+app.use(cors({ origin: env.FRONTEND_URL, credentials: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 //protected routes
+import { RegisterRoutes } from "@presentation/http/routes";
 RegisterRoutes(app);
 
 //AppError middleware
-app.use(ErrorMiddleware.execute);
+app.use(errorMiddleware);
 
 export default app;

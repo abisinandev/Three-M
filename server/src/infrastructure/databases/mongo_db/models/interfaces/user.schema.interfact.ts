@@ -1,36 +1,33 @@
-import { Document, Types } from "mongoose";
+import type { CurrencyTypes } from "@domain/enum/users/currency-enum";
+import type { KycStatusType } from "@domain/enum/users/kyc-status.enum";
+import type { SubscripionPlan } from "@domain/enum/users/subscription-plan.enum";
+import type { SubscriptionStatus } from "@domain/enum/users/subscription-status.enum";
+import type { UserRole } from "@domain/enum/users/user-role.enum";
 
-export interface IUserSchema extends Document {
+export interface IUserSchema {
   _id: string;
   userCode: string;
   fullName: string;
   email: string;
   phone: string;
   password: string;
-  role: "user";
+  role: UserRole;
 
   isVerified: boolean;
   isEmailVerified: boolean;
   isBlocked: boolean;
 
   kycId?: string;
-  kycStatus?: "pending" | "verified" | "rejected";
+  kycStatus?: KycStatusType;
   walletId?: string;
   walletBalance?: number;
-  currency?: string;
+  currency?: CurrencyTypes;
 
-  currentPlanId?: string;
   subscriptionId?: string;
-  subscriptionStatus?: string;
+  subscriptionStatus?: SubscriptionStatus;
+  subscriptionPlan: SubscripionPlan;
 
   isTwoFactorEnabled?: boolean;
   twoFactorSecret?: string;
-  refreshToken?: string;
-  lastLoginAt?: Date;
-  lastLoginIp?: string;
-  loginAttempts?: number;
-
-  deletedAt?: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
+  qrCodeUrl?: string;
 }

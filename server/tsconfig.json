@@ -17,9 +17,11 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strict": true,
-    // "incremental": true,
-    // "removeComments": true,
-    "skipLibCheck": true
+    "incremental": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "typeRoots": ["./src/types", "./node_modules/@types"],
+    "types": ["node", "express"], 
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

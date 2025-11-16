@@ -1,5 +1,5 @@
 import OTPVerificationPage from '@modules/user/components/OtpComponet'
-import { useAuthStore } from '@stores/user/useAuthStore';
+import { useAuthStore } from '@stores/user/UserAuthStore';
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/auth/verify-otp')({

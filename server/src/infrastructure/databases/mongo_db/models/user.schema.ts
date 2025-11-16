@@ -1,7 +1,13 @@
 import { model, Schema } from "mongoose";
-import { IUserSchema } from "./interfaces/user.schema.interfact";
+import type { Document } from "mongoose";
+import type { IUserSchema } from "./interfaces/user.schema.interfact";
+import { UserRole } from "@domain/enum/users/user-role.enum";
+import { SubscriptionStatus } from "@domain/enum/users/subscription-status.enum";
+import { SubscripionPlan } from "@domain/enum/users/subscription-plan.enum";
+import { CurrencyTypes } from "@domain/enum/users/currency-enum";
+import { KycStatusType } from "@domain/enum/users/kyc-status.enum";
 
-export interface UserDocument extends IUserSchema, Document { }
+export type UserDocument = Document & IUserSchema;
 
 const UserSchema = new Schema<UserDocument>(
   {
@@ -11,30 +17,28 @@ const UserSchema = new Schema<UserDocument>(
     phone: { type: String, required: true, unique: true, index: true },
     password: { type: String, required: true },
 
-    role: { type: String, enum: ["user"], default: "user" },
+    role: { type: String, enum: Object.values(UserRole), default: UserRole.USER },
 
     isVerified: { type: Boolean, default: false },
     isEmailVerified: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },
 
     kycId: { type: String },
-    kycStatus: { type: String, enum: ["pending", "verified", "rejected"], default: "pending" },
+    kycStatus: {
+      type: String,
+      enum: KycStatusType,
+      default: KycStatusType.NULL,
+    },
     walletId: { type: String },
     walletBalance: { type: Number, default: 0 },
-    currency: { type: String, default: "INR" },
+    currency: { type: String, enum: CurrencyTypes, default: CurrencyTypes.INR },
 
     subscriptionId: { type: String },
-    currentPlanId: { type: String },
-    subscriptionStatus: { type: String },
-    lastLoginAt: { type: Date },
-    lastLoginIp: { type: String },
-    loginAttempts: { type: Number, default: 0 },
-
+    subscriptionStatus: { type: String, enum: Object.values(SubscriptionStatus), default: SubscriptionStatus.INACTIVE },
+    subscriptionPlan: { type: String, enum: Object.values(SubscripionPlan), default: SubscripionPlan.FREE },
     isTwoFactorEnabled: { type: Boolean, default: false },
     twoFactorSecret: { type: String },
-    refreshToken: { type: String },
-
-    deletedAt: { type: Date },
+    qrCodeUrl: { type: String },
   },
   { timestamps: true },
 );

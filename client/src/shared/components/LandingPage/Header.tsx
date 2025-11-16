@@ -2,7 +2,6 @@ import React from "react";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 
-
 interface HeaderProps {
   scrolled: boolean;
   mobileMenuOpen: boolean;
@@ -14,14 +13,18 @@ export const Header: React.FC<HeaderProps> = ({
   mobileMenuOpen,
   setMobileMenuOpen,
 }) => {
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
-        ? "bg-deep-charcoal/90 backdrop-blur-md border-b border-[#2e2e2e]"
-        : "bg-deep-charcoal/80"
-        }`}
+      className={`
+        fixed top-0 w-full z-50 transition-all duration-300
+        border-b border-[#2e2e2e]  /* Always show subtle bottom border */
+        ${scrolled
+          ? "bg-deep-charcoal/90 backdrop-blur-md"
+          : "bg-deep-charcoal/80"
+        }
+      `}
       aria-label="Main navigation"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,7 +53,10 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <button className="text-teal-green hover:text-teal-green/80 font-medium transition-colors duration-200 text-sm">
+            <button
+              onClick={() => navigate({ to: '/auth/login' })}
+              className="text-teal-green hover:text-teal-green/80 font-medium transition-colors duration-200 text-sm"
+            >
               Log In
             </button>
             <button
@@ -86,6 +92,7 @@ export const Header: React.FC<HeaderProps> = ({
                 key={item}
                 href={`#${item.toLowerCase()}`}
                 className="block text-cool-white/80 hover:text-teal-green transition-colors duration-200"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 {item}
               </a>
@@ -93,10 +100,22 @@ export const Header: React.FC<HeaderProps> = ({
 
             <hr className="border-[#2e2e2e]" />
 
-            <button className="w-full text-teal-green hover:text-teal-green/80 py-2 font-medium transition-colors duration-200">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                navigate({ to: '/auth/login' });
+              }}
+              className="w-full text-teal-green hover:text-teal-green/80 py-2 font-medium transition-colors duration-200"
+            >
               Log In
             </button>
-            <button className="w-full bg-teal-green text-deep-charcoal py-2 rounded-lg font-semibold hover:bg-teal-green/90 transition-transform duration-200">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                navigate({ to: '/auth/signup' });
+              }}
+              className="w-full bg-teal-green text-deep-charcoal py-2 rounded-lg font-semibold hover:bg-teal-green/90 transition-transform duration-200"
+            >
               Start Free
             </button>
           </div>

@@ -1,32 +1,43 @@
-import { inject, injectable } from "inversify";
-import { IOtpRepository } from "@application/interfaces/repositories/otp-repository.interface";
-import { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
-import { VerifyOtpDTO } from "@application/dto/auth-dto/verify-otp.dto";
-import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
+import type { VerifyOtpDTO } from "@application/dto/auth/verify-otp.dto";
+import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";
-import { NotFoundError, ValidationError } from "@presentation/express/utils/error-handling";
 import { SuccessMessage } from "@domain/enum/express/messages/success.message";
+import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
+import { redisClient } from "@infrastructure/providers/redis/redis.provider";
+import { NotFoundError, ValidationError } from "@presentation/express/utils/error-handling";
+import { inject, injectable } from "inversify";
+import type { IBaseUseCase } from "../interfaces/base-usecase.interface";
+import type { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
+import { HttpStatus } from "@domain/enum/express/status-code";
 
 @injectable()
-export class VerifyOtpUseCase {
+export class VerifyOtpUseCase implements IBaseUseCase<VerifyOtpDTO, BaseResponseDTO> {
     constructor(
-        @inject(AUTH_TYPES.IOtpRepository) private readonly _otpRepository: IOtpRepository,
         @inject(USER_TYPES.IUserRepository) private readonly _userRepository: IUserRepository
     ) { }
 
-    async execute(data: VerifyOtpDTO) {
-        
-        const storedOtp = await this._otpRepository.getOtp(data.email)
-        
-        if (!storedOtp) throw new ValidationError(ErrorMessage.OTP_EXPIRED);
-        if (storedOtp.otp !== data.otp) throw new ValidationError(ErrorMessage.INVALID_OTP);
+    async execute(data: VerifyOtpDTO): Promise<BaseResponseDTO> {
 
-        await this._otpRepository.deleteOtp(data.email);
+        const storedOtp = await redisClient.hgetall(`otp:${data.email}`);
+
+        if (!storedOtp || !storedOtp.otp)
+            throw new ValidationError(ErrorMessage.OTP_EXPIRED);
+
+        if (Number(storedOtp.expiresAt) < Date.now())
+            throw new ValidationError(ErrorMessage.OTP_EXPIRED);
+
+        if (storedOtp.otp !== data.otp)
+            throw new ValidationError(ErrorMessage.INVALID_OTP);
 
         const user = await this._userRepository.verifyEmail(data.email);
         if (!user) throw new NotFoundError(ErrorMessage.USER_NOT_FOUND);
 
-        return { success: true, message: SuccessMessage.EMAIL_VERIFIED }
+        await redisClient.del(data.email);
+
+        return {
+            success: true,
+            message: SuccessMessage.EMAIL_VERIFIED,
+            statusCode: HttpStatus.OK,
+        }
     }
 }
