@@ -31,7 +31,8 @@ export default defineConfig({
       "@customTypes": path.resolve(__dirname, "src/customTypes"),
       "@utils": path.resolve(__dirname, "src/utils"),
       "@hooks": path.resolve(__dirname, "src/hooks"),
-      "@configs":path.resolve(__dirname,"src/configs")
+      "@configs": path.resolve(__dirname, "src/configs"),
+      "@lib":path.resolve(__dirname,"src/lib"),
     },
   },
 })

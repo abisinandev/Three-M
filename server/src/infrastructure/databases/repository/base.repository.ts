@@ -1,16 +1,20 @@
-import { IBaseRepository } from "@application/interfaces/repositories/base-repository.interface";
-import { FilterQuery, Model, UpdateQuery } from "mongoose";
+import type { IBaseRepository } from "@application/interfaces/repositories/base-repository.interface";
+import type {
+  FilterQuery,
+  Model,
+  UpdateQuery,
+  Document,
+} from "mongoose";
 
-export abstract class BaseRepository<TDomain, TDocument>
-  implements IBaseRepository<TDomain>
-{
+export abstract class BaseRepository<TDomain, TDocument extends Document> implements IBaseRepository<TDomain, TDocument> {
+
   constructor(
     protected readonly model: Model<TDocument>,
     protected readonly mapper: {
       toDomain(doc: TDocument): TDomain;
-      toPersistance(domain: TDomain): any;
+      toPersistance(domain: TDomain): Partial<TDocument>;
     },
-  ) {}
+  ) { }
 
   async create(entity: TDomain): Promise<void> {
     const data = this.mapper.toPersistance(entity);
@@ -19,20 +23,19 @@ export abstract class BaseRepository<TDomain, TDocument>
 
   async findById(id: string): Promise<TDomain | null> {
     const doc = await this.model.findById(id);
-    if (!doc) return null;
-    return this.mapper.toDomain(doc);
+    return doc ? this.mapper.toDomain(doc) : null;
   }
 
-  async findOne(filter: FilterQuery<any>): Promise<TDomain | null> {
+  async findOne(filter: FilterQuery<TDocument>): Promise<TDomain | null> {
+    console.log("filter ", filter)
     const doc = await this.model.findOne(filter);
-    if (!doc) return null;
-    return this.mapper.toDomain(doc);
+    console.log('Document : ', doc)
+    return doc ? this.mapper.toDomain(doc) : null;
   }
 
-  async update(id: string, update: UpdateQuery<any>): Promise<TDomain | null> {
+  async update(id: string, update: UpdateQuery<TDocument>): Promise<TDomain | null> {
     const doc = await this.model.findByIdAndUpdate(id, update, { new: true });
-    if (!doc) return null;
-    return this.mapper.toDomain(doc);
+    return doc ? this.mapper.toDomain(doc) : null;
   }
 
   async delete(id: string): Promise<void> {

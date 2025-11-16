@@ -19,7 +19,8 @@
       "@utils/*":["utils/*"],
       "@hooks/*":["hooks/*"],
       "@shared/*":["shared/*"],
-      "@configs":["configs/*"]
+      "@configs/*":["configs/*"],
+      "@lib/*":["lib/*"],
     },
 
     /* Bundler mode */
@@ -38,5 +39,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src", "src/routes/_auth/profile.tsx"]
 }

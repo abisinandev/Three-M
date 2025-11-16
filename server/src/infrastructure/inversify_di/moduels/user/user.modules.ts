@@ -1,20 +1,26 @@
-import { Container, ContainerModule } from "inversify";
-import { USER_TYPES } from "../../types/user/user.types";
-import { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
-import { UserRepository } from "@infrastructure/databases/repository/user.repository";
+import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
+import { UserLoginUseCase } from "@application/use_cases/auth/user-login.usecase";
 import { UserSignupUseCase } from "@application/use_cases/auth/user-signup.usecase";
-import { UserAuthController } from "@presentation/http/controllers/user/user-auth.controller";
-import { IVerificationService } from "@application/interfaces/services/user-verfication.service.interface";
-import { VerificationService } from "@application/service/user-verification-service";
-import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
+import { ContainerModule } from "inversify";
+import { USER_TYPES } from "../../types/user/user.types";
+import { UserRepository } from "@infrastructure/databases/repository/auth/user.repository";
+import { UserController } from "@presentation/http/controllers/user/user.controller";
+import { GetUserProfileUseCase } from "@application/use_cases/user/user-profile.usecase";
+import type { IBaseUseCase } from "@application/use_cases/interfaces/base-usecase.interface";
+import type { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
+import type { UserLoginDTO } from "@application/dto/auth/user-login.dto";
+import type { CreateUserDTO } from "@application/dto/auth/create-user.dto";
+import type { ResponseUserDTO } from "@application/dto/auth/response-user.dto";
 
 export const UserModule = new ContainerModule(({ bind }) => {
-  bind<UserSignupUseCase>(USER_TYPES.UserSignupUseCase).to(UserSignupUseCase);
-  bind<UserAuthController>(USER_TYPES.UserAuthController).to(
-    UserAuthController,
-  );
-  bind<IVerificationService>(AUTH_TYPES.IVerificationService).to(
-    VerificationService,
-  );
+  //Repository
   bind<IUserRepository>(USER_TYPES.IUserRepository).to(UserRepository);
+
+  //Controller
+  bind<UserController>(USER_TYPES.UserController).to(UserController);
+
+  //Usecases
+  bind<IBaseUseCase<UserLoginDTO, BaseResponseDTO>>(USER_TYPES.UserLoginUseCase).to(UserLoginUseCase);
+  bind<IBaseUseCase<CreateUserDTO, BaseResponseDTO>>(USER_TYPES.UserSignupUseCase).to(UserSignupUseCase);
+  bind<IBaseUseCase<{ userId: string }, BaseResponseDTO<ResponseUserDTO>>>(USER_TYPES.GetUserProfileUseCase).to(GetUserProfileUseCase)
 });

@@ -1,4 +1,4 @@
- import { HttpStatus } from "@domain/enum/express/status-code";
+import { HttpStatus } from "@domain/enum/express/status-code";
 import { BaseError } from "../base-error";
 
 /** 409 - resource already exists */

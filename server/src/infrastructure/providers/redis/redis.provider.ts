@@ -1,5 +1,6 @@
-import { env } from "@presentation/express/configs/env.constants";
+import { env } from "@presentation/express/utils/constants/env.constants";
 import Redis from "ioredis";
+import { logger } from "../logger/winston.logger";
 
 export const redisClient = new Redis({
   host: "localhost",
@@ -7,5 +8,5 @@ export const redisClient = new Redis({
   db: 0,
 });
 
-redisClient.on("connect", () => console.log("Redis connected✅"));
-redisClient.on("error", (err) => console.error("Redis error:", err));
+redisClient.on("connect", () => logger.info("Redis connected✅"));
+redisClient.on("error", (err) => logger.error("Redis error:", err));

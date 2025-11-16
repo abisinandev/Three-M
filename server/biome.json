@@ -1,5 +1,10 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.2/schema.json",
+  "javascript": {
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    }
+  },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
@@ -10,5 +15,12 @@
     "rules": {
       "recommended": true
     }
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!dist",
+      "!**/dist"
+    ]
   }
 }
