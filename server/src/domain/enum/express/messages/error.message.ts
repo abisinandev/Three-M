@@ -16,5 +16,6 @@ export enum ErrorMessage {
   TWO_FA_REQUIRED = "2FA verification required",
   EMAIL_MUST_STRING = "Email must be a string",
   TWO_FA_NOT_CONFIGURED = '2FA not configured for this user',
-  
+  RESET_TOKEN_EXPIRED = "Reset token expired",
+  RESET_TOKEN_INVALID = "RESET TOKEN IS INVALID",
 }

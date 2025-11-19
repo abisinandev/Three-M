@@ -1,5 +1,6 @@
 import type { ButtonProps } from "@modules/user/types/ButttonProps";
 
+
 export const Button: React.FC<ButtonProps> = ({ text, onClick, disabled, loading, type = "button" }) => (
   <button
     type={type}

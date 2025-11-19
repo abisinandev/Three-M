@@ -13,13 +13,13 @@ import type { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
 import { HttpStatus } from "@domain/enum/express/status-code";
 import { generateOtp } from "@shared/utils/otp-generator";
 import type { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
-import { OtpStore } from "@infrastructure/providers/redis/otp-store";
+import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 
 @injectable()
 export class UserSignupUseCase implements IBaseUseCase<CreateUserDTO, BaseResponseDTO> {
 
     constructor(
-        @inject(USER_TYPES.IUserRepository) private readonly _userRepository: IUserRepository,
+        @inject(USER_TYPES.UserRepository) private readonly _userRepository: IUserRepository,
         @inject(AUTH_TYPES.IPasswordHashingService) private readonly _passswordHashing: IPasswordHashingService,
         @inject(AUTH_TYPES.IEmailService) private readonly _emailVerifyService: IEmailService,
 
@@ -31,6 +31,9 @@ export class UserSignupUseCase implements IBaseUseCase<CreateUserDTO, BaseRespon
         const otp = generateOtp();
         const expiryTime = 5 * 60;
         const expiresAt = Date.now() + expiryTime * 1000;
+        const redisKey = `otp:${user.email}`;
+        const resendCount = 0;
+        const now = Date.now()
 
         if (isExistingUser) {
 
@@ -39,13 +42,14 @@ export class UserSignupUseCase implements IBaseUseCase<CreateUserDTO, BaseRespon
             }
 
             await this._emailVerifyService.sendOtpEmail(user.email, otp);
-            OtpStore({
+            await redisClient.hmset(redisKey, {
                 email: user.email,
                 otp,
                 expiresAt,
-                lastResendAt: Date.now(),
-                resendCount: 0
-            }, 300);
+                resendCount,
+                lastResendAt: now
+            });
+            await redisClient.expire(redisKey, 300);
 
             return {
                 success: true,
@@ -65,13 +69,14 @@ export class UserSignupUseCase implements IBaseUseCase<CreateUserDTO, BaseRespon
         await this._userRepository.create(newUser);
 
         await this._emailVerifyService.sendOtpEmail(user.email, otp);
-        OtpStore({
+        await redisClient.hmset(redisKey, {
             email: user.email,
             otp,
             expiresAt,
-            lastResendAt: Date.now(),
-            resendCount: 0
-        }, 300);
+            resendCount,
+            lastResendAt: now
+        });
+        await redisClient.expire(redisKey, 300);
 
         return {
             success: true,

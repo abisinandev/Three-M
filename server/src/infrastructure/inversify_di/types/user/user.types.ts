@@ -1,6 +1,6 @@
 export const USER_TYPES = {
   // Repository
-  IUserRepository: Symbol.for("IUserRepository"),
+  UserRepository: Symbol.for("UserRepository"),
 
   //Usecases
   UserSignupUseCase: Symbol.for("UserSignupUseCase"),

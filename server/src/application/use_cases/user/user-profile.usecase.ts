@@ -10,7 +10,7 @@ import { HttpStatus } from "@domain/enum/express/status-code";
 @injectable()
 export class GetUserProfileUseCase implements IBaseUseCase<{ userId: string }, BaseResponseDTO<ResponseUserDTO>> {
   constructor(
-    @inject(USER_TYPES.IUserRepository) private readonly _userRepository: IUserRepository,
+    @inject(USER_TYPES.UserRepository) private readonly _userRepository: IUserRepository,
   ) { }
 
   async execute(req: { userId: string; }): Promise<BaseResponseDTO<ResponseUserDTO>> {

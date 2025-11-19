@@ -14,7 +14,7 @@ import type { ResponseUserDTO } from "@application/dto/auth/response-user.dto";
 
 export const UserModule = new ContainerModule(({ bind }) => {
   //Repository
-  bind<IUserRepository>(USER_TYPES.IUserRepository).to(UserRepository);
+  bind<IUserRepository>(USER_TYPES.UserRepository).to(UserRepository);
 
   //Controller
   bind<UserController>(USER_TYPES.UserController).to(UserController);

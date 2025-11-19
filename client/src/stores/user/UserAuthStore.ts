@@ -1,22 +1,21 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 interface AuthState {
-    pendingEmail: string | null;
-    setPendingEmail: (email: string) => void;
-    clearPendingEmail: () => void;
+    email: string | null;
+    timeLeft: number;
+    setData: (email: string, time: number, token?: string | null) => void;
+    clearData: () => void;
+    token?: string | null;
 }
 
-export const useAuthStore = create<AuthState>()(
-    persist(
-        (set) => ({
-            pendingEmail: null,
-            setPendingEmail: (email) => set({ pendingEmail: email }),
-            clearPendingEmail: () => set({ pendingEmail: null }),
-        }),
-        {
-            name: "auth-storage",
-            partialize: (state) => ({ pendingEmail: state.pendingEmail }),
-        }
-    )
-)
+export const useAuthStore = create<AuthState>((set) => ({
+    email: null,
+    timeLeft: 0,
+    token: null,
+    setData: (email, time, token) => set({
+        email,
+        timeLeft: time,
+        token: token
+    }),
+    clearData: () => set({ email: null, timeLeft: 0, token: null }),
+}));

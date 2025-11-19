@@ -9,97 +9,148 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthVerifyOtpRouteImport } from './routes/auth/verify-otp'
-import { Route as AuthSignupRouteImport } from './routes/auth/signup'
+import { Route as UserProfileRouteImport } from './routes/user/profile'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as AuthProfileRouteImport } from './routes/_auth/profile'
-import { Route as AuthAuthRouteImport } from './routes/_auth/_auth'
+import { Route as AuthSignupIndexRouteImport } from './routes/auth/signup/index'
+import { Route as AuthResetPasswordIndexRouteImport } from './routes/auth/reset-password/index'
+import { Route as AuthForgotPasswordIndexRouteImport } from './routes/auth/forgot-password/index'
+import { Route as AuthSignupVerifyOtpRouteImport } from './routes/auth/signup/verify-otp'
+import { Route as AuthForgotPasswordVerifyOtpRouteImport } from './routes/auth/forgot-password/verify-otp'
 
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthVerifyOtpRoute = AuthVerifyOtpRouteImport.update({
-  id: '/auth/verify-otp',
-  path: '/auth/verify-otp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthSignupRoute = AuthSignupRouteImport.update({
-  id: '/auth/signup',
-  path: '/auth/signup',
+const UserProfileRoute = UserProfileRouteImport.update({
+  id: '/user/profile',
+  path: '/user/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
-  getParentRoute: () => rootRouteImport,
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
-const AuthProfileRoute = AuthProfileRouteImport.update({
-  id: '/_auth/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
+const AuthSignupIndexRoute = AuthSignupIndexRouteImport.update({
+  id: '/signup/',
+  path: '/signup/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
-const AuthAuthRoute = AuthAuthRouteImport.update({
-  id: '/_auth/_auth',
-  getParentRoute: () => rootRouteImport,
+const AuthResetPasswordIndexRoute = AuthResetPasswordIndexRouteImport.update({
+  id: '/reset-password/',
+  path: '/reset-password/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
+const AuthForgotPasswordIndexRoute = AuthForgotPasswordIndexRouteImport.update({
+  id: '/forgot-password/',
+  path: '/forgot-password/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthSignupVerifyOtpRoute = AuthSignupVerifyOtpRouteImport.update({
+  id: '/signup/verify-otp',
+  path: '/signup/verify-otp',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthForgotPasswordVerifyOtpRoute =
+  AuthForgotPasswordVerifyOtpRouteImport.update({
+    id: '/forgot-password/verify-otp',
+    path: '/forgot-password/verify-otp',
+    getParentRoute: () => AuthRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/profile': typeof AuthProfileRoute
+  '/auth': typeof AuthRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
-  '/auth/signup': typeof AuthSignupRoute
-  '/auth/verify-otp': typeof AuthVerifyOtpRoute
+  '/user/profile': typeof UserProfileRoute
+  '/auth/forgot-password/verify-otp': typeof AuthForgotPasswordVerifyOtpRoute
+  '/auth/signup/verify-otp': typeof AuthSignupVerifyOtpRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordIndexRoute
+  '/auth/reset-password': typeof AuthResetPasswordIndexRoute
+  '/auth/signup': typeof AuthSignupIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/profile': typeof AuthProfileRoute
+  '/auth': typeof AuthRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
-  '/auth/signup': typeof AuthSignupRoute
-  '/auth/verify-otp': typeof AuthVerifyOtpRoute
+  '/user/profile': typeof UserProfileRoute
+  '/auth/forgot-password/verify-otp': typeof AuthForgotPasswordVerifyOtpRoute
+  '/auth/signup/verify-otp': typeof AuthSignupVerifyOtpRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordIndexRoute
+  '/auth/reset-password': typeof AuthResetPasswordIndexRoute
+  '/auth/signup': typeof AuthSignupIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_auth/_auth': typeof AuthAuthRoute
-  '/_auth/profile': typeof AuthProfileRoute
+  '/auth': typeof AuthRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
-  '/auth/signup': typeof AuthSignupRoute
-  '/auth/verify-otp': typeof AuthVerifyOtpRoute
+  '/user/profile': typeof UserProfileRoute
+  '/auth/forgot-password/verify-otp': typeof AuthForgotPasswordVerifyOtpRoute
+  '/auth/signup/verify-otp': typeof AuthSignupVerifyOtpRoute
+  '/auth/forgot-password/': typeof AuthForgotPasswordIndexRoute
+  '/auth/reset-password/': typeof AuthResetPasswordIndexRoute
+  '/auth/signup/': typeof AuthSignupIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/profile'
+    | '/auth'
     | '/auth/login'
+    | '/user/profile'
+    | '/auth/forgot-password/verify-otp'
+    | '/auth/signup/verify-otp'
+    | '/auth/forgot-password'
+    | '/auth/reset-password'
     | '/auth/signup'
-    | '/auth/verify-otp'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/profile' | '/auth/login' | '/auth/signup' | '/auth/verify-otp'
+  to:
+    | '/'
+    | '/auth'
+    | '/auth/login'
+    | '/user/profile'
+    | '/auth/forgot-password/verify-otp'
+    | '/auth/signup/verify-otp'
+    | '/auth/forgot-password'
+    | '/auth/reset-password'
+    | '/auth/signup'
   id:
     | '__root__'
     | '/'
-    | '/_auth/_auth'
-    | '/_auth/profile'
+    | '/auth'
     | '/auth/login'
-    | '/auth/signup'
-    | '/auth/verify-otp'
+    | '/user/profile'
+    | '/auth/forgot-password/verify-otp'
+    | '/auth/signup/verify-otp'
+    | '/auth/forgot-password/'
+    | '/auth/reset-password/'
+    | '/auth/signup/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthAuthRoute: typeof AuthAuthRoute
-  AuthProfileRoute: typeof AuthProfileRoute
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthSignupRoute: typeof AuthSignupRoute
-  AuthVerifyOtpRoute: typeof AuthVerifyOtpRoute
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  UserProfileRoute: typeof UserProfileRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -107,51 +158,84 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/verify-otp': {
-      id: '/auth/verify-otp'
-      path: '/auth/verify-otp'
-      fullPath: '/auth/verify-otp'
-      preLoaderRoute: typeof AuthVerifyOtpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/signup': {
-      id: '/auth/signup'
-      path: '/auth/signup'
-      fullPath: '/auth/signup'
-      preLoaderRoute: typeof AuthSignupRouteImport
+    '/user/profile': {
+      id: '/user/profile'
+      path: '/user/profile'
+      fullPath: '/user/profile'
+      preLoaderRoute: typeof UserProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/login': {
       id: '/auth/login'
-      path: '/auth/login'
+      path: '/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
-    '/_auth/profile': {
-      id: '/_auth/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AuthProfileRouteImport
-      parentRoute: typeof rootRouteImport
+    '/auth/signup/': {
+      id: '/auth/signup/'
+      path: '/signup'
+      fullPath: '/auth/signup'
+      preLoaderRoute: typeof AuthSignupIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
-    '/_auth/_auth': {
-      id: '/_auth/_auth'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthAuthRouteImport
-      parentRoute: typeof rootRouteImport
+    '/auth/reset-password/': {
+      id: '/auth/reset-password/'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/auth/forgot-password/': {
+      id: '/auth/forgot-password/'
+      path: '/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/auth/signup/verify-otp': {
+      id: '/auth/signup/verify-otp'
+      path: '/signup/verify-otp'
+      fullPath: '/auth/signup/verify-otp'
+      preLoaderRoute: typeof AuthSignupVerifyOtpRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/auth/forgot-password/verify-otp': {
+      id: '/auth/forgot-password/verify-otp'
+      path: '/forgot-password/verify-otp'
+      fullPath: '/auth/forgot-password/verify-otp'
+      preLoaderRoute: typeof AuthForgotPasswordVerifyOtpRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
   }
 }
 
+interface AuthRouteRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthForgotPasswordVerifyOtpRoute: typeof AuthForgotPasswordVerifyOtpRoute
+  AuthSignupVerifyOtpRoute: typeof AuthSignupVerifyOtpRoute
+  AuthForgotPasswordIndexRoute: typeof AuthForgotPasswordIndexRoute
+  AuthResetPasswordIndexRoute: typeof AuthResetPasswordIndexRoute
+  AuthSignupIndexRoute: typeof AuthSignupIndexRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthLoginRoute: AuthLoginRoute,
+  AuthForgotPasswordVerifyOtpRoute: AuthForgotPasswordVerifyOtpRoute,
+  AuthSignupVerifyOtpRoute: AuthSignupVerifyOtpRoute,
+  AuthForgotPasswordIndexRoute: AuthForgotPasswordIndexRoute,
+  AuthResetPasswordIndexRoute: AuthResetPasswordIndexRoute,
+  AuthSignupIndexRoute: AuthSignupIndexRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthAuthRoute: AuthAuthRoute,
-  AuthProfileRoute: AuthProfileRoute,
-  AuthLoginRoute: AuthLoginRoute,
-  AuthSignupRoute: AuthSignupRoute,
-  AuthVerifyOtpRoute: AuthVerifyOtpRoute,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
+  UserProfileRoute: UserProfileRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

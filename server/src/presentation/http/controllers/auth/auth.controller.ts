@@ -1,11 +1,17 @@
 import type { Verify2faDTO } from "@application/dto/auth/2fa-verify-dto";
+import { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
 import type { CreateUserDTO } from "@application/dto/auth/create-user.dto";
+import { ForgotPasswordDTO } from "@application/dto/auth/forgot-password";
 import type { RefreshResponseDTO } from "@application/dto/auth/refresh-response.dto";
 import type { RefreshDTO } from "@application/dto/auth/refresh.dto";
+import { ResendOtpDTO } from "@application/dto/auth/resend-otp.dto";
+import { ResetPasswordDTO } from "@application/dto/auth/reset-password";
 import type { ResponseUserDTO } from "@application/dto/auth/response-user.dto";
 import type { UserLoginDTO } from "@application/dto/auth/user-login.dto";
+import { VerifyOtpDTO } from "@application/dto/auth/verify-otp.dto";
 import type { IBaseUseCase } from "@application/use_cases/interfaces/base-usecase.interface";
 import { SuccessMessage } from "@domain/enum/express/messages/success.message";
+import { HttpStatus } from "@domain/enum/express/status-code";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
 import { logger } from "@infrastructure/providers/logger/winston.logger";
@@ -21,6 +27,12 @@ export class AuthController {
         @inject(AUTH_TYPES.RefreshTokenUseCase) private readonly _refreshTokenUseCase: IBaseUseCase<RefreshDTO, RefreshResponseDTO>,
         @inject(AUTH_TYPES.LogoutUseCase) private readonly _logoutUseCase: IBaseUseCase<{ userId: string }, { success: boolean, message: string }>,
         @inject(AUTH_TYPES.VerifyTwoFactorUseCase) private readonly _verifyTwoFactorUseCase: IBaseUseCase<Verify2faDTO, { accessToken: string, refreshToken: string }>,
+        @inject(AUTH_TYPES.ForgotPasswordUseCase) private readonly _forgotPasswordUseCase: IBaseUseCase<ForgotPasswordDTO, BaseResponseDTO>,
+        @inject(AUTH_TYPES.SignupVerifyOtpUseCase) private readonly _verifyOtpUseCase: IBaseUseCase<VerifyOtpDTO, { message: string }>,
+        @inject(AUTH_TYPES.ResendOtpUseCase) private readonly _resendOtpUseCase: IBaseUseCase<{ email: string }, { message: string }>,
+        @inject(AUTH_TYPES.ForgotPasswordOtpVerifyUseCase) private readonly _forgotPassVerifyOtp: IBaseUseCase<VerifyOtpDTO, BaseResponseDTO>,
+        @inject(AUTH_TYPES.ForgotPasswordResendOtpUseCase) private readonly _forgotPasswordResendOtp: IBaseUseCase<ResendOtpDTO, BaseResponseDTO<{ expiresAt: number, resendCount: number }>>,
+        @inject(AUTH_TYPES.ResetPasswordUseCase) private readonly _resetPassword: IBaseUseCase<ResetPasswordDTO, BaseResponseDTO>,
     ) { }
 
     async signup(req: Request, res: Response, next: NextFunction) {
@@ -78,6 +90,26 @@ export class AuthController {
         }
     }
 
+    async verifySignupOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const response = await this._verifyOtpUseCase.execute(req.body);
+            res.status(HttpStatus.OK).json(response);
+        } catch (err) {
+            next(err)
+        }
+    }
+
+
+    async resendOtp(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { email } = req.body;
+            const response = await this._resendOtpUseCase.execute({ email })
+            res.status(HttpStatus.OK).json(response)
+        } catch (err) {
+            next(err)
+        }
+    }
+
     async refresh(req: Request, res: Response, next: NextFunction) {
         try {
             const refreshToken = req.cookies.refreshToken;
@@ -94,6 +126,43 @@ export class AuthController {
             });
             return res.json({ success: true, message: response.message })
 
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async forgotPassword(req: Request, res: Response, next: NextFunction) {
+        try {
+            const response = await this._forgotPasswordUseCase.execute(req.body);
+            return res.json(response);
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async forgotPasswordVeirfyOtp(req: Request, res: Response, next: NextFunction) {
+        try {
+            const response = await this._forgotPassVerifyOtp.execute(req.body);
+            res.status(HttpStatus.OK).json(response);
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async forgotPasswordResendOtp(req: Request, res: Response, next: NextFunction) {
+        try {
+            const response = await this._forgotPasswordResendOtp.execute(req.body);
+            res.status(HttpStatus.OK).json(response)
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async resetPassword(req: Request, res: Response, next: NextFunction) {
+        try {
+            const response = await this._resetPassword.execute(req.body)
+            return res.json(response);
         } catch (error) {
             next(error)
         }

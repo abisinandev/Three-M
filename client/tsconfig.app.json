@@ -39,5 +39,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "src/routes/_auth/profile.tsx"]
+  "include": ["src", "src/routes/user/profile.tsx"]
 }

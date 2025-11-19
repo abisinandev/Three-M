@@ -16,7 +16,7 @@ import { inject, injectable } from "inversify";
 export class UserLoginUseCase implements IBaseUseCase<UserLoginDTO, BaseResponseDTO> {
 
     constructor(
-        @inject(USER_TYPES.IUserRepository) private readonly _userRepository: IUserRepository,
+        @inject(USER_TYPES.UserRepository) private readonly _userRepository: IUserRepository,
         @inject(AUTH_TYPES.IPasswordHashingService) private readonly _passwordHashing: IPasswordHashingService,
         @inject(AUTH_TYPES.TwoFactorAuthSetup) private readonly _twoFactorAuthSetup: ITwoFactorAuthSetup,
     ) { }

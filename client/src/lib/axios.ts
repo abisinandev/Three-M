@@ -64,9 +64,9 @@ api.interceptors.response.use(
         const skipRefreshUrls = [
             "/api/auth/login",
             "/api/auth/signup",
-            "/api/auth//two-factor-verify",
-            "/api/auth/2fa/verify-otp",
-            "/api/auth/2fa/resend-otp"
+            "/api/auth/two-factor-verify",
+            "/api/auth/verify-otp",
+            "/api/auth/resend-otp"
         ];
 
         if (skipRefreshUrls.some(url => originalRequest.url?.includes(url))) {
