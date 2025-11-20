@@ -1,8 +1,4 @@
-export enum Routes {
-    SIGNUP = "/signup",
-    LOGIN = "/login",
-    TWO_FA_VERIFY = "/two-factor-verify",
-    REFRESH = "/refresh",
+export enum Routes{
     PROFILE = "/profile/me",
-    LOGOUT = "/logout"
+    CHANGE_PASSWORD = "/change-password"
 }

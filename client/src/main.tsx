@@ -3,11 +3,18 @@ import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'sonner'
-import { routeTree } from './routeTree.gen'
+import { routeTree } from './routeTree.gen';
 import './index.css'
+import NotFoundPage from '@shared/components/error/NotFoundComponent';
 
-// Create a new router instance
-const router = createRouter({ routeTree })
+
+const router = createRouter({
+  routeTree,
+  defaultNotFoundComponent: NotFoundPage,
+  context: {
+    user: null
+  },
+});
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {

@@ -1,21 +1,18 @@
-import { createRootRouteWithContext, Outlet, useLocation } from '@tanstack/react-router'
+import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import type { UserType } from '@shared/types/user/UserType'
-
-import { Footer } from '@shared/components/LandingPage/Footer'
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 export interface RouterContext {
   user: UserType | null
 }
 
 const RootLayout = () => {
-    const location = useLocation();
-    const hideFooter = location.pathname.includes('/verify-otp');
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Outlet />
-      {!hideFooter && <Footer />}
-    </>
+      <TanStackRouterDevtools />
+    </div>
   )
 }
 

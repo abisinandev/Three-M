@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "sonner";
 
 const api = axios.create({
     baseURL: "/api",
@@ -6,109 +7,114 @@ const api = axios.create({
     headers: {
         "Content-Type": "application/json",
     },
-})
+});
 
 let isRefreshing = false;
-let failedQueue: any[] = [];
+let failedQueue: Array<{
+    resolve: (value?: any) => void;
+    reject: (reason?: any) => void;
+}> = [];
 
-const processQueue = (error: any, token: string | null = null) => {
-    failedQueue.forEach((prom) => {
-        if (error) prom.reject(error);
-        else prom.resolve(token);
+const processQueue = (error: any = null) => {
+    failedQueue.forEach((promise) => {
+        if (error) {
+            promise.reject(error);
+        } else {
+            promise.resolve();
+        }
     });
     failedQueue = [];
 };
 
-
-
-export const getErrorMessage = (error: any) => {
+export const getErrorMessage = (error: any): string => {
     const res = error.response;
     if (!res) return "Network error! Check your internet connection.";
 
-    const msg =
+    return (
         res.data?.message ||
         res.data?.error ||
-        (res.status === 404 && "Requested resource not found.") ||
-        (res.status === 500 && "Server error! Please try again later.") ||
-        "Unexpected error occurred.";
-
-    return msg;
+        (res.status === 404 ? "Requested resource not found." : "") ||
+        (res.status === 500 ? "Server error! Please try again later." : "") ||
+        "Unexpected error occurred."
+    );
 };
 
+const NO_REFRESH_URLS = [
+    "/auth/login",
+    "/auth/signup",
+    "/auth/two-factor-verify",
+    "/auth/verify-otp",
+    "/auth/resend-otp",
+    "/auth/refresh",
+    "/auth/forgot-password",
+    "/auth/reset-password",
+];
 
 
-//Request interceptor
+//REQUEST INTERCEPTOR
 api.interceptors.request.use(
     (config) => {
-        console.log("➡️ Axios Request:", config.url, config.data);
+        if (import.meta.env.DEV) {
+            console.log("➡️ Request:", config.method?.toUpperCase(), config.url);
+        }
         return config;
     },
     (error) => {
-        console.error("❌ Axios Request Error:", error);
+        console.error("❌ Request Error:", error);
         return Promise.reject(error);
     }
 );
 
-
-//Response interceptor  
+//RESPONSE INTERCEPTOR
 api.interceptors.response.use(
     (response) => {
-        console.log("Axios response📌: ", response)
-        return response
+        if (import.meta.env.DEV) {
+            console.log("✅ Response:", response.status, response.config.url);
+        }
+        return response;
     },
     async (error) => {
         const originalRequest = error.config;
-        console.log("Axios error response❌: ", error)
-        console.log("Original Request: ", originalRequest);
 
-        const skipRefreshUrls = [
-            "/api/auth/login",
-            "/api/auth/signup",
-            "/api/auth//two-factor-verify",
-            "/api/auth/2fa/verify-otp",
-            "/api/auth/2fa/resend-otp"
-        ];
+        const shouldSkipRefresh = NO_REFRESH_URLS.some(url =>
+            originalRequest.url?.includes(url)
+        );
 
-        if (skipRefreshUrls.some(url => originalRequest.url?.includes(url))) {
+        if (shouldSkipRefresh || error.response?.status !== 401) {
             return Promise.reject(error);
         }
 
-        if (!error.response || error.response.status !== 401) return Promise.reject(error);
-
-
-        if (error.response.status === 403 && !originalRequest._retry) {
+        if (originalRequest._retry) {
+            toast.error("Session expired. Please login again.");
+            window.dispatchEvent(new CustomEvent('auth:logout'));
             return Promise.reject(error);
         }
 
-        if (error.response.status === 401 ) {
-            originalRequest._retry = true;
+        originalRequest._retry = true;
 
-            if (isRefreshing) {
-                return new Promise(function (resolve, reject) {
-                    failedQueue.push({ resolve, reject });
-                })
-                    .then(() => api(originalRequest))
-                    .catch((err) => Promise.reject(err));
-            }
-
-            isRefreshing = true;
+        if (isRefreshing) {
+            return new Promise((resolve, reject) => {
+                failedQueue.push({ resolve, reject });
+            })
+                .then(() => api(originalRequest))
+                .catch(err => Promise.reject(err));
         }
+
+        isRefreshing = true;
 
         try {
-            await api.post("/auth/refresh", { withCredentials: true });
-            processQueue(null);
+            await api.post("/auth/refresh");
+            processQueue();
             return api(originalRequest);
         } catch (refreshError) {
-            processQueue(refreshError, null);
+            processQueue(refreshError);
+            toast.error("Session expired. Please login again.");
+            window.dispatchEvent(new CustomEvent('auth:logout'));
             return Promise.reject(refreshError);
         } finally {
             isRefreshing = false;
         }
-
-        return Promise.reject(error);
-
     }
 );
-
 
 export default api;

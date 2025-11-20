@@ -30,6 +30,7 @@ export class UserEntity {
   private _isTwoFactorEnabled: boolean;
   private _twoFactorSecret?: string;
   private _qrCodeUrl?: string;
+  private _createdAt?: Date;
 
   private constructor(props: {
     id?: string;
@@ -52,6 +53,7 @@ export class UserEntity {
     isTwoFactorEnabled: boolean;
     twoFactorSecret?: string;
     qrCodeUrl?: string;
+    _createdAt?: Date
   }) {
 
     if (!props.fullName || props.fullName.length < 2) {
@@ -78,6 +80,7 @@ export class UserEntity {
     this._isTwoFactorEnabled = props.isTwoFactorEnabled;
     this._twoFactorSecret = props.twoFactorSecret;
     this._qrCodeUrl = props.qrCodeUrl;
+    this._createdAt = props._createdAt;
   }
 
   static create(data: {
@@ -128,6 +131,7 @@ export class UserEntity {
     isTwoFactorEnabled: boolean;
     twoFactorSecret?: string;
     qrCodeUrl?: string;
+    createdAt?: Date;
   }): UserEntity {
     return new UserEntity({
       id: props.id,
@@ -150,6 +154,7 @@ export class UserEntity {
       isTwoFactorEnabled: props.isTwoFactorEnabled,
       twoFactorSecret: props.twoFactorSecret,
       qrCodeUrl: props.qrCodeUrl,
+      _createdAt: props.createdAt,
     });
   }
 
@@ -173,7 +178,8 @@ export class UserEntity {
   get kycId() { return this._kycId };
   get twoFactorSecret() { return this._twoFactorSecret };
   get qrCodeUrl() { return this._qrCodeUrl };
-
+  get createdAt() { return this._createdAt };
+  
   changePassword(newPassword: string): void {
     this._password = Password.create(newPassword);
   }

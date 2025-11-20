@@ -15,7 +15,7 @@ import { env } from "@presentation/express/utils/constants/env.constants";
 @injectable()
 export class VerifyTwoFactorUseCase implements IBaseUseCase<Verify2faDTO, { accessToken: string, refreshToken: string }> {
     constructor(
-        @inject(USER_TYPES.IUserRepository) private readonly _userRepository: IUserRepository,
+        @inject(USER_TYPES.UserRepository) private readonly _userRepository: IUserRepository,
         @inject(AUTH_TYPES.IJwtProvider) private readonly _jwtProvider: IJwtProvider,
         @inject(AUTH_TYPES.TwoFactorAuthVerify) private readonly _twoFactorAuthVerify: ITwoFactorAuthVerify,
     ) { }

@@ -27,7 +27,8 @@ export const toDomain = (userDoc: UserDocument): UserEntity => {
     walletBalance: userDoc.walletBalance ?? 0,
     isTwoFactorEnabled: userDoc.isTwoFactorEnabled ?? false,
     twoFactorSecret: userDoc.twoFactorSecret,
-    qrCodeUrl: userDoc.qrCodeUrl
+    qrCodeUrl: userDoc.qrCodeUrl,
+    createdAt: userDoc.createdAt,
   });
 }
 

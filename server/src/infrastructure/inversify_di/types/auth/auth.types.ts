@@ -1,7 +1,5 @@
-
 export const AUTH_TYPES = {
   // Controllers
-  OtpController: Symbol.for("OtpController"),
   AuthController: Symbol.for("AuthController"),
 
   // Interfaces
@@ -10,11 +8,14 @@ export const AUTH_TYPES = {
   IJwtProvider: Symbol.for('IJwtProvider'),
 
   // Use Cases
-  VerifyOtpUseCase: Symbol.for("VerifyOtpUseCase"),
+  SignupVerifyOtpUseCase: Symbol.for("SignupVerifyOtpUseCase"),
   ResendOtpUseCase: Symbol.for("ResendOtpUseCase"),
   RefreshTokenUseCase: Symbol.for("RefreshTokenUseCase"),
   LogoutUseCase: Symbol.for("LogoutUseCase"),
-
+  ForgotPasswordUseCase: Symbol.for("ForgotPasswordUseCase"),
+  ForgotPasswordOtpVerifyUseCase: Symbol.for("ForgotPasswordOtpVerifyUseCase"),
+  ForgotPasswordResendOtpUseCase: Symbol.for("ForgotPasswordResendOtpUseCase"),
+  ResetPasswordUseCase:Symbol.for("ResetPasswordUseCase"),
   //Providers
   TwoFactorAuthSetup: Symbol.for("TwoFactorAuthSetup"),
   TwoFactorAuthVerify: Symbol.for("TwoFactorAuthVerify"),

@@ -15,7 +15,7 @@ import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 export class RefreshTokenUseCase implements IBaseUseCase<RefreshDTO, RefreshResponseDTO> {
     constructor(
         @inject(AUTH_TYPES.IJwtProvider) private readonly _jwtProvider: IJwtProvider,
-        @inject(USER_TYPES.IUserRepository) private readonly _userRepository: IUserRepository,
+        @inject(USER_TYPES.UserRepository) private readonly _userRepository: IUserRepository,
     ) { }
     async execute(req: RefreshDTO): Promise<RefreshResponseDTO> {
 

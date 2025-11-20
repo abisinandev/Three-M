@@ -8,7 +8,15 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      // === FONT FAMILY - ZERODHA EXACT ===
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'], // Zerodha uses Inter
+        inter: ['Inter', 'system-ui', 'sans-serif'],
+      },
+
+      // === COLORS - Keep yours + Add Zerodha precision ===
       colors: {
+        // Your existing (keep all!)
         'deep-charcoal': { DEFAULT: '#000000', dark: '#1B1B1B', light: '#F9FAFB' },
         'card-dark': { DEFAULT: '#2D3748', dark: '#2D3748', light: '#FFFFFF' },
         'near-black': { DEFAULT: '#1A202C', dark: '#1A202C', light: '#E5E7EB' },
@@ -18,7 +26,51 @@ export default {
         'text-primary': { DEFAULT: '#E2E8F0', dark: '#E2E8F0', light: '#111827' },
         'text-secondary': { DEFAULT: '#A0AEC0', dark: '#A0AEC0', light: '#6B7280' },
         'border-gray-dark': '#393939',
+
+        // === NEW: Zerodha-Exact Shades (Safe to Add) ===
+        border: {
+          DEFAULT: '#2D3748',     // Card borders
+          light: '#E2E8F0',       // Light mode
+          dark: '#2D3748',
+        },
+        gray: {
+          50: '#F9FAFB',
+          100: '#F3F4F6',
+          200: '#E5E7EB',
+          300: '#D1D5DB',
+          400: '#9CA3AF',
+          500: '#6B7280',   // Labels (Zerodha's main gray)
+          600: '#4B5563',
+          700: '#374151',
+          800: '#1F2937',
+          900: '#111827',
+        },
       },
+
+      // === FONT WEIGHTS - Zerodha Uses These ===
+      fontWeight: {
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',
+      },
+
+      spacing: {
+        '4.5': '1.125rem',  // For py-4.5, px-4.5 etc.
+        '5.5': '1.375rem',
+        '7': '1.75rem',
+        '9': '2.25rem',
+      },
+
+      // === BORDER RADIUS - Zerodha Style ===
+      borderRadius: {
+        lg: '0.5rem',    // Cards
+        xl: '0.75rem',   // Modals
+        '2xl': '1rem',   // Larger cards
+        '3xl': '1.5rem', // Profile header
+      },
+
+      // === YOUR ANIMATIONS - Keep 100% ===
       keyframes: {
         'slide-down': {
           '0%': { opacity: '0', transform: 'translateY(-10%)' },
@@ -33,10 +85,11 @@ export default {
         'slide-down': 'slide-down 0.25s ease-out',
         'draw-line': 'draw-line 2s ease-out forwards',
       },
+
       perspective: {
         '1000': '1000px',
       },
     },
   },
   plugins: [],
-};
+} 

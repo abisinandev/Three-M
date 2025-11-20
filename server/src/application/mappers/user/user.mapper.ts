@@ -25,5 +25,6 @@ export function toUserResponse(entity: UserEntity): ResponseUserDTO {
     isVerified: entity.isVerified ?? false,
     isBlocked: entity.isBlocked ?? false,
     subscriptionStatus: entity.subscriptionStatus ?? SubscripionPlan.FREE,
+    createdAt: entity.createdAt?.toISOString() ?? null,
   };
 }

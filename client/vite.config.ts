@@ -8,6 +8,8 @@ export default defineConfig({
     tanstackRouter({
       target: 'react',
       autoCodeSplitting: true,
+      routesDirectory: './src/routes',   
+      generatedRouteTree: './src/routeTree.gen.ts',  
     }),
     react()
   ],
@@ -32,7 +34,7 @@ export default defineConfig({
       "@utils": path.resolve(__dirname, "src/utils"),
       "@hooks": path.resolve(__dirname, "src/hooks"),
       "@configs": path.resolve(__dirname, "src/configs"),
-      "@lib":path.resolve(__dirname,"src/lib"),
+      "@lib": path.resolve(__dirname, "src/lib"),
     },
   },
 })

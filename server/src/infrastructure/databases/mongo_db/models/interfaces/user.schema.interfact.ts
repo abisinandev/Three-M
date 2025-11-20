@@ -30,4 +30,5 @@ export interface IUserSchema {
   isTwoFactorEnabled?: boolean;
   twoFactorSecret?: string;
   qrCodeUrl?: string;
+  createdAt?: Date;
 }
