@@ -85,18 +85,25 @@ export const SignupPage: React.FC = () => {
         signupMutation.mutate(result.data, {
             onSuccess: (res: any) => {
                 if (res.data) {
-                    setData(formData.email, Date.now());
-                    navigate({
-                        to: "/auth/signup/verify-otp",
-                        replace:true
-                    });
+                    const { clearData, setData } = useAuthStore.getState();
+                    clearData();
+
+                    const expirationTime = Date.now() + 5 * 60 * 1000;
+                    setData(formData.email, expirationTime);
+
                     toast.success(res?.data.message);
+
+                    setTimeout(() => {
+                        navigate({
+                            to: "/auth/signup/verify-otp",
+                            replace: true,
+                        });
+                    }, 50);
                 }
             },
             onError: (err: any) => toast.error(err.response?.data?.message || "Verification failed"),
         });
     };
-
 
     return (
         <div className="bg-deep-charcoal min-h-screen flex items-center justify-center px-4 text-text-primary">

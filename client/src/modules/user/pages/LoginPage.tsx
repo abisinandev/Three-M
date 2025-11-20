@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
-import { useLogin } from "../hooks/useLogin";
 import type { LoginType } from "@shared/types/user/LoginTypes";
 import z from "zod";
 import { LoginValidationSchema } from "@utils/validation/zodFormValidation";
@@ -9,10 +8,12 @@ import { useVerify2FA } from "@shared/services/user/useVerify2FA";
 import { LoginForm } from "../components/LoginComponent";
 import { RightSidePanel } from "@shared/components/auth/RightSidePanel";
 import { TwoFAModal } from "@shared/components/modals/TwoFaModal";
+import { useMutation } from "@tanstack/react-query";
+import api from "@lib/axios";
+import { LOGIN_API } from "@shared/contants";
 
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
-    const loginMutation = useLogin();
     const verify2faMutation = useVerify2FA();
 
     const [formData, setFormData] = useState<LoginType>({ email: "", password: "" });
@@ -36,6 +37,18 @@ export const LoginPage: React.FC = () => {
         }
     };
 
+    const loginMutation = useMutation({
+        mutationFn: async () => await api.post(LOGIN_API,
+            { email: formData.email, password: formData.password }
+        ),
+        onSuccess: (res) => {
+            setQrCodeUrl(res.data.data.qrCode);
+            setIs2faModalOpen(true);
+            toast.info("Scan QR Code and verify your 2FA");
+        },
+        onError: (err: any) => toast.error(err.response?.data?.message || "Login failed"),
+    })
+
     const handleLogin = () => {
         const result = LoginValidationSchema.safeParse(formData);
         if (!result.success) {
@@ -48,14 +61,7 @@ export const LoginPage: React.FC = () => {
             return;
         }
 
-        loginMutation.mutate(result.data, {
-            onSuccess: (res) => {
-                setQrCodeUrl(res.data.qrCode);
-                setIs2faModalOpen(true);
-                toast.info("Scan QR Code and verify your 2FA");
-            },
-            onError: (err: any) => toast.error(err.response?.data?.message || "Login failed"),
-        });
+        loginMutation.mutate();
     };
 
     const handleVerify2FA = (code: string) => {

@@ -1,4 +1,4 @@
-import { createRootRouteWithContext, Outlet, useMatches } from '@tanstack/react-router'
+import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import type { UserType } from '@shared/types/user/UserType'
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 

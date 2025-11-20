@@ -1,7 +1,7 @@
-import ProfileComponent from '@modules/user/components/ProfileComponent'
+import UserProfilePage from '@modules/user/pages/UserProfilePage'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/user/profile')({
-  component: ProfileComponent,
+  component: UserProfilePage,
 })
  

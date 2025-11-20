@@ -9,9 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UserRouteRouteImport } from './routes/user/route'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UserProfileRouteImport } from './routes/user/profile'
+import { Route as UserDashboardRouteImport } from './routes/user/dashboard'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthSignupIndexRouteImport } from './routes/auth/signup/index'
 import { Route as AuthResetPasswordIndexRouteImport } from './routes/auth/reset-password/index'
@@ -19,6 +21,11 @@ import { Route as AuthForgotPasswordIndexRouteImport } from './routes/auth/forgo
 import { Route as AuthSignupVerifyOtpRouteImport } from './routes/auth/signup/verify-otp'
 import { Route as AuthForgotPasswordVerifyOtpRouteImport } from './routes/auth/forgot-password/verify-otp'
 
+const UserRouteRoute = UserRouteRouteImport.update({
+  id: '/user',
+  path: '/user',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -30,9 +37,14 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const UserProfileRoute = UserProfileRouteImport.update({
-  id: '/user/profile',
-  path: '/user/profile',
-  getParentRoute: () => rootRouteImport,
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => UserRouteRoute,
+} as any)
+const UserDashboardRoute = UserDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => UserRouteRoute,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
@@ -69,7 +81,9 @@ const AuthForgotPasswordVerifyOtpRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/user': typeof UserRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
+  '/user/dashboard': typeof UserDashboardRoute
   '/user/profile': typeof UserProfileRoute
   '/auth/forgot-password/verify-otp': typeof AuthForgotPasswordVerifyOtpRoute
   '/auth/signup/verify-otp': typeof AuthSignupVerifyOtpRoute
@@ -80,7 +94,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/user': typeof UserRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
+  '/user/dashboard': typeof UserDashboardRoute
   '/user/profile': typeof UserProfileRoute
   '/auth/forgot-password/verify-otp': typeof AuthForgotPasswordVerifyOtpRoute
   '/auth/signup/verify-otp': typeof AuthSignupVerifyOtpRoute
@@ -92,7 +108,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/user': typeof UserRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
+  '/user/dashboard': typeof UserDashboardRoute
   '/user/profile': typeof UserProfileRoute
   '/auth/forgot-password/verify-otp': typeof AuthForgotPasswordVerifyOtpRoute
   '/auth/signup/verify-otp': typeof AuthSignupVerifyOtpRoute
@@ -105,7 +123,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/user'
     | '/auth/login'
+    | '/user/dashboard'
     | '/user/profile'
     | '/auth/forgot-password/verify-otp'
     | '/auth/signup/verify-otp'
@@ -116,7 +136,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/user'
     | '/auth/login'
+    | '/user/dashboard'
     | '/user/profile'
     | '/auth/forgot-password/verify-otp'
     | '/auth/signup/verify-otp'
@@ -127,7 +149,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/auth'
+    | '/user'
     | '/auth/login'
+    | '/user/dashboard'
     | '/user/profile'
     | '/auth/forgot-password/verify-otp'
     | '/auth/signup/verify-otp'
@@ -139,11 +163,18 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  UserProfileRoute: typeof UserProfileRoute
+  UserRouteRoute: typeof UserRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/user': {
+      id: '/user'
+      path: '/user'
+      fullPath: '/user'
+      preLoaderRoute: typeof UserRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -160,10 +191,17 @@ declare module '@tanstack/react-router' {
     }
     '/user/profile': {
       id: '/user/profile'
-      path: '/user/profile'
+      path: '/profile'
       fullPath: '/user/profile'
       preLoaderRoute: typeof UserProfileRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof UserRouteRoute
+    }
+    '/user/dashboard': {
+      id: '/user/dashboard'
+      path: '/dashboard'
+      fullPath: '/user/dashboard'
+      preLoaderRoute: typeof UserDashboardRouteImport
+      parentRoute: typeof UserRouteRoute
     }
     '/auth/login': {
       id: '/auth/login'
@@ -232,10 +270,24 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
+interface UserRouteRouteChildren {
+  UserDashboardRoute: typeof UserDashboardRoute
+  UserProfileRoute: typeof UserProfileRoute
+}
+
+const UserRouteRouteChildren: UserRouteRouteChildren = {
+  UserDashboardRoute: UserDashboardRoute,
+  UserProfileRoute: UserProfileRoute,
+}
+
+const UserRouteRouteWithChildren = UserRouteRoute._addFileChildren(
+  UserRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  UserProfileRoute: UserProfileRoute,
+  UserRouteRoute: UserRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

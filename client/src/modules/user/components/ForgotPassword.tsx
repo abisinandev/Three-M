@@ -2,18 +2,36 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@shared/components/auth/ButtonField";
 import { InputField } from "@shared/components/auth/InputFields";
-import { useForgotPassword } from "../hooks/useForgotPassword";
 import { useNavigate } from "@tanstack/react-router";
 import { useAuthStore } from "@stores/user/UserAuthStore";
-
+import { useMutation } from "@tanstack/react-query";
+import api from "@lib/axios";
+import { FORGOT_PASSWORD } from "@shared/contants";
 
 const ForgotPasswordForm: React.FC = () => {
   const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const forgotPasswordMutation = useForgotPassword();
-  const setData = useAuthStore(s => s.setData);
+  const setData = useAuthStore((s) => s.setData);
 
   const navigate = useNavigate();
+
+  const forgotPasswordMutation = useMutation({
+    mutationFn: async () => await api.post(FORGOT_PASSWORD, { email }),
+
+    onSuccess: (res) => {
+      toast.success(`${res.data.message} 🎉`);
+      setData(email, Date.now());
+
+      navigate({
+        to: "/auth/forgot-password/verify-otp",
+        replace: true,
+      });
+    },
+
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || "Forgot password failed");
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -22,32 +40,11 @@ const ForgotPasswordForm: React.FC = () => {
       return;
     }
 
-    setIsLoading(true);
-
-    forgotPasswordMutation.mutate(
-      { email },
-      {
-        onSuccess: (res) => {
-          toast.success(`${res.data.message} 🎉`);
-          setData(email, Date.now(), res.data.token);
-          navigate({
-            to: "/auth/forgot-password/verify-otp",
-            replace: true,
-          })
-          setIsLoading(false);
-
-        },
-        onError: (err: any) => {
-          toast.error(err.response?.data?.message || "Forgot password failed");
-          setIsLoading(false);
-        },
-      }
-    );
+    forgotPasswordMutation.mutate();
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-
       <InputField
         label="Email Address"
         name="email"
@@ -58,8 +55,8 @@ const ForgotPasswordForm: React.FC = () => {
       />
 
       <Button
-        text={isLoading ? "Sending..." : "Send Reset OTP"}
-        loading={isLoading}
+        text={forgotPasswordMutation.isPending ? "Sending..." : "Send Reset OTP"}
+        loading={forgotPasswordMutation.isPending}
         type="submit"
       />
 
@@ -68,11 +65,11 @@ const ForgotPasswordForm: React.FC = () => {
         <button
           type="button"
           className="text-teal-green font-medium hover:underline"
+          onClick={() => navigate({ to: "/auth/login" })}
         >
           Login here
         </button>
       </p>
-
     </form>
   );
 };

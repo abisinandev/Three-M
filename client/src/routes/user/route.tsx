@@ -1,0 +1,152 @@
+import { createFileRoute, Outlet, Link, useNavigate } from '@tanstack/react-router';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
+import api from '@lib/axios';
+import { useUserStore } from '@stores/user/UserStore';
+import { Wallet, ChevronDown, LogOut, User, Menu } from 'lucide-react';
+import { Footer } from '@shared/components/LandingPage/Footer';
+
+function UserLayout() {
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const { user, setUser, logout } = useUserStore();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const response = await api.get('/user/profile/me', { withCredentials: true });
+                setUser(response.data.data);
+            } catch (error) {
+                navigate({ to: '/auth/login', replace: true });
+            }
+        };
+        fetchProfile();
+    }, [setUser, navigate]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleLogout = async () => {
+        if (window.confirm('Are you sure you want to logout?')) {
+            try {
+                await api.post('/auth/logout');
+                logout();
+                navigate({ to: '/auth/login', replace: true });
+                toast.success('Logged out successfully');
+            } catch (error) {
+                toast.error('Logout failed');
+            }
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-black text-white font-inter antialiased">
+            <header className="bg-[#0f0f0f] border-b border-[#1f1f1f]">
+                <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between text-sm">
+
+                    {/* Logo */}
+                    <Link to="/user/dashboard" className="flex items-center">
+                        <h1 className="text-xl font-bold tracking-tighter">
+                            <span className="text-white">three</span>
+                            <span className="text-[#22C55E]">M</span>
+                        </h1>
+                    </Link>
+
+                    <nav className="hidden lg:flex items-center gap-8 font-medium text-gray-400">
+                        {[
+                            { to: '/user/dashboard', label: 'Dashboard' },
+                            { to: '/user/expenses', label: 'Expense tracker' },
+                            { to: '/user/wallet', label: 'Wallet' },
+                            { to: '/user/mutual-funds', label: 'Funds' },
+                            { to: '/user/sip', label: 'SIP' },
+                            { to: '/user/algo', label: 'Algo trading' },
+                            { to: '/user/portfolio', label: 'Portfolio' },
+                            { to: '/user/news', label: "News" },
+                            {to:'/user/ai-bot',label:"AI bot"}
+                        ].map((item) => (
+                            <Link
+                                key={item.to}
+                                to={item.to}
+                                className="relative py-1 text-xs tracking-wider transition-colors
+                                data-[status=active]:text-white
+                                data-[status=active]:after:absolute data-[status=active]:after:bottom-0 data-[status=active]:after:left-0 data-[status=active]:after:w-full data-[status=active]:after:h-0.5 data-[status=active]:after:bg-[#22C55E]
+                                hover:text-gray-200"
+                            >
+                                {item.label}
+                            </Link>
+                        ))}
+                    </nav>
+
+                    <div className="flex items-center gap-4">
+
+                        <div className="hidden sm:flex items-center gap-2 bg-[#171717] px-3 py-1.5 rounded-full border border-[#2a2a2a] text-xs font-medium">
+                            <Wallet className="w-3.5 h-3.5 text-[#22C55E]" />
+                            <span>₹1,24,500</span>
+                        </div>
+
+                        <div className="relative" ref={dropdownRef}>
+                            <button
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                className="flex items-center gap-2.5 px-3 py-1.5 rounded-lg hover:bg-[#1a1a1a] transition text-xs font-medium tracking-wide border border-transparent hover:border-[#333]"
+                            >
+                                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#22C55E] to-[#16a34a] flex items-center justify-center text-xs font-bold text-black">
+                                    {user?.fullName ? user.fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : 'U'}
+                                </div>
+                                <span className="text-gray-300">
+                                    {user?.userCode || user?.fullName?.split(' ')[0] || 'User'}
+                                </span>
+                                <ChevronDown size={14} className={`text-gray-500 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                            </button>
+
+                            {/* Dropdown Menu */}
+                            {isDropdownOpen && (
+                                <div className="absolute right-0 mt-2 w-48 bg-[#111] rounded-lg shadow-2xl border border-[#2a2a2a] overflow-hidden z-50">
+                                    <div className="py-1">
+                                        <Link
+                                            to="/user/profile"
+                                            onClick={() => setIsDropdownOpen(false)}
+                                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-[#1a1a1a] transition"
+                                        >
+                                            <User size={16} />
+                                            Profile
+                                        </Link>
+                                        <div className="h-px bg-[#2a2a2a]" />
+                                        <button
+                                            onClick={handleLogout}
+                                            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-[#1a1a1a] transition"
+                                        >
+                                            <LogOut size={16} />
+                                            Logout
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <button className="lg:hidden">
+                            <Menu size={20} className="text-gray-400" />
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <main className="max-w-7xl mx-auto px-4 py-6">
+                <Outlet />
+            </main>
+
+            <Footer />
+        </div>
+    );
+}
+
+export const Route = createFileRoute('/user')({
+    component: UserLayout,
+});

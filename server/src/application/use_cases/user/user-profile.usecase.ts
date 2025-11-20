@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
 import type { ResponseUserDTO } from "@application/dto/auth/response-user.dto";
 import type { IBaseUseCase } from "../interfaces/base-usecase.interface";
-import type{ BaseResponseDTO } from "@application/dto/auth/base-response.dto";
+import type { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
 import { SuccessMessage } from "@domain/enum/express/messages/success.message";
 import { HttpStatus } from "@domain/enum/express/status-code";
 
@@ -29,7 +29,8 @@ export class GetUserProfileUseCase implements IBaseUseCase<{ userId: string }, B
         isBlocked: user?.isBlocked,
         isEmailVerified: user?.isEmailVerified,
         isVerified: user?.isVerified,
-        subscriptionStatus: user?.subscriptionStatus
+        subscriptionStatus: user?.subscriptionStatus,
+        createdAt: user?.createdAt?.toLocaleDateString() as string,
       }
     };
   }

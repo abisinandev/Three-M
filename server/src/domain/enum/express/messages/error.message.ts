@@ -18,4 +18,5 @@ export enum ErrorMessage {
   TWO_FA_NOT_CONFIGURED = '2FA not configured for this user',
   RESET_TOKEN_EXPIRED = "Reset token expired",
   RESET_TOKEN_INVALID = "RESET TOKEN IS INVALID",
+  INVALID_PASSWORD = "Invalid old password"
 }

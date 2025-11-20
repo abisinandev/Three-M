@@ -8,4 +8,5 @@ export type ResponseUserDTO = {
   isVerified?: boolean;
   isBlocked?: boolean;
   subscriptionStatus?: string;
+  createdAt: string | null;
 };

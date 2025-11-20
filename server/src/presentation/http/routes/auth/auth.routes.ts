@@ -3,7 +3,7 @@ import { CreateUserDTO } from "@application/dto/auth/create-user.dto";
 import { UserLoginDTO } from "@application/dto/auth/user-login.dto";
 import { container } from "@infrastructure/inversify_di/inversify.di";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import { Routes } from "@presentation/express/utils/constants/user-routes.constants";
+import { Routes } from "@presentation/express/utils/constants/auth-routes.constants";
 import { AuthMiddleware } from "@presentation/express/middlewares/auth.middlware";
 import { validateDTO } from "@presentation/express/middlewares/validation-dto.middlewares";
 import type { AuthController } from "@presentation/http/controllers/auth/auth.controller";
