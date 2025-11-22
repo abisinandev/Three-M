@@ -1,6 +1,6 @@
 import { injectable, inject } from "inversify";
-import crypto from "crypto";
-import { IBaseUseCase } from "../interfaces/base-usecase.interface";
+import crypto from "node:crypto";
+import type { IBaseUseCase } from "../interfaces/base-usecase.interface";
 import type { VerifyOtpDTO } from "@application/dto/auth/verify-otp.dto";
 import type { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
 import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";

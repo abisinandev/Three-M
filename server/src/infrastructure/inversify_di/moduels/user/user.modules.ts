@@ -11,7 +11,7 @@ import type { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
 import type { UserLoginDTO } from "@application/dto/auth/user-login.dto";
 import type { CreateUserDTO } from "@application/dto/auth/create-user.dto";
 import type { ResponseUserDTO } from "@application/dto/auth/response-user.dto";
-import { ChangePasswordDTO } from "@application/dto/user/change-password.dto";
+import type { ChangePasswordDTO } from "@application/dto/user/change-password.dto";
 import { ChangePasswordUseCase } from "@application/use_cases/user/change-password.usecase";
 
 export const UserModule = new ContainerModule(({ bind }) => {

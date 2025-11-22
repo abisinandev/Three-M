@@ -1,13 +1,13 @@
 import type { IAdminAuthUseCase } from "@application/use_cases/interfaces/admin/admin-auth-usecase.interface";
 import type { IAdminAuthVerifyOtpUseCase } from "@application/use_cases/interfaces/admin/admin-auth-verify-otp.interface";
-import { IAdminLogoutUseCase } from "@application/use_cases/interfaces/admin/admin-logout.interface";
+import type { IAdminLogoutUseCase } from "@application/use_cases/interfaces/admin/admin-logout.interface";
 import type { IRefreshTokenUseCase } from "@application/use_cases/interfaces/admin/admin-refresh-token.interface";
 import { SuccessMessage } from "@domain/enum/express/messages/success.message";
 import { HttpStatus } from "@domain/enum/express/status-code";
 import { ADMIN_TYPES } from "@infrastructure/inversify_di/types/admin/admin.types";
 import { ValidationError } from "@presentation/express/utils/error-handling";
 import { HttpStatusCode } from "axios";
-import { type NextFunction, type Request, type Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 
 @injectable()

@@ -1,15 +1,15 @@
 import { inject, injectable } from "inversify";
-import { IRefreshTokenUseCase } from "../interfaces/admin/admin-refresh-token.interface";
-import { RefreshResponseDTO } from "@application/dto/auth/refresh-response.dto";
-import { RefreshDTO } from "@application/dto/auth/refresh.dto";
+import type { IRefreshTokenUseCase } from "../interfaces/admin/admin-refresh-token.interface";
+import type { RefreshResponseDTO } from "@application/dto/auth/refresh-response.dto";
+import type { RefreshDTO } from "@application/dto/auth/refresh.dto";
 import { NotFoundError, ValidationError } from "@presentation/express/utils/error-handling";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import { IJwtProvider } from "@application/interfaces/services/auth/jwt.provider.interface";
+import type { IJwtProvider } from "@application/interfaces/services/auth/jwt.provider.interface";
 import { ADMIN_TYPES } from "@infrastructure/inversify_di/types/admin/admin.types";
-import { IAdminRepository } from "@application/interfaces/repositories/admin.repository.interface";
+import type { IAdminRepository } from "@application/interfaces/repositories/admin.repository.interface";
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
-import { JwtPayload } from "@domain/types/jwt-payload.type";
+import type { JwtPayload } from "@domain/types/jwt-payload.type";
 
 @injectable()
 export class AdminRefreshTokenUseCase implements IRefreshTokenUseCase {

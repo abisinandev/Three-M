@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsString, ValidateIf, MinLength } from "class-validator";
+import { IsEmail, IsString, ValidateIf, MinLength } from "class-validator";
 
 export class AdminAuthDTO {
 

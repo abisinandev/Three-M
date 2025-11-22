@@ -11,7 +11,7 @@ import type { JwtPayload } from "@domain/types/jwt-payload.type";
 import type { IJwtProvider } from "@application/interfaces/services/auth/jwt.provider.interface";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 import { env } from "@presentation/express/utils/constants/env.constants";
-import { VerifyOtpResponseDTO } from "@application/dto/auth/verify-otp-response.dto";
+import type { VerifyOtpResponseDTO } from "@application/dto/auth/verify-otp-response.dto";
 
 @injectable()
 export class VerifyTwoFactorUseCase implements IBaseUseCase<Verify2faDTO, { accessToken: string, refreshToken: string }> {

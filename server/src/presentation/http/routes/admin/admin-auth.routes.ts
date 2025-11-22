@@ -5,8 +5,8 @@ import { ADMIN_TYPES } from "@infrastructure/inversify_di/types/admin/admin.type
 import { AdminAuthMiddleware } from "@presentation/express/middlewares/admin-auth.middleware";
 import { validateDTO } from "@presentation/express/middlewares/validation-dto.middlewares";
 import { ROUTES } from "@presentation/express/utils/constants/admin-routes.constants";
-import { AdminAuthController } from "@presentation/http/controllers/admin/admin-auth.controller";
-import { AdminController } from "@presentation/http/controllers/admin/admin.controller";
+import type { AdminAuthController } from "@presentation/http/controllers/admin/admin-auth.controller";
+import type { AdminController } from "@presentation/http/controllers/admin/admin.controller";
 import { Router } from "express";
 
 const router = Router();

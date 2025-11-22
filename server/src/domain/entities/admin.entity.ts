@@ -1,4 +1,4 @@
-import { Role } from "@domain/enum/users/user-role.enum";
+import type { Role } from "@domain/enum/users/user-role.enum";
 import { Email } from "@domain/value-objects/user/email.vo";
 import { Password } from "@domain/value-objects/user/password.vo";
 

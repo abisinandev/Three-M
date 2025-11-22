@@ -1,15 +1,15 @@
-import { ResetPasswordDTO } from "@application/dto/auth/reset-password";
-import { IBaseUseCase } from "../interfaces/base-usecase.interface";
-import { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
+import type { ResetPasswordDTO } from "@application/dto/auth/reset-password";
+import type { IBaseUseCase } from "../interfaces/base-usecase.interface";
+import type { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
 import { inject, injectable } from "inversify";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
-import { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
+import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
 import { NotFoundError, ValidationError } from "@presentation/express/utils/error-handling";
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import { IPasswordHashingService } from "@application/interfaces/services/auth/password-hashing.service.interface";
+import type { IPasswordHashingService } from "@application/interfaces/services/auth/password-hashing.service.interface";
 import { SuccessMessage } from "@domain/enum/express/messages/success.message";
 import { HttpStatus } from "@domain/enum/express/status-code";
 

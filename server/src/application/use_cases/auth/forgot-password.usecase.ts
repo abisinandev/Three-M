@@ -1,12 +1,12 @@
-import { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
-import { IBaseUseCase } from "../interfaces/base-usecase.interface";
+import type { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
+import type { IBaseUseCase } from "../interfaces/base-usecase.interface";
 import { inject, injectable } from "inversify";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
-import { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
+import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
 import { SuccessMessage } from "@domain/enum/express/messages/success.message";
 import { NotFoundError } from "@presentation/express/utils/error-handling";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
+import type { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
 import { generateOtp } from "@shared/utils/otp-generator";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 
@@ -28,7 +28,7 @@ export class ForgotPasswordUseCase implements IBaseUseCase<{ email: string }, Ba
         const expiryTime = 5 * 60;
         const expiresAt = Date.now() + expiryTime * 1000;
         const now = Date.now();
-        let resendCount = 0;
+        const resendCount = 0;
 
         await redisClient.hmset(redisKey, {
             email: req.email,

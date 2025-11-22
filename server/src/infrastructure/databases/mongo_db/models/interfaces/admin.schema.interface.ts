@@ -1,4 +1,4 @@
-import { Role } from "@domain/enum/users/user-role.enum";
+import type { Role } from "@domain/enum/users/user-role.enum";
 
 export interface IAdminSchema {
     _id: string;

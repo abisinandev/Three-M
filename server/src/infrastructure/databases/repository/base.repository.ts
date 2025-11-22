@@ -1,5 +1,5 @@
 import type { IBaseRepository } from "@application/interfaces/repositories/base-repository.interface";
-import { Model, UpdateQuery } from "mongoose";
+import type { Model, UpdateQuery } from "mongoose";
 
 export abstract class BaseRepository<TDomain, TDocument> implements IBaseRepository<TDomain> {
 

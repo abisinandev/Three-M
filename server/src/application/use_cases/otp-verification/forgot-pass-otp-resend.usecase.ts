@@ -1,10 +1,10 @@
 import { inject, injectable } from "inversify";
-import { IBaseUseCase } from "../interfaces/base-usecase.interface";
-import { ResendOtpDTO } from "@application/dto/auth/resend-otp.dto";
-import { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
+import type { IBaseUseCase } from "../interfaces/base-usecase.interface";
+import type { ResendOtpDTO } from "@application/dto/auth/resend-otp.dto";
+import type { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
-import { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
-import { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
+import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
+import type { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
 import { HttpStatus } from "@domain/enum/express/status-code";
 import { NotFoundError } from "@presentation/express/utils/error-handling";
@@ -34,7 +34,7 @@ export class ForgotPasswordResendOtpUseCase implements IBaseUseCase<ResendOtpDTO
         const now = Date.now();
         let resendCount = 0;
 
-        if (otpData && otpData.otp) {
+        if (otpData?.otp) {
 
             if (otpData.lastResendAt && (now - Number(otpData.lastResendAt)) < 30000) {
                 throw new AppError("Please wait 30 seconds before requesting another OTP", HttpStatus.TOO_MANY_REQUESTS);

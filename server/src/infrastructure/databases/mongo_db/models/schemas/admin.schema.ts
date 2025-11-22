@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { IAdminSchema } from "../interfaces/admin.schema.interface";
+import type { IAdminSchema } from "../interfaces/admin.schema.interface";
 import { Role } from "@domain/enum/users/user-role.enum";
 
 export type AdminDocument = Document & IAdminSchema;

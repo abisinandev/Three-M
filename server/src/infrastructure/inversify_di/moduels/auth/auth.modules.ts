@@ -23,11 +23,11 @@ import type { VerifyOtpDTO } from "@application/dto/auth/verify-otp.dto";
 import type { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
 import { VerifyTwoFactorUseCase } from "@application/use_cases/auth/verify-2fa.usecase";
 import { ForgotPasswordUseCase } from "@application/use_cases/auth/forgot-password.usecase";
-import { ForgotPasswordDTO } from "@application/dto/auth/forgot-password";
+import type { ForgotPasswordDTO } from "@application/dto/auth/forgot-password";
 import { ForgotPasswordOtpVerifyUseCase } from "@application/use_cases/otp-verification/forgot-pass-otp-verify.usecase";
-import { ResendOtpDTO } from "@application/dto/auth/resend-otp.dto";
+import type { ResendOtpDTO } from "@application/dto/auth/resend-otp.dto";
 import { ForgotPasswordResendOtpUseCase } from "@application/use_cases/otp-verification/forgot-pass-otp-resend.usecase";
-import { ResetPasswordDTO } from "@application/dto/auth/reset-password";
+import type { ResetPasswordDTO } from "@application/dto/auth/reset-password";
 import { ResetPasswordUseCase } from "@application/use_cases/auth/reset-password.usecase";
 
 export const AuthModule = new ContainerModule(({ bind }) => {
