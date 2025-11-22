@@ -1,7 +1,7 @@
 import { Container } from "inversify";
 import { AuthModule } from "./moduels/auth/auth.modules";
 import { UserModule } from "./moduels/user/user.modules";
-import { LoggerModule } from "./moduels/express/logger.modules";
+import { AdminModule } from "./moduels/admin/admin.modules";
 
 const container = new Container({
   defaultScope: "Singleton",
@@ -11,7 +11,7 @@ const container = new Container({
 container.load(
   AuthModule,
   UserModule,
-  LoggerModule
+  AdminModule,
 );
 
 export { container };

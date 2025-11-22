@@ -1,5 +1,5 @@
-import api from "@lib/axios";
-import { CHANGE_PASSWORD } from "@shared/contants";
+import api from "@lib/axiosUser";
+import { CHANGE_PASSWORD } from "@shared/constants/userContants";
 
 export const ChangePasswordApi = async (data: {
     currentPassword: string,

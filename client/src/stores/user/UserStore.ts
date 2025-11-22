@@ -1,4 +1,3 @@
-
 import type { UserType } from '@shared/types/user/UserType';
 import { create } from 'zustand';
 

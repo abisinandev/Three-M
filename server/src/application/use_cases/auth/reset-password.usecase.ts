@@ -33,7 +33,7 @@ export class ResetPasswordUseCase implements IBaseUseCase<ResetPasswordDTO, Base
 
         const incomingHashedToken = crypto
             .createHash("sha256")
-            .update(req.resetToken) 
+            .update(req.resetToken)
             .digest("hex");
 
         if (storedHashedToken !== incomingHashedToken)
@@ -41,9 +41,9 @@ export class ResetPasswordUseCase implements IBaseUseCase<ResetPasswordDTO, Base
 
         const hashedPassword = await this._passwordHashingService.hash(req.password);
 
-        await this._userRepository.update(user.id as string, { $set: { password: hashedPassword } });
+        await this._userRepository.updatePassword(user.id as string, hashedPassword);
         await redisClient.del(redisKey);
-        
+
         return {
             success: true,
             message: SuccessMessage.PASSWORD_RESET_SUCCESS,

@@ -18,7 +18,7 @@ export class ChangePasswordUseCase implements IBaseUseCase<{ userId: string, dat
         @inject(USER_TYPES.UserRepository) private readonly _userRepository: IUserRepository,
         @inject(AUTH_TYPES.IPasswordHashingService) private readonly _hashingService: IPasswordHashingService,
     ) { }
-    
+
     async execute(req: { userId: string; data: ChangePasswordDTO; }): Promise<BaseResponseDTO<unknown>> {
         const { userId, data } = req
         const user = await this._userRepository.findById(userId);
@@ -30,9 +30,7 @@ export class ChangePasswordUseCase implements IBaseUseCase<{ userId: string, dat
 
         const newHashedPassword = await this._hashingService.hash(data.newPassword);
 
-        await this._userRepository.update(userId, {
-            $set: { password: newHashedPassword }
-        });
+        await this._userRepository.updatePassword(userId, newHashedPassword);
 
         return {
             success: true,

@@ -3,15 +3,14 @@ import type { UserEntity } from "@domain/entities/user.entity";
 import {
   type UserDocument,
   UserModel,
-} from "@infrastructure/databases/mongo_db/models/user.schema";
+} from "@infrastructure/databases/mongo_db/models/schemas/user.schema";
 import { UserMapper } from "@infrastructure/mappers/user.mapper";
 import { injectable } from "inversify";
 import { BaseRepository } from "../base.repository";
- 
+
 
 @injectable()
-export class UserRepository extends BaseRepository<UserEntity, UserDocument>
-  implements IUserRepository {
+export class UserRepository extends BaseRepository<UserEntity, UserDocument> implements IUserRepository {
   constructor() {
     super(UserModel, UserMapper);
   }
@@ -31,4 +30,12 @@ export class UserRepository extends BaseRepository<UserEntity, UserDocument>
     if (!userDoc) return null;
     return this.mapper.toDomain(userDoc);
   }
+
+  async updatePassword(id: string, password: string): Promise<void> {
+    await this.model.findByIdAndUpdate(
+      id,
+      { $set: { password } }
+    )
+  }
+
 }

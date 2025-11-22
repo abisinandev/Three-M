@@ -2,7 +2,7 @@ import type { CurrencyTypes } from "@domain/enum/users/currency-enum";
 import type { KycStatusType } from "@domain/enum/users/kyc-status.enum";
 import type { SubscripionPlan } from "@domain/enum/users/subscription-plan.enum";
 import type { SubscriptionStatus } from "@domain/enum/users/subscription-status.enum";
-import type { UserRole } from "@domain/enum/users/user-role.enum";
+import type { Role } from "@domain/enum/users/user-role.enum";
 
 export interface IUserSchema {
   _id: string;
@@ -11,7 +11,7 @@ export interface IUserSchema {
   email: string;
   phone: string;
   password: string;
-  role: UserRole;
+  role: Role;
 
   isVerified: boolean;
   isEmailVerified: boolean;

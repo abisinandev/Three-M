@@ -9,8 +9,8 @@ import { LoginForm } from "../components/LoginComponent";
 import { RightSidePanel } from "@shared/components/auth/RightSidePanel";
 import { TwoFAModal } from "@shared/components/modals/TwoFaModal";
 import { useMutation } from "@tanstack/react-query";
-import api from "@lib/axios";
-import { LOGIN_API } from "@shared/contants";
+import api from "@lib/axiosUser";
+import { LOGIN_API } from "@shared/constants/userContants";
 
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();

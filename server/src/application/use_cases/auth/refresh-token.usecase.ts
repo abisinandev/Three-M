@@ -19,17 +19,17 @@ export class RefreshTokenUseCase implements IBaseUseCase<RefreshDTO, RefreshResp
     ) { }
     async execute(req: RefreshDTO): Promise<RefreshResponseDTO> {
 
-        if (!req.refreshToken) throw new ValidationError("Refresh token is missing");
+        if (!req.refreshToken) throw new ValidationError(ErrorMessage.REFRESH_TOKEN_MISSING);
         const decoded = this._jwtProvider.verifyJwtTokens(req.refreshToken, "refresh");
 
         if (typeof decoded === "string" || !decoded.id) {
-            throw new ValidationError("Invalid or expired refresh token");
+            throw new ValidationError(ErrorMessage.REFRESH_TOKEN_EXPIRED);
         }
 
         const storedToken = await redisClient.hgetall(`refresh_token:${decoded.id}`);
 
         if (!storedToken || storedToken.refreshToken !== req.refreshToken) {
-            throw new ValidationError("Refresh token not found or already revoked")
+            throw new ValidationError(ErrorMessage.REFRESH_TOKEN_NOT_FOUND)
         }
 
         const user = await this._userRepository.findByField("email", decoded.email);
@@ -43,9 +43,6 @@ export class RefreshTokenUseCase implements IBaseUseCase<RefreshDTO, RefreshResp
         };
         const newAccessToken = this._jwtProvider.generateAccessToken(payload);
 
-        return {
-            accessToken: newAccessToken,
-            message: "Access token refreshed successfully",
-        }
+        return { accessToken: newAccessToken }
     }
 }

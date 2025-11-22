@@ -1,5 +1,5 @@
-import api from "@lib/axios";
-import { FORGOT_PASSWORD } from "@shared/contants";
+import api from "@lib/axiosUser";
+import { FORGOT_PASSWORD } from "@shared/constants/userContants";
 
 export const ForgotPasswordApi = async (data: { email: string }) => {
     const response = await api.post(FORGOT_PASSWORD, data, {

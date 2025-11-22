@@ -2,7 +2,7 @@ import { CurrencyTypes } from "@domain/enum/users/currency-enum";
 import { KycStatusType } from "@domain/enum/users/kyc-status.enum";
 import { SubscripionPlan } from "@domain/enum/users/subscription-plan.enum";
 import { SubscriptionStatus } from "@domain/enum/users/subscription-status.enum";
-import { UserRole } from "@domain/enum/users/user-role.enum";
+import { Role } from "@domain/enum/users/user-role.enum";
 import { Email } from "@domain/value-objects/user/email.vo";
 import { Password } from "@domain/value-objects/user/password.vo";
 import { Phone } from "@domain/value-objects/user/phone.vo";
@@ -16,7 +16,7 @@ export class UserEntity {
   private readonly _email: Email;
   private readonly _phone: Phone;
   private _password: Password;
-  private _role: UserRole;
+  private _role: Role;
   private _isEmailVerified: boolean;
   private _isVerified: boolean;
   private _isBlocked: boolean;
@@ -39,7 +39,7 @@ export class UserEntity {
     email: Email;
     phone: Phone;
     password: Password;
-    role: UserRole;
+    role: Role;
     isEmailVerified: boolean;
     isVerified: boolean;
     isBlocked: boolean;
@@ -53,7 +53,7 @@ export class UserEntity {
     isTwoFactorEnabled: boolean;
     twoFactorSecret?: string;
     qrCodeUrl?: string;
-    _createdAt?: Date
+    createdAt?: Date
   }) {
 
     if (!props.fullName || props.fullName.length < 2) {
@@ -80,7 +80,7 @@ export class UserEntity {
     this._isTwoFactorEnabled = props.isTwoFactorEnabled;
     this._twoFactorSecret = props.twoFactorSecret;
     this._qrCodeUrl = props.qrCodeUrl;
-    this._createdAt = props._createdAt;
+    this._createdAt = props.createdAt;
   }
 
   static create(data: {
@@ -97,7 +97,7 @@ export class UserEntity {
       email: Email.create(data.email),
       phone: Phone.create(data.phone),
       password: Password.create(data.password),
-      role: (data.role as UserRole) ?? UserRole.USER,
+      role: (data.role as Role) ?? Role.USER,
       isEmailVerified: false,
       isVerified: false,
       isBlocked: false,
@@ -117,7 +117,7 @@ export class UserEntity {
     email: string;
     phone: string;
     password: string;
-    role: UserRole;
+    role: Role;
     isEmailVerified: boolean;
     isVerified: boolean;
     isBlocked: boolean;
@@ -154,7 +154,7 @@ export class UserEntity {
       isTwoFactorEnabled: props.isTwoFactorEnabled,
       twoFactorSecret: props.twoFactorSecret,
       qrCodeUrl: props.qrCodeUrl,
-      _createdAt: props.createdAt,
+      createdAt: props.createdAt,
     });
   }
 

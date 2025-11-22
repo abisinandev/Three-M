@@ -35,14 +35,11 @@ export class UserLoginUseCase implements IBaseUseCase<UserLoginDTO, BaseResponse
         if (!existingUser.isTwoFactorEnabled) {
             const { secret, qrCode } = await this._twoFactorAuthSetup.setTwoFactor(existingUser.email, 'three_M');
             await this._userRepository.update(
-                existingUser.id as string,
-                {
-                    $set: {
-                        twoFactorSecret: secret,
-                        qrCodeUrl: qrCode,
-                        isTwoFactorEnabled: true
-                    }
-                }
+                existingUser.id as string, {
+                twoFactorSecret: secret,
+                qrCodeUrl: qrCode,
+                isTwoFactorEnabled: true
+            }
             )
 
             return {

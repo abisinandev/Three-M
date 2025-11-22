@@ -11,6 +11,7 @@ import type { JwtPayload } from "@domain/types/jwt-payload.type";
 import type { IJwtProvider } from "@application/interfaces/services/auth/jwt.provider.interface";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 import { env } from "@presentation/express/utils/constants/env.constants";
+import { VerifyOtpResponseDTO } from "@application/dto/auth/verify-otp-response.dto";
 
 @injectable()
 export class VerifyTwoFactorUseCase implements IBaseUseCase<Verify2faDTO, { accessToken: string, refreshToken: string }> {
@@ -20,7 +21,7 @@ export class VerifyTwoFactorUseCase implements IBaseUseCase<Verify2faDTO, { acce
         @inject(AUTH_TYPES.TwoFactorAuthVerify) private readonly _twoFactorAuthVerify: ITwoFactorAuthVerify,
     ) { }
 
-    async execute(req: Verify2faDTO): Promise<{ accessToken: string, refreshToken: string }> {
+    async execute(req: Verify2faDTO): Promise<VerifyOtpResponseDTO> {
 
         const user = await this._userRepository.findByField("email", req.email);
         if (!user?.twoFactorSecret) throw new ForbiddenError(ErrorMessage.TWO_FA_NOT_CONFIGURED);

@@ -24,5 +24,11 @@ export const env = {
   ACCESS_SECRET: process.env.JWT_ACCESS_SECRET as string,
   REFRESH_SECRET: process.env.JWT_REFRESH_SECRET as string,
   ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN as string | number,
-  REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN as string| number,
+  REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN as string | number,
+
+  //admin datas
+  ADMIN_NAME: process.env.ADMIN_NAME,
+  ADMIN_CODE: process.env.ADMIN_CODE,
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
 };
