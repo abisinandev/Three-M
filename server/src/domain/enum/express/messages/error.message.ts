@@ -23,7 +23,8 @@ export enum ErrorMessage {
 
   REFRESH_TOKEN_MISSING = "Refresh token is missing",
   REFRESH_TOKEN_EXPIRED = "Invalid or expired refresh token",
-  REFRESH_TOKEN_NOT_FOUND ="Refresh token not found or already revoked"
+  REFRESH_TOKEN_NOT_FOUND ="Refresh token not found or already revoked",
 
-
+  RATE_LIMIT_MESSAGE = "Please wait 30 seconds before requesting another OTP",
+  MAX_RESEND_REACHED = "Maximum resend attempts reached",
 }

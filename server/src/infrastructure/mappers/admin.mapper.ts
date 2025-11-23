@@ -1,4 +1,4 @@
-import type { AdminEntity } from "@domain/entities/admin.entity";
+import { AdminEntity } from "@domain/entities/admin.entity";
 import type { AdminDocument } from "@infrastructure/databases/mongo_db/models/schemas/admin.schema";
 
 export const toDomain = (doc: AdminDocument): AdminEntity => {

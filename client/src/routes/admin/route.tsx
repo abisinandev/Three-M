@@ -1,24 +1,25 @@
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
+import { createFileRoute, redirect, Outlet } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/admin')({
-  beforeLoad: async ({ location }) => {
-    const publicPaths = ['/admin/authentication', '/admin/verify-otp']; 7
+    beforeLoad: async ({ location }) => {
+        const publicPathPrefix = '/admin/authentication';
 
-    if (publicPaths.includes(location.pathname)) {
-      return <Outlet />;
-    }
+        if (location.pathname.startsWith(publicPathPrefix)) {
+            return;
+        }
 
-    const isAdmin = true;
-    if (!isAdmin) {
-      throw redirect({
-        to: '/admin/authentication',
-        search: { redirect: location.href },
-      });
-    }
-  },
-  component: () => (
-    <>
-      <Outlet />
-    </>
-  ),
+        const isAdmin = true; 
+        
+        if (!isAdmin) {
+            throw redirect({
+                to: publicPathPrefix,
+                search: { from: location.pathname }, 
+            });
+        }
+    },
+    component: () => (
+        <>
+            <Outlet />
+        </>
+    ),
 });

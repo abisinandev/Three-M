@@ -31,5 +31,6 @@ export enum SuccessMessage {
 
   ACCESS_TOKEN_UPDATED = "Access token refreshed successfully",
 
-  LOGGED_OUT = "Logged out successfully" ,
+  LOGGED_OUT = "Logged out successfully",
+  OTP_VERIFIED =  "OTP verified. You can now reset your password.",
 } 

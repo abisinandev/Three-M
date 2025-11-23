@@ -3,20 +3,18 @@ import type { IUserRepository } from "@application/interfaces/repositories/user-
 import type { IPasswordHashingService } from "@application/interfaces/services/auth/password-hashing.service.interface";
 import { toEntity } from "@application/mappers/user/user.mapper";
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";
-import { SuccessMessage } from "@domain/enum/express/messages/success.message";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
 import { ConflictError } from '@presentation/express/utils/error-handling/index'
 import { inject, injectable } from "inversify";
-import type { IBaseUseCase } from "../interfaces/base-usecase.interface";
-import type { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
-import { HttpStatus } from "@domain/enum/express/status-code";
 import { generateOtp } from "@shared/utils/otp-generator";
 import type { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
+import type { IUserSignupUseCase } from "../interfaces/user/user-signup.usecase.interface";
+import type { SignupResponseDTO } from "@application/dto/auth/signup-response.dto";
 
 @injectable()
-export class UserSignupUseCase implements IBaseUseCase<CreateUserDTO, BaseResponseDTO> {
+export class UserSignupUseCase implements IUserSignupUseCase {
 
     constructor(
         @inject(USER_TYPES.UserRepository) private readonly _userRepository: IUserRepository,
@@ -25,7 +23,7 @@ export class UserSignupUseCase implements IBaseUseCase<CreateUserDTO, BaseRespon
 
     ) { }
 
-    async execute(user: CreateUserDTO): Promise<BaseResponseDTO> {
+    async execute(user: CreateUserDTO): Promise<SignupResponseDTO> {
 
         const isExistingUser = await this._userRepository.findByField('email', user.email);
         const otp = generateOtp();
@@ -51,12 +49,7 @@ export class UserSignupUseCase implements IBaseUseCase<CreateUserDTO, BaseRespon
             });
             await redisClient.expire(redisKey, 300);
 
-            return {
-                success: true,
-                message: SuccessMessage.ACCOUNT_EXISTS_EMAIL_NOT_VERIFIED,
-                statusCode: HttpStatus.OK,
-                data: { expiresAt }
-            };
+            return { expiresAt, isAlreadyCreated: true };
         }
 
         const isExistingPhone = await this._userRepository.findByField('phone', user.phone);
@@ -78,12 +71,7 @@ export class UserSignupUseCase implements IBaseUseCase<CreateUserDTO, BaseRespon
         });
         await redisClient.expire(redisKey, 300);
 
-        return {
-            success: true,
-            message: SuccessMessage.OTP_SEND,
-            statusCode: HttpStatus.CREATED,
-            data: { expiresAt }
-        };
-    }
+        return { expiresAt, isAlreadyCreated: false }
+    };
 }
 
