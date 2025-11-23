@@ -1,10 +1,11 @@
 import { createFileRoute, Outlet, Link, useNavigate } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import api from '@lib/axios';
+import api from '@lib/axiosUser';
 import { useUserStore } from '@stores/user/UserStore';
 import { Wallet, ChevronDown, LogOut, User, Menu } from 'lucide-react';
 import { Footer } from '@shared/components/LandingPage/Footer';
+import { LOGOUT } from '@shared/constants/userContants';
 
 function UserLayout() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -37,7 +38,7 @@ function UserLayout() {
     const handleLogout = async () => {
         if (window.confirm('Are you sure you want to logout?')) {
             try {
-                await api.post('/auth/logout');
+                await api.post(LOGOUT);
                 logout();
                 navigate({ to: '/auth/login', replace: true });
                 toast.success('Logged out successfully');

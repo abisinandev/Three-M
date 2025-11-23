@@ -3,8 +3,8 @@ import { useAuthStore } from "@stores/user/UserAuthStore";
 import OTPVerification from "@shared/components/otp/OtpComponet";
 import { useNavigate } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
-import { FORGOT_PASSWORD_VERIFY, FORGOT_PASSWORD_RESEND } from "@shared/contants";
-import api from "@lib/axios";
+import { FORGOT_PASSWORD_VERIFY, FORGOT_PASSWORD_RESEND } from "@shared/constants/userContants";
+import api from "@lib/axiosUser";
 import { toast } from "sonner";
 
 export default function ForgotPasswordOTP() {

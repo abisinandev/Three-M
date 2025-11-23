@@ -4,8 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useOtpControls } from "@shared/hooks/auth/useOtpControls";
 import { useAuthStore } from "@stores/user/UserAuthStore";
 import OTPVerification from "@shared/components/otp/OtpComponet";
-import { RESEND_OTP, VERIFY_OTP } from "@shared/contants";
-import api from "@lib/axios";
+import { RESEND_OTP, VERIFY_OTP } from "@shared/constants/userContants";
+import api from "@lib/axiosUser";
 import { toast } from "sonner";
 
 

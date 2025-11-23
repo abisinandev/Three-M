@@ -1,20 +1,18 @@
-import type { Verify2faDTO } from "@application/dto/auth/2fa-verify-dto";
-import { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
-import type { CreateUserDTO } from "@application/dto/auth/create-user.dto";
-import { ForgotPasswordDTO } from "@application/dto/auth/forgot-password";
-import type { RefreshResponseDTO } from "@application/dto/auth/refresh-response.dto";
-import type { RefreshDTO } from "@application/dto/auth/refresh.dto";
-import { ResendOtpDTO } from "@application/dto/auth/resend-otp.dto";
-import { ResetPasswordDTO } from "@application/dto/auth/reset-password";
-import type { ResponseUserDTO } from "@application/dto/auth/response-user.dto";
-import type { UserLoginDTO } from "@application/dto/auth/user-login.dto";
-import { VerifyOtpDTO } from "@application/dto/auth/verify-otp.dto";
-import type { IBaseUseCase } from "@application/use_cases/interfaces/base-usecase.interface";
+import type { IForgotPasswordResendOtpUseCase } from "@application/use_cases/interfaces/user/forgot-pass-resend-otp-usecase.interface";
+import type { IForgotPasswordVerifyOtpUseCase } from "@application/use_cases/interfaces/user/forgot-pass-verify-otp-usecase.interface";
+import type { IForgotPasswordUseCase } from "@application/use_cases/interfaces/user/forgot-password-usecase.interface";
+import type { IRefreshTokenUseCase } from "@application/use_cases/interfaces/user/refresh-token-usecase.interface";
+import type { IResetPasswordUseCase } from "@application/use_cases/interfaces/user/reset-password-usecase.interface";
+import type { ISignupVerifyOtpUseCase } from "@application/use_cases/interfaces/user/signup-verify-otp-usecase.interface";
+import type { ISignupResendOtpUseCase } from "@application/use_cases/interfaces/user/singup-resend-otp-usecase.interface";
+import type { IUserLoginUseCase } from "@application/use_cases/interfaces/user/user-login-usecase.interface";
+import type { IUserLogoutUseCase } from "@application/use_cases/interfaces/user/user-logout-usecase.interface";
+import type { IUserSignupUseCase } from "@application/use_cases/interfaces/user/user-signup.usecase.interface";
+import type { IVerifyTwoFactorUseCase } from "@application/use_cases/interfaces/user/verify-2fa-usecase.interface";
 import { SuccessMessage } from "@domain/enum/express/messages/success.message";
 import { HttpStatus } from "@domain/enum/express/status-code";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
-import { logger } from "@infrastructure/providers/logger/winston.logger";
 import { ValidationError } from "@presentation/express/utils/error-handling";
 import type { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
@@ -22,23 +20,38 @@ import { inject, injectable } from "inversify";
 @injectable()
 export class AuthController {
     constructor(
-        @inject(USER_TYPES.UserSignupUseCase) private readonly _userSignupUseCase: IBaseUseCase<CreateUserDTO, ResponseUserDTO>,
-        @inject(USER_TYPES.UserLoginUseCase) private readonly _userLoginUseCase: IBaseUseCase<UserLoginDTO, ResponseUserDTO>,
-        @inject(AUTH_TYPES.RefreshTokenUseCase) private readonly _refreshTokenUseCase: IBaseUseCase<RefreshDTO, RefreshResponseDTO>,
-        @inject(AUTH_TYPES.LogoutUseCase) private readonly _logoutUseCase: IBaseUseCase<{ userId: string }, { success: boolean, message: string }>,
-        @inject(AUTH_TYPES.VerifyTwoFactorUseCase) private readonly _verifyTwoFactorUseCase: IBaseUseCase<Verify2faDTO, { accessToken: string, refreshToken: string }>,
-        @inject(AUTH_TYPES.ForgotPasswordUseCase) private readonly _forgotPasswordUseCase: IBaseUseCase<ForgotPasswordDTO, BaseResponseDTO>,
-        @inject(AUTH_TYPES.SignupVerifyOtpUseCase) private readonly _verifyOtpUseCase: IBaseUseCase<VerifyOtpDTO, { message: string }>,
-        @inject(AUTH_TYPES.ResendOtpUseCase) private readonly _resendOtpUseCase: IBaseUseCase<{ email: string }, { message: string }>,
-        @inject(AUTH_TYPES.ForgotPasswordOtpVerifyUseCase) private readonly _forgotPassVerifyOtp: IBaseUseCase<VerifyOtpDTO, BaseResponseDTO>,
-        @inject(AUTH_TYPES.ForgotPasswordResendOtpUseCase) private readonly _forgotPasswordResendOtp: IBaseUseCase<ResendOtpDTO, BaseResponseDTO<{ expiresAt: number, resendCount: number }>>,
-        @inject(AUTH_TYPES.ResetPasswordUseCase) private readonly _resetPassword: IBaseUseCase<ResetPasswordDTO, BaseResponseDTO>,
+        @inject(USER_TYPES.UserSignupUseCase) private readonly _userSignupUseCase: IUserSignupUseCase,
+        @inject(USER_TYPES.UserLoginUseCase) private readonly _userLoginUseCase: IUserLoginUseCase,
+        @inject(AUTH_TYPES.VerifyTwoFactorUseCase) private readonly _verifyTwoFactorUseCase: IVerifyTwoFactorUseCase,
+        @inject(AUTH_TYPES.RefreshTokenUseCase) private readonly _refreshTokenUseCase: IRefreshTokenUseCase,
+        @inject(AUTH_TYPES.LogoutUseCase) private readonly _logoutUseCase: IUserLogoutUseCase,
+        @inject(AUTH_TYPES.ForgotPasswordUseCase) private readonly _forgotPasswordUseCase: IForgotPasswordUseCase,
+        @inject(AUTH_TYPES.SignupVerifyOtpUseCase) private readonly _verifyOtpUseCase: ISignupVerifyOtpUseCase,
+        @inject(AUTH_TYPES.ResendOtpUseCase) private readonly _resendOtpUseCase: ISignupResendOtpUseCase,
+        @inject(AUTH_TYPES.ForgotPasswordOtpVerifyUseCase) private readonly _forgotPassVerifyOtp: IForgotPasswordVerifyOtpUseCase,
+        @inject(AUTH_TYPES.ForgotPasswordResendOtpUseCase) private readonly _forgotPasswordResendOtp: IForgotPasswordResendOtpUseCase,
+        @inject(AUTH_TYPES.ResetPasswordUseCase) private readonly _resetPassword: IResetPasswordUseCase,
     ) { }
 
     async signup(req: Request, res: Response, next: NextFunction) {
         try {
-            const response = await this._userSignupUseCase.execute(req.body);
-            return res.json(response);
+            const dto = { ...req.body };
+            const result = await this._userSignupUseCase.execute(dto);
+
+            if (result.isAlreadyCreated) {
+                return res.status(HttpStatus.CREATED).json({
+                    success: true,
+                    message: SuccessMessage.ACCOUNT_EXISTS_EMAIL_NOT_VERIFIED,
+                    data: { expiresAt: result.expiresAt }
+                })
+            }
+
+            return res.status(HttpStatus.CREATED).json({
+                success: true,
+                message: SuccessMessage.OTP_SEND,
+                data: { expiresAt: result.expiresAt }
+            })
+
         } catch (error) {
             next(error)
         }
@@ -47,8 +60,25 @@ export class AuthController {
 
     async login(req: Request, res: Response, next: NextFunction) {
         try {
-            const response = await this._userLoginUseCase.execute(req.body);
-            res.json(response);
+            const dto = { ...req.body };
+            const result = await this._userLoginUseCase.execute(dto);
+
+            if (result.required2FASetup) {
+
+                return res.status(HttpStatus.CREATED).json({
+                    success: true,
+                    message: SuccessMessage.TWO_FA_REQUIRED,
+                    data: { qrCode: result.qrCode }
+                })
+
+            }
+
+            return res.status(HttpStatus.CREATED).json({
+                success: true,
+                message: SuccessMessage.PLEASE_VERIFY_2FA_CODE,
+                data: { qrCode: result.qrCode }
+            })
+
         } catch (error) {
             next(error);
         }
@@ -58,19 +88,18 @@ export class AuthController {
     async verifyTwoFactor(req: Request, res: Response, next: NextFunction) {
         try {
             const email = req.query.email as string;
-            logger.info(email);
-            const { token } = req.body;
+            const { token } = { ...req.body };
 
-            const { accessToken, refreshToken } = await this._verifyTwoFactorUseCase.execute({ email, token });
+            const result = await this._verifyTwoFactorUseCase.execute({ email, token });
 
-            res.cookie("refreshToken", refreshToken, {
+            res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: "lax",
                 maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
             });
 
-            res.cookie("accessToken", accessToken, {
+            res.cookie("accessToken", result.accessToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: "lax",
@@ -78,10 +107,9 @@ export class AuthController {
             });
 
 
-            return res.json({
+            return res.status(HttpStatus.OK).json({
                 success: true,
                 message: SuccessMessage.LOGGED_IN_SUCCESS,
-                statusCode: 200,
                 data: { accessToken: "Created" }
             })
 
@@ -92,8 +120,12 @@ export class AuthController {
 
     async verifySignupOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const response = await this._verifyOtpUseCase.execute(req.body);
-            res.status(HttpStatus.OK).json(response);
+            const dto = { ...req.body }
+            await this._verifyOtpUseCase.execute(dto);
+            res.status(HttpStatus.OK).json({
+                success: HttpStatus.OK,
+                message: SuccessMessage.EMAIL_VERIFIED,
+            });
         } catch (err) {
             next(err)
         }
@@ -102,9 +134,14 @@ export class AuthController {
 
     async resendOtp(req: Request, res: Response, next: NextFunction) {
         try {
-            const { email } = req.body;
-            const response = await this._resendOtpUseCase.execute({ email })
-            res.status(HttpStatus.OK).json(response)
+            const dto = { ...req.body };
+            const result = await this._resendOtpUseCase.execute(dto)
+
+            return res.status(HttpStatus.OK).json({
+                success: true,
+                message: SuccessMessage.RESEND_OTP_MSG,
+                data: { ...result }
+            });
         } catch (err) {
             next(err)
         }
@@ -116,15 +153,20 @@ export class AuthController {
             console.log('Refresh : ', refreshToken)
             if (!refreshToken) throw new ValidationError("No refresh token provided");
 
-            const response = await this._refreshTokenUseCase.execute({ refreshToken })
+            const result = await this._refreshTokenUseCase.execute({ refreshToken })
 
-            res.cookie("accessToken", response.accessToken, {
+            res.cookie("accessToken", result.accessToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: "lax",
                 maxAge: 15 * 60 * 1000, // 15 minutes
             });
-            return res.json({ success: true, message: response.message })
+
+            return res.status(HttpStatus.CREATED).json(
+                {
+                    success: true,
+                    message: SuccessMessage.ACCESS_TOKEN_UPDATED
+                })
 
         } catch (error) {
             next(error)
@@ -134,8 +176,12 @@ export class AuthController {
 
     async forgotPassword(req: Request, res: Response, next: NextFunction) {
         try {
-            const response = await this._forgotPasswordUseCase.execute(req.body);
-            return res.json(response);
+            const dto = { ...req.body };
+            await this._forgotPasswordUseCase.execute(dto);
+            return res.status(HttpStatus.OK).json({
+                success: true,
+                message: SuccessMessage.VERIFYCATION_CODE_SEND,
+            });
         } catch (error) {
             next(error)
         }
@@ -143,8 +189,14 @@ export class AuthController {
 
     async forgotPasswordVeirfyOtp(req: Request, res: Response, next: NextFunction) {
         try {
-            const response = await this._forgotPassVerifyOtp.execute(req.body);
-            res.status(HttpStatus.OK).json(response);
+            const dto = { ...req.body };
+            const result = await this._forgotPassVerifyOtp.execute(dto);
+
+            return res.status(HttpStatus.OK).json({
+                success: true,
+                message: SuccessMessage.OTP_VERIFIED,
+                data: { resetToken: result.resetToken }
+            });
         } catch (error) {
             next(error)
         }
@@ -152,8 +204,17 @@ export class AuthController {
 
     async forgotPasswordResendOtp(req: Request, res: Response, next: NextFunction) {
         try {
-            const response = await this._forgotPasswordResendOtp.execute(req.body);
-            res.status(HttpStatus.OK).json(response)
+            const dto = { ...req.body }
+            const result = await this._forgotPasswordResendOtp.execute(dto);
+
+            res.status(HttpStatus.OK).json({
+                success: true,
+                message: SuccessMessage.RESEND_OTP_MSG,
+                data: {
+                    expiresAt: result.expiresAt,
+                    resendCount: result.resendCount,
+                }
+            })
         } catch (err) {
             next(err)
         }
@@ -161,8 +222,13 @@ export class AuthController {
 
     async resetPassword(req: Request, res: Response, next: NextFunction) {
         try {
-            const response = await this._resetPassword.execute(req.body)
-            return res.json(response);
+            const dto = { ...req.body }
+            await this._resetPassword.execute(dto)
+
+            return res.status(HttpStatus.OK).json({
+                success: true,
+                message: SuccessMessage.PASSWORD_RESET_SUCCESS
+            });
         } catch (error) {
             next(error)
         }
@@ -177,7 +243,10 @@ export class AuthController {
             res.clearCookie("accessToken", { httpOnly: true, sameSite: "lax" });
             res.clearCookie("refreshToken", { httpOnly: true, sameSite: "lax" });
 
-            return res.status(200).json({ success: true, message: "Logged out successfully" });
+            return res.status(HttpStatus.OK).json({
+                success: true,
+                message: SuccessMessage.LOGGED_OUT
+            });
         } catch (error) {
             next(error)
         }

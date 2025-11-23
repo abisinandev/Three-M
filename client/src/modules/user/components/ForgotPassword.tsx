@@ -5,8 +5,8 @@ import { InputField } from "@shared/components/auth/InputFields";
 import { useNavigate } from "@tanstack/react-router";
 import { useAuthStore } from "@stores/user/UserAuthStore";
 import { useMutation } from "@tanstack/react-query";
-import api from "@lib/axios";
-import { FORGOT_PASSWORD } from "@shared/contants";
+import api from "@lib/axiosUser";
+import { FORGOT_PASSWORD } from "@shared/constants/userContants";
 
 const ForgotPasswordForm: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -19,7 +19,8 @@ const ForgotPasswordForm: React.FC = () => {
 
     onSuccess: (res) => {
       toast.success(`${res.data.message} 🎉`);
-      setData(email, Date.now());
+      const expirationTime = Date.now() + 5 * 60 * 1000;
+      setData(email, expirationTime);
 
       navigate({
         to: "/auth/forgot-password/verify-otp",

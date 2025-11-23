@@ -1,6 +1,6 @@
 import type { SignupType } from '@shared/types/user/SignupTypes'
-import { SIGNUP_API } from '@shared/contants'
-import api from "../../../lib/axios";
+import { SIGNUP_API } from '@shared/constants/userContants'
+import api from "../../../lib/axiosUser";
  
 
 export const SignupApi = async (data: SignupType)=>{

@@ -1,19 +1,12 @@
 import { injectable } from "inversify";
-import type { IBaseUseCase } from "../interfaces/base-usecase.interface";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
-import type { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
-import { HttpStatus } from "@domain/enum/express/status-code";
+import type { IUserLogoutUseCase } from "../interfaces/user/user-logout-usecase.interface";
 
 @injectable()
-export class LogoutUseCase implements IBaseUseCase<{ userId: string }, BaseResponseDTO> {
+export class LogoutUseCase implements IUserLogoutUseCase {
 
-    async execute(req: { userId: string }): Promise<BaseResponseDTO> {
+    async execute(req: { userId: string }): Promise<void> {
         await redisClient.del(`refresh_token:${req.userId}`)
-        return {
-            success: true,
-            message: "Token deleted from database",
-            statusCode: HttpStatus.OK,
-        }
     }
 
 }

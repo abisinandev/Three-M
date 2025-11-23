@@ -2,13 +2,13 @@ import { UserEntity } from "@domain/entities/user.entity";
 import { CurrencyTypes } from "@domain/enum/users/currency-enum";
 import { KycStatusType } from "@domain/enum/users/kyc-status.enum";
 import { SubscriptionStatus } from "@domain/enum/users/subscription-status.enum";
-import type { UserDocument } from "@infrastructure/databases/mongo_db/models/user.schema";
+import type { UserDocument } from "@infrastructure/databases/mongo_db/models/schemas/user.schema";
 
 
 // Convert MongoDb -> Domain
 export const toDomain = (userDoc: UserDocument): UserEntity => {
   return UserEntity.reconstitute({
-    id: userDoc._id,
+    id: userDoc._id.toString(),
     userCode: userDoc.userCode,
     fullName: userDoc.fullName,
     email: userDoc.email,
@@ -30,12 +30,13 @@ export const toDomain = (userDoc: UserDocument): UserEntity => {
     qrCodeUrl: userDoc.qrCodeUrl,
     createdAt: userDoc.createdAt,
   });
-}
+};
+
 
 // Convert Domain -> MongoDb
 export const toPersistance = (user: UserEntity): Partial<UserDocument> => {
   return {
-    _id: user.id,
+    // _id: user.id,
     userCode: user.userCode,
     fullName: user.fullName,
     email: user.email,
@@ -56,8 +57,7 @@ export const toPersistance = (user: UserEntity): Partial<UserDocument> => {
     twoFactorSecret: user.twoFactorSecret,
     qrCodeUrl: user.qrCodeUrl,
   };
-}
-
+};
 
 export const UserMapper = {
   toDomain,

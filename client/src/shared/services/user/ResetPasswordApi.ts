@@ -1,5 +1,5 @@
-import api from "@lib/axios";
-import { RESET_PASSWORD } from "@shared/contants";
+import api from "@lib/axiosUser";
+import { RESET_PASSWORD } from "@shared/constants/userContants";
 
 type Data = {
     email: string,

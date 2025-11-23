@@ -6,11 +6,16 @@ export const Route = createFileRoute('/auth/forgot-password/verify-otp')({
   beforeLoad: () => {
     const { email, clearData, timeLeft } = useAuthStore.getState();
 
-    const navigationEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-    const isPageRefresh = navigationEntry?.type === 'reload';
-    const isExpired = timeLeft && Date.now() - timeLeft > 5 * 60 * 1000;
+    if (!email) {
+      clearData();
+      throw redirect({
+        to: '/auth/login',
+        replace: true,
+      });
+    }
 
-    if (isPageRefresh || !email || isExpired) {
+    const isExpired = !timeLeft || Date.now() > timeLeft;
+    if (isExpired) {
       clearData();
       throw redirect({
         to: '/auth/login',

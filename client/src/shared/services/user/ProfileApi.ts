@@ -1,5 +1,5 @@
-import api from "@lib/axios";
-import { LOGIN_API } from "@shared/contants"
+import api from "@lib/axiosUser";
+import { LOGIN_API } from "@shared/constants/userContants"
 
 
 export const ProfileApi = async () => {

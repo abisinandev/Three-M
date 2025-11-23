@@ -1,9 +1,8 @@
-import type { FilterQuery, UpdateQuery } from "mongoose";
-
-export interface IBaseRepository<TDomain,TDocument> {
-  create(entity: TDomain): Promise<void>;
-  findById(id: string): Promise<TDomain | null>;
-  findOne(filter: FilterQuery<TDocument>): Promise<TDomain | null>;
-  update(id: string, update: UpdateQuery<TDocument>): Promise<TDomain | null>;
+export interface IBaseRepository<T>{
+  create(entity: T): Promise<void>;
+  findById(id: string): Promise<T | null>;
+  findAll(): Promise<T[]>;
+  findOne(data: Partial<T>): Promise<T | null>;
+  update(id:string,update:Partial<T>): Promise<T | null>;
   delete(id: string): Promise<void>;
 }

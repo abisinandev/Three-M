@@ -1,26 +1,23 @@
-import { ResetPasswordDTO } from "@application/dto/auth/reset-password";
-import { IBaseUseCase } from "../interfaces/base-usecase.interface";
-import { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
+import type { ResetPasswordDTO } from "@application/dto/auth/reset-password";
 import { inject, injectable } from "inversify";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
-import { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
+import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
 import { NotFoundError, ValidationError } from "@presentation/express/utils/error-handling";
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import { IPasswordHashingService } from "@application/interfaces/services/auth/password-hashing.service.interface";
-import { SuccessMessage } from "@domain/enum/express/messages/success.message";
-import { HttpStatus } from "@domain/enum/express/status-code";
+import type { IPasswordHashingService } from "@application/interfaces/services/auth/password-hashing.service.interface";
+import type { IResetPasswordUseCase } from "../interfaces/user/reset-password-usecase.interface";
 
 @injectable()
-export class ResetPasswordUseCase implements IBaseUseCase<ResetPasswordDTO, BaseResponseDTO> {
+export class ResetPasswordUseCase implements IResetPasswordUseCase {
     constructor(
         @inject(USER_TYPES.UserRepository) private readonly _userRepository: IUserRepository,
         @inject(AUTH_TYPES.IPasswordHashingService) private readonly _passwordHashingService: IPasswordHashingService,
     ) { }
 
-    async execute(req: ResetPasswordDTO): Promise<BaseResponseDTO<unknown>> {
+    async execute(req: ResetPasswordDTO): Promise<void> {
 
         const user = await this._userRepository.findByField("email", req.email);
         if (!user) throw new NotFoundError(ErrorMessage.USER_NOT_FOUND);
@@ -33,7 +30,7 @@ export class ResetPasswordUseCase implements IBaseUseCase<ResetPasswordDTO, Base
 
         const incomingHashedToken = crypto
             .createHash("sha256")
-            .update(req.resetToken) 
+            .update(req.resetToken)
             .digest("hex");
 
         if (storedHashedToken !== incomingHashedToken)
@@ -41,13 +38,8 @@ export class ResetPasswordUseCase implements IBaseUseCase<ResetPasswordDTO, Base
 
         const hashedPassword = await this._passwordHashingService.hash(req.password);
 
-        await this._userRepository.update(user.id as string, { $set: { password: hashedPassword } });
+        await this._userRepository.updatePassword(user.id as string, hashedPassword);
         await redisClient.del(redisKey);
-        
-        return {
-            success: true,
-            message: SuccessMessage.PASSWORD_RESET_SUCCESS,
-            statusCode: HttpStatus.OK,
-        };
+
     }
 }

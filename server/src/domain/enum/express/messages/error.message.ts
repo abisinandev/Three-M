@@ -18,5 +18,13 @@ export enum ErrorMessage {
   TWO_FA_NOT_CONFIGURED = '2FA not configured for this user',
   RESET_TOKEN_EXPIRED = "Reset token expired",
   RESET_TOKEN_INVALID = "RESET TOKEN IS INVALID",
-  INVALID_PASSWORD = "Invalid old password"
+  INVALID_PASSWORD = "Invalid old password",
+  ADMIN_NOT_FOUND = "Admin not found",
+
+  REFRESH_TOKEN_MISSING = "Refresh token is missing",
+  REFRESH_TOKEN_EXPIRED = "Invalid or expired refresh token",
+  REFRESH_TOKEN_NOT_FOUND ="Refresh token not found or already revoked",
+
+  RATE_LIMIT_MESSAGE = "Please wait 30 seconds before requesting another OTP",
+  MAX_RESEND_REACHED = "Maximum resend attempts reached",
 }

@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
 import type { Document } from "mongoose";
-import type { IUserSchema } from "./interfaces/user.schema.interfact";
-import { UserRole } from "@domain/enum/users/user-role.enum";
+import type { IUserSchema } from "../interfaces/user.schema.interfact";
+import { Role } from "@domain/enum/users/user-role.enum";
 import { SubscriptionStatus } from "@domain/enum/users/subscription-status.enum";
 import { SubscripionPlan } from "@domain/enum/users/subscription-plan.enum";
 import { CurrencyTypes } from "@domain/enum/users/currency-enum";
@@ -17,7 +17,7 @@ const UserSchema = new Schema<UserDocument>(
     phone: { type: String, required: true, unique: true, index: true },
     password: { type: String, required: true },
 
-    role: { type: String, enum: Object.values(UserRole), default: UserRole.USER },
+    role: { type: String, enum: Object.values(Role), default: Role.USER },
 
     isVerified: { type: Boolean, default: false },
     isEmailVerified: { type: Boolean, default: false },

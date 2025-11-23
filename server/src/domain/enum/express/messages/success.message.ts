@@ -28,4 +28,9 @@ export enum SuccessMessage {
   RESEND_OTP_MSG = 'New OTP sent to your email',
 
   PASSWORD_RESET_SUCCESS = "Password reseting done successfully",
-}
+
+  ACCESS_TOKEN_UPDATED = "Access token refreshed successfully",
+
+  LOGGED_OUT = "Logged out successfully",
+  OTP_VERIFIED =  "OTP verified. You can now reset your password.",
+} 

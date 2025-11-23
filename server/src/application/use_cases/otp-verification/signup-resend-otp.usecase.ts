@@ -6,21 +6,20 @@ import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 import AppError from "@presentation/express/utils/error-handling/app.error";
 import { generateOtp } from "@shared/utils/otp-generator";
 import { inject, injectable } from "inversify";
-import type { IBaseUseCase } from "../interfaces/base-usecase.interface";
-import { HttpStatus } from "@domain/enum/express/status-code";
-import type { BaseResponseDTO } from "@application/dto/auth/base-response.dto";
-import { SuccessMessage } from "@domain/enum/express/messages/success.message";
+import type { ISignupResendOtpUseCase } from "../interfaces/user/singup-resend-otp-usecase.interface";
+import type { ResendOtpDTO } from "@application/dto/auth/resend-otp.dto";
+import type { ResendOtpResponseDTO } from "@application/dto/auth/resend-otp-response.dto";
 
 
 @injectable()
-export class ResendOtpUseCase implements IBaseUseCase<{ email: string }, BaseResponseDTO<{ expiresAt: number, resendCount: number }>> {
+export class ResendOtpUseCase implements ISignupResendOtpUseCase {
     constructor(
         @inject(USER_TYPES.UserRepository) private readonly _userRepository: IUserRepository,
         @inject(AUTH_TYPES.IEmailService) private readonly _emailVerifyService: IEmailService,
     ) { }
-    async execute(prop: { email: string }): Promise<BaseResponseDTO<{ expiresAt: number, resendCount: number }>> {
-        console.log('========',prop.email)
-        const user = await this._userRepository.findByField('email', prop.email);
+    async execute(data: ResendOtpDTO): Promise<ResendOtpResponseDTO> {
+        console.log('========', data.email)
+        const user = await this._userRepository.findByField('email', data.email);
 
         const otp = generateOtp();
         const expiryTime = 5 * 60;
@@ -43,12 +42,7 @@ export class ResendOtpUseCase implements IBaseUseCase<{ email: string }, BaseRes
             }
         }
 
-        await this._emailVerifyService.sendOtpEmail(prop.email, otp);
-        return {
-            success: true,
-            message: SuccessMessage.RESEND_OTP_MSG,
-            statusCode: HttpStatus.OK,
-            data: { expiresAt, resendCount: 0 }
-        };
+        await this._emailVerifyService.sendOtpEmail(data.email, otp);
+        return { expiresAt, resendCount: 0 };
     }
 }
