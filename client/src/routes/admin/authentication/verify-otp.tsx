@@ -5,6 +5,7 @@
   export const Route = createFileRoute('/admin/authentication/verify-otp')({
     beforeLoad: () => {
       const { email, clearData, timeLeft } = useAuthStore.getState();
+      console.log(email,timeLeft)
 
       if (!email) {
         clearData();
