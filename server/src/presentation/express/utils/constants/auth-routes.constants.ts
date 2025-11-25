@@ -10,4 +10,5 @@ export enum Routes {
     FORGOT_PASS_VERIFY_OTP = "/forgot-password/verify-otp",
     FORGOT_PASS_RESENT_OTP = "/forgot-password/resend-otp",
     RESET_PASSWORD = "/reset-password",
+    GOOGLE_AUTH = "/google/callback",
 }

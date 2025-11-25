@@ -29,14 +29,15 @@ export const toDomain = (userDoc: UserDocument): UserEntity => {
     twoFactorSecret: userDoc.twoFactorSecret,
     qrCodeUrl: userDoc.qrCodeUrl,
     createdAt: userDoc.createdAt,
+    authProvider: userDoc.authProvider,
+    avatar: userDoc.avatar,
+    googleId: userDoc.googleId,
   });
 };
-
 
 // Convert Domain -> MongoDb
 export const toPersistance = (user: UserEntity): Partial<UserDocument> => {
   return {
-    // _id: user.id,
     userCode: user.userCode,
     fullName: user.fullName,
     email: user.email,
@@ -56,6 +57,9 @@ export const toPersistance = (user: UserEntity): Partial<UserDocument> => {
     isTwoFactorEnabled: user.isTwoFactorEnabled,
     twoFactorSecret: user.twoFactorSecret,
     qrCodeUrl: user.qrCodeUrl,
+    authProvider: user.authProvider,
+    avatar: user.avatar,
+    googleId: user.googleId,
   };
 };
 

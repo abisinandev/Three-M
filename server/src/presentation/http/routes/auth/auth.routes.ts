@@ -22,7 +22,7 @@ const authController = container.get<AuthController>(
 router.post(Routes.SIGNUP, validateDTO(CreateUserDTO), authController.signup.bind(authController));
 router.post(Routes.LOGIN, validateDTO(UserLoginDTO), authController.login.bind(authController));
 router.post(Routes.TWO_FA_VERIFY, validateDTO(Verify2faDTO), authController.verifyTwoFactor.bind(authController));
-router.post((Routes.REFRESH), authController.refresh.bind(authController));
+router.post(Routes.REFRESH, authController.refresh.bind(authController));
 router.post(Routes.LOGOUT, AuthMiddleware, authController.logout.bind(authController));
 router.post(Routes.VERIFY_OTP, validateDTO(VerifyOtpDTO), authController.verifySignupOtp.bind(authController));
 router.post(Routes.RESEND_OTP, validateDTO(ResendOtpDTO), authController.resendOtp.bind(authController));
@@ -31,4 +31,6 @@ router.post(Routes.FORGOT_PASS_VERIFY_OTP, validateDTO(VerifyOtpDTO), authContro
 router.post(Routes.FORGOT_PASS_RESENT_OTP, validateDTO(ResendOtpDTO), authController.forgotPasswordResendOtp.bind(authController));
 router.post(Routes.RESET_PASSWORD, validateDTO(ResetPasswordDTO), authController.resetPassword.bind(authController));
 
+router.post(Routes.GOOGLE_AUTH,authController.googleAuth.bind(authController))
 export default router;
+  

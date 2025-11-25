@@ -37,7 +37,7 @@ export class VerifyTwoFactorUseCase implements IVerifyTwoFactorUseCase {
         };
 
         const accessToken = this._jwtProvider.generateAccessToken(payload);
-        const refreshToken = this._jwtProvider.generateRefreshToken(payload)
+        const refreshToken = this._jwtProvider.generateRefreshToken(payload);
 
         const key = `refresh_token:${user.id}`;
         const ttl = Number(env.REFRESH_EXPIRES_IN);

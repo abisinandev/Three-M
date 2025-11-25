@@ -1,3 +1,4 @@
+import { AuthProvider } from "@domain/enum/users/auth-provider.enum";
 import { CurrencyTypes } from "@domain/enum/users/currency-enum";
 import { KycStatusType } from "@domain/enum/users/kyc-status.enum";
 import { SubscripionPlan } from "@domain/enum/users/subscription-plan.enum";
@@ -14,8 +15,8 @@ export class UserEntity {
   private readonly _userCode: UserCode;
   private _fullName: string;
   private readonly _email: Email;
-  private readonly _phone: Phone;
-  private _password: Password;
+  private _phone?: Phone | null;
+  private _password?: Password | null;
   private _role: Role;
   private _isEmailVerified: boolean;
   private _isVerified: boolean;
@@ -23,22 +24,25 @@ export class UserEntity {
   private _subscriptionStatus: SubscriptionStatus;
   private _subscriptionPlan: SubscripionPlan;
   private _currency: CurrencyTypes;
-  private readonly _kycId?: string;
+  private readonly _kycId?: string | null;
   private _kycStatus: KycStatusType;
-  private readonly _walletId?: string;
+  private readonly _walletId?: string | null;
   private _walletBalance: number;
   private _isTwoFactorEnabled: boolean;
-  private _twoFactorSecret?: string;
-  private _qrCodeUrl?: string;
-  private _createdAt?: Date;
+  private _twoFactorSecret?: string | null;
+  private _qrCodeUrl?: string | null;
+  private _createdAt?: Date | null;
+  private _authProvider: AuthProvider;
+  private _avatar?: string | null;
+  private _googleId?: string | null;
 
   private constructor(props: {
     id?: string;
     userCode: UserCode;
     fullName: string;
     email: Email;
-    phone: Phone;
-    password: Password;
+    phone?: Phone | null;
+    password?: Password | null;
     role: Role;
     isEmailVerified: boolean;
     isVerified: boolean;
@@ -46,14 +50,17 @@ export class UserEntity {
     subscriptionStatus: SubscriptionStatus;
     subscriptionPlan: SubscripionPlan;
     currency: CurrencyTypes;
-    kycId?: string;
+    kycId?: string | null;
     kycStatus: KycStatusType;
-    walletId?: string;
+    walletId?: string | null;
     walletBalance: number;
     isTwoFactorEnabled: boolean;
-    twoFactorSecret?: string;
-    qrCodeUrl?: string;
-    createdAt?: Date
+    twoFactorSecret?: string | null;
+    qrCodeUrl?: string | null;
+    createdAt?: Date | null;
+    authProvider: AuthProvider;
+    avatar?: string | null;
+    googleId?: string | null;
   }) {
 
     if (!props.fullName || props.fullName.length < 2) {
@@ -64,8 +71,8 @@ export class UserEntity {
     this._userCode = props.userCode;
     this._fullName = props.fullName;
     this._email = props.email;
-    this._phone = props.phone;
-    this._password = props.password;
+    this._phone = props.phone ?? null;
+    this._password = props.password ?? null;
     this._role = props.role;
     this._isEmailVerified = props.isEmailVerified;
     this._isVerified = props.isVerified;
@@ -73,14 +80,17 @@ export class UserEntity {
     this._subscriptionStatus = props.subscriptionStatus;
     this._subscriptionPlan = props.subscriptionPlan;
     this._currency = props.currency;
-    this._kycId = props.kycId;
+    this._kycId = props.kycId ?? null;
     this._kycStatus = props.kycStatus;
-    this._walletId = props.walletId;
+    this._walletId = props.walletId ?? null;
     this._walletBalance = props.walletBalance;
     this._isTwoFactorEnabled = props.isTwoFactorEnabled;
-    this._twoFactorSecret = props.twoFactorSecret;
-    this._qrCodeUrl = props.qrCodeUrl;
-    this._createdAt = props.createdAt;
+    this._twoFactorSecret = props.twoFactorSecret ?? null;
+    this._qrCodeUrl = props.qrCodeUrl ?? null;
+    this._createdAt = props.createdAt ?? null;
+    this._authProvider = props.authProvider;
+    this._avatar = props.avatar ?? null;
+    this._googleId = props.googleId ?? null;
   }
 
   static create(data: {
@@ -106,7 +116,38 @@ export class UserEntity {
       currency: data.currency ?? CurrencyTypes.INR,
       kycStatus: KycStatusType.NULL,
       walletBalance: 0,
-      isTwoFactorEnabled: false
+      isTwoFactorEnabled: false,
+      authProvider: AuthProvider.MANAUL,
+    });
+  }
+
+
+  static createSocialUser(data: {
+    fullName: string;
+    email: string;
+    avatar?: string;
+    provider: AuthProvider;
+    googleId?: string;
+  }): UserEntity {
+    return new UserEntity({
+      userCode: UserCode.create("USR"),
+      fullName: data.fullName,
+      email: Email.create(data.email),
+      phone: null,
+      password: null,
+      role: Role.USER,
+      isEmailVerified: true,
+      isVerified: true,
+      isBlocked: false,
+      subscriptionStatus: SubscriptionStatus.INACTIVE,
+      subscriptionPlan: SubscripionPlan.FREE,
+      currency: CurrencyTypes.INR,
+      kycStatus: KycStatusType.NULL,
+      walletBalance: 0,
+      isTwoFactorEnabled: false,
+      authProvider: data.provider,
+      avatar: data.avatar ?? null,
+      googleId: data.googleId ?? null,
     });
   }
 
@@ -115,8 +156,8 @@ export class UserEntity {
     userCode: string;
     fullName: string;
     email: string;
-    phone: string;
-    password: string;
+    phone?: string | null;
+    password?: string | null;
     role: Role;
     isEmailVerified: boolean;
     isVerified: boolean;
@@ -124,22 +165,26 @@ export class UserEntity {
     subscriptionStatus: SubscriptionStatus;
     subscriptionPlan: SubscripionPlan;
     currency: CurrencyTypes;
-    kycId?: string;
+    kycId?: string | null;
     kycStatus: KycStatusType;
-    walletId?: string;
+    walletId?: string | null;
     walletBalance: number;
     isTwoFactorEnabled: boolean;
-    twoFactorSecret?: string;
-    qrCodeUrl?: string;
-    createdAt?: Date;
+    twoFactorSecret?: string | null;
+    qrCodeUrl?: string | null;
+    createdAt?: Date | null;
+    authProvider: AuthProvider;
+    avatar?: string | null;
+    googleId?: string | null;
+
   }): UserEntity {
     return new UserEntity({
       id: props.id,
       userCode: UserCode.rebuild(props.userCode),
       fullName: props.fullName,
       email: Email.create(props.email),
-      phone: Phone.create(props.phone),
-      password: Password.rebuild(props.password),
+      phone: props.phone ? Phone.create(props.phone) : null,
+      password: props.password ? Password.rebuild(props.password) : null,
       role: props.role,
       isEmailVerified: props.isEmailVerified,
       isVerified: props.isVerified,
@@ -147,23 +192,29 @@ export class UserEntity {
       subscriptionStatus: props.subscriptionStatus,
       subscriptionPlan: props.subscriptionPlan,
       currency: props.currency,
-      kycId: props.kycId,
+      kycId: props.kycId ?? null,
       kycStatus: props.kycStatus,
-      walletId: props.walletId,
+      walletId: props.walletId ?? null,
       walletBalance: props.walletBalance,
       isTwoFactorEnabled: props.isTwoFactorEnabled,
-      twoFactorSecret: props.twoFactorSecret,
-      qrCodeUrl: props.qrCodeUrl,
-      createdAt: props.createdAt,
+      twoFactorSecret: props.twoFactorSecret ?? null,
+      qrCodeUrl: props.qrCodeUrl ?? null,
+      createdAt: props.createdAt ?? null,
+      authProvider: props.authProvider,
+      avatar: props.avatar ?? null,
+      googleId: props.googleId ?? null,
     });
   }
+
+
+
 
   get id() { return this._id; };
   get userCode() { return this._userCode.value; };
   get fullName() { return this._fullName; };
   get email() { return this._email.value; };
-  get phone() { return this._phone.value; };
-  get password() { return this._password.value; };
+  get phone() { return this._phone?.value ?? null; };
+  get password() { return this._password?.value ?? null; };
   get role() { return this._role; };
   get currency() { return this._currency; };
   get walletBalance() { return this._walletBalance; };
@@ -174,12 +225,15 @@ export class UserEntity {
   get isVerified() { return this._isVerified };
   get subscriptionStatus() { return this._subscriptionStatus };
   get subscriptionPlan() { return this._subscriptionPlan };
-  get walletId() { return this._walletId };
-  get kycId() { return this._kycId };
-  get twoFactorSecret() { return this._twoFactorSecret };
-  get qrCodeUrl() { return this._qrCodeUrl };
-  get createdAt() { return this._createdAt };
-  
+  get walletId() { return this._walletId ?? null; };
+  get kycId() { return this._kycId ?? null; };
+  get twoFactorSecret() { return this._twoFactorSecret ?? null; };
+  get qrCodeUrl() { return this._qrCodeUrl ?? null; };
+  get createdAt() { return this._createdAt ?? null; };
+  get authProvider() { return this._authProvider };
+  get avatar() { return this._avatar ?? null; };
+  get googleId() { return this._googleId ?? null; };
+
   changePassword(newPassword: string): void {
     this._password = Password.create(newPassword);
   }

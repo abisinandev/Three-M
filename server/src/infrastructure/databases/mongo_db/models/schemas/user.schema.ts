@@ -6,6 +6,7 @@ import { SubscriptionStatus } from "@domain/enum/users/subscription-status.enum"
 import { SubscripionPlan } from "@domain/enum/users/subscription-plan.enum";
 import { CurrencyTypes } from "@domain/enum/users/currency-enum";
 import { KycStatusType } from "@domain/enum/users/kyc-status.enum";
+import { AuthProvider } from "@domain/enum/users/auth-provider.enum";
 
 export type UserDocument = Document & IUserSchema;
 
@@ -14,8 +15,20 @@ const UserSchema = new Schema<UserDocument>(
     userCode: { type: String, unique: true, index: true },
     fullName: { type: String, required: true },
     email: { type: String, required: true, unique: true, index: true },
-    phone: { type: String, required: true, unique: true, index: true },
-    password: { type: String, required: true },
+    phone: {
+      type: String,
+      required: function (this: any) {
+        return this.authProvider === "MANUAL";
+      },
+      default: null,
+    },
+    password: {
+      type: String,
+      required: function (this: any) {
+        return this.authProvider === "MANUAL";
+      },
+      default: null,
+    },
 
     role: { type: String, enum: Object.values(Role), default: Role.USER },
 
@@ -39,6 +52,10 @@ const UserSchema = new Schema<UserDocument>(
     isTwoFactorEnabled: { type: Boolean, default: false },
     twoFactorSecret: { type: String },
     qrCodeUrl: { type: String },
+
+    authProvider: { type: String, enum: Object.values(AuthProvider), default: AuthProvider.MANAUL },
+    avatar: { type: String },
+    googleId: { type: String },
   },
   { timestamps: true },
 );

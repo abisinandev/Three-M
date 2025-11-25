@@ -29,6 +29,10 @@ import type { IForgotPasswordVerifyOtpUseCase } from "@application/use_cases/int
 import type { IForgotPasswordResendOtpUseCase } from "@application/use_cases/interfaces/user/forgot-pass-resend-otp-usecase.interface";
 import type { IResetPasswordUseCase } from "@application/use_cases/interfaces/user/reset-password-usecase.interface";
 import type { IUserLogoutUseCase } from "@application/use_cases/interfaces/user/user-logout-usecase.interface";
+import { IGoogleAuthService } from "@application/interfaces/services/auth/google-auth.service.interface";
+import { GoogleAuthService } from "@infrastructure/providers/google-auth/google-auth.service";
+import { IGoogleAuthUseCase } from "@application/use_cases/interfaces/user/google-auth.usecase.interface";
+import { GoogleAuthUseCase } from "@application/use_cases/auth/google-auth.usecase";
 
 export const AuthModule = new ContainerModule(({ bind }) => {
   //Providers
@@ -37,7 +41,9 @@ export const AuthModule = new ContainerModule(({ bind }) => {
   bind<IJwtProvider>(AUTH_TYPES.IJwtProvider).to(JwtProvider);
   bind<ITwoFactorAuthSetup>(AUTH_TYPES.TwoFactorAuthSetup).to(TwoFactorAuthSetup);
   bind<ITwoFactorAuthVerify>(AUTH_TYPES.TwoFactorAuthVerify).to(TwoFactorAuthVerify);
+  bind<IGoogleAuthService>(AUTH_TYPES.GoogleAuthService).to(GoogleAuthService);
 
+  
   //Usecases
   bind<ISignupVerifyOtpUseCase>(AUTH_TYPES.SignupVerifyOtpUseCase).to(SignupVerifyOtpUseCase);
   bind<ISignupResendOtpUseCase>(AUTH_TYPES.ResendOtpUseCase).to(ResendOtpUseCase);
@@ -48,6 +54,7 @@ export const AuthModule = new ContainerModule(({ bind }) => {
   bind<IForgotPasswordVerifyOtpUseCase>(AUTH_TYPES.ForgotPasswordOtpVerifyUseCase).to(ForgotPasswordOtpVerifyUseCase);
   bind<IForgotPasswordResendOtpUseCase>(AUTH_TYPES.ForgotPasswordResendOtpUseCase).to(ForgotPasswordResendOtpUseCase);
   bind<IResetPasswordUseCase>(AUTH_TYPES.ResetPasswordUseCase).to(ResetPasswordUseCase);
+  bind<IGoogleAuthUseCase>(AUTH_TYPES.GoogleAuthUseCase).to(GoogleAuthUseCase),
 
   //Controllers
   bind<AuthController>(AUTH_TYPES.AuthController).to(AuthController);

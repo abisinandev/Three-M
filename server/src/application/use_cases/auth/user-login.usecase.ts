@@ -26,7 +26,7 @@ export class UserLoginUseCase implements IUserLoginUseCase {
         if (existingUser.isBlocked) throw new ForbiddenError(ErrorMessage.ACCOUNT_BLOCKED);
         if (!existingUser.isEmailVerified) new ForbiddenError(ErrorMessage.EMAIL_NOT_VERIFIED)
 
-        const isMatch = await this._passwordHashing.verify(user.password, existingUser.password);
+        const isMatch = await this._passwordHashing.verify(user.password, existingUser.password as string);
         if (!isMatch) throw new UnauthorizedError(ErrorMessage.INVALID_CREDENTIALS);
 
         if (!existingUser.isTwoFactorEnabled) {

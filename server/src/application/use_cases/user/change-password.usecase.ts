@@ -22,7 +22,7 @@ export class ChangePasswordUseCase implements IChangePasswordUseCase {
 
         if (!user) throw new NotFoundError(ErrorMessage.USER_NOT_FOUND);
 
-        const isMatch = await this._hashingService.verify(data.currentPassword, user.password);
+        const isMatch = await this._hashingService.verify(data.currentPassword, user.password as string);
         if (!isMatch) throw new ValidationError(ErrorMessage.INVALID_PASSWORD);
 
         const newHashedPassword = await this._hashingService.hash(data.newPassword);

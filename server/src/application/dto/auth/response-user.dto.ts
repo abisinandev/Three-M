@@ -2,7 +2,7 @@ export type ResponseUserDTO = {
   userCode: string;
   fullName: string;
   email: string;
-  phone: string;
+  phone: string | null;
   role: string;
   isEmailVerified?: boolean;
   isVerified?: boolean;

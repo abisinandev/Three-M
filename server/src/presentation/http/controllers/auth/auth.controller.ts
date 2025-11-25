@@ -1,6 +1,7 @@
 import type { IForgotPasswordResendOtpUseCase } from "@application/use_cases/interfaces/user/forgot-pass-resend-otp-usecase.interface";
 import type { IForgotPasswordVerifyOtpUseCase } from "@application/use_cases/interfaces/user/forgot-pass-verify-otp-usecase.interface";
 import type { IForgotPasswordUseCase } from "@application/use_cases/interfaces/user/forgot-password-usecase.interface";
+import { IGoogleAuthUseCase } from "@application/use_cases/interfaces/user/google-auth.usecase.interface";
 import type { IRefreshTokenUseCase } from "@application/use_cases/interfaces/user/refresh-token-usecase.interface";
 import type { IResetPasswordUseCase } from "@application/use_cases/interfaces/user/reset-password-usecase.interface";
 import type { ISignupVerifyOtpUseCase } from "@application/use_cases/interfaces/user/signup-verify-otp-usecase.interface";
@@ -16,6 +17,7 @@ import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
 import { ValidationError } from "@presentation/express/utils/error-handling";
 import type { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
+import { success } from "zod";
 
 @injectable()
 export class AuthController {
@@ -31,6 +33,7 @@ export class AuthController {
         @inject(AUTH_TYPES.ForgotPasswordOtpVerifyUseCase) private readonly _forgotPassVerifyOtp: IForgotPasswordVerifyOtpUseCase,
         @inject(AUTH_TYPES.ForgotPasswordResendOtpUseCase) private readonly _forgotPasswordResendOtp: IForgotPasswordResendOtpUseCase,
         @inject(AUTH_TYPES.ResetPasswordUseCase) private readonly _resetPassword: IResetPasswordUseCase,
+        @inject(AUTH_TYPES.GoogleAuthUseCase) private readonly _googleAuthUseCase: IGoogleAuthUseCase,
     ) { }
 
     async signup(req: Request, res: Response, next: NextFunction) {
@@ -229,6 +232,36 @@ export class AuthController {
                 success: true,
                 message: SuccessMessage.PASSWORD_RESET_SUCCESS
             });
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async googleAuth(req: Request, res: Response, next: NextFunction) {
+        try {
+            const dto = { ...req.body };
+            const result = await this._googleAuthUseCase.execute(dto);
+
+            res.cookie("refreshToken", result.refreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "lax",
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            });
+
+            res.cookie("accessToken", result.accessToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "lax",
+                maxAge: 15 * 60 * 1000, // 15 minutes
+            });
+
+            return res.status(200).json({
+                success: true,
+                message: SuccessMessage.LOGGED_IN_SUCCESS,
+                data: { accessToken: "created" }
+            })
         } catch (error) {
             next(error)
         }

@@ -31,4 +31,6 @@ export const env = {
   ADMIN_CODE: process.env.ADMIN_CODE,
   ADMIN_EMAIL: process.env.ADMIN_EMAIL,
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+
+  GOOGLE_AUTH_CLIENT_ID: process.env.GOOGLE_AUTH_CLIENT_ID,
 };

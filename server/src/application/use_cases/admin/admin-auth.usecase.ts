@@ -24,12 +24,11 @@ export class AdminAuthUseCase implements IAdminAuthUseCase {
     async execute(data: AdminAuthDTO): Promise<AdminAuthReponseDTO> {
 
         const isExist = await this._adminRepository.findOne({ adminCode: data.adminCode });
+        console.log('=========',isExist?.email)
         if (!isExist) throw new NotFoundError(ErrorMessage.ADMIN_NOT_FOUND);
-
 
         const isMatch = await this._passwordHashing.verify(data.password, isExist.password)
         if (!isMatch) throw new ValidationError(ErrorMessage.INVALID_PASSWORD);
-
 
         const otp = generateOtp();
         const expiryTime = 5 * 60;

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from "class-validator";
 
 export class CreateUserDTO {
   @IsNotEmpty({ message: "Full name is required." })
@@ -24,4 +24,5 @@ export class CreateUserDTO {
 
   @IsString({ message: "Role must be a valid string." })
   role: string = "user";
+
 }

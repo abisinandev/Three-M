@@ -6,7 +6,7 @@ export const AUTH_TYPES = {
   IEmailService: Symbol.for("IEmailService"),
   IPasswordHashingService: Symbol.for("IPasswordHashingService"),
   IJwtProvider: Symbol.for('IJwtProvider'),
-
+  GoogleAuthService: Symbol.for("GoogleAuthService"),
   // Use Cases
   SignupVerifyOtpUseCase: Symbol.for("SignupVerifyOtpUseCase"),
   ResendOtpUseCase: Symbol.for("ResendOtpUseCase"),
@@ -15,7 +15,9 @@ export const AUTH_TYPES = {
   ForgotPasswordUseCase: Symbol.for("ForgotPasswordUseCase"),
   ForgotPasswordOtpVerifyUseCase: Symbol.for("ForgotPasswordOtpVerifyUseCase"),
   ForgotPasswordResendOtpUseCase: Symbol.for("ForgotPasswordResendOtpUseCase"),
-  ResetPasswordUseCase:Symbol.for("ResetPasswordUseCase"),
+  ResetPasswordUseCase: Symbol.for("ResetPasswordUseCase"),
+  GoogleAuthUseCase: Symbol.for("GoogleAuthUseCase"),
+
   //Providers
   TwoFactorAuthSetup: Symbol.for("TwoFactorAuthSetup"),
   TwoFactorAuthVerify: Symbol.for("TwoFactorAuthVerify"),

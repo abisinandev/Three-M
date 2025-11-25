@@ -18,8 +18,7 @@ router.post(ROUTES.AUTH, validateDTO(AdminAuthDTO), authController.authenticatio
 router.post(ROUTES.VERIFY_OTP, validateDTO(VerifyOtpDTO), authController.veirfyOtp.bind(authController));
 router.post(ROUTES.REFRESH_API, authController.refresh.bind(authController));
 
-
-router.get(ROUTES.PROILE,AdminAuthMiddleware, adminController.getProfile.bind(adminController));
-router.post(ROUTES.LOGOUT,AdminAuthMiddleware, authController.logout.bind(authController));
+router.get(ROUTES.PROILE, AdminAuthMiddleware, adminController.getProfile.bind(adminController));
+router.post(ROUTES.LOGOUT, AdminAuthMiddleware, authController.logout.bind(authController));
 
 export default router

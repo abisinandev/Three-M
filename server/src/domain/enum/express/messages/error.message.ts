@@ -27,4 +27,6 @@ export enum ErrorMessage {
 
   RATE_LIMIT_MESSAGE = "Please wait 30 seconds before requesting another OTP",
   MAX_RESEND_REACHED = "Maximum resend attempts reached",
+  
+  EMAIL_NOT_VERIFIED_BY_GOOGLE = "Email not verified by Google",
 }

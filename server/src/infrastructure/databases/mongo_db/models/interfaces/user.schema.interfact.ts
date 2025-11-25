@@ -1,3 +1,4 @@
+import { AuthProvider } from "@domain/enum/users/auth-provider.enum";
 import type { CurrencyTypes } from "@domain/enum/users/currency-enum";
 import type { KycStatusType } from "@domain/enum/users/kyc-status.enum";
 import type { SubscripionPlan } from "@domain/enum/users/subscription-plan.enum";
@@ -9,17 +10,17 @@ export interface IUserSchema {
   userCode: string;
   fullName: string;
   email: string;
-  phone: string;
-  password: string;
+  phone: string | null;
+  password: string | null;
   role: Role;
 
   isVerified: boolean;
   isEmailVerified: boolean;
   isBlocked: boolean;
 
-  kycId?: string;
+  kycId?: string | null;
   kycStatus?: KycStatusType;
-  walletId?: string;
+  walletId?: string | null;
   walletBalance?: number;
   currency?: CurrencyTypes;
 
@@ -28,7 +29,11 @@ export interface IUserSchema {
   subscriptionPlan: SubscripionPlan;
 
   isTwoFactorEnabled?: boolean;
-  twoFactorSecret?: string;
-  qrCodeUrl?: string;
-  createdAt?: Date;
+  twoFactorSecret?: string | null;
+  qrCodeUrl?: string | null;
+  createdAt?: Date | null;
+
+  authProvider: AuthProvider;
+  avatar: string | null
+  googleId: string | null
 }
