@@ -6,7 +6,7 @@ export type UserType = {
     fullName: string;
     email: string;
     phone: string;
-
+    
     // Auth & Security
     role: string;
     isVerified: boolean;          // mobile verification

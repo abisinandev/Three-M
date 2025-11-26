@@ -1,5 +1,5 @@
 import type { IBaseRepository } from "@application/interfaces/repositories/base-repository.interface";
-import type { Model, UpdateQuery } from "mongoose";
+import type { Model, QueryOptions, UpdateQuery } from "mongoose";
 
 export abstract class BaseRepository<TDomain, TDocument> implements IBaseRepository<TDomain> {
 
@@ -27,8 +27,15 @@ export abstract class BaseRepository<TDomain, TDocument> implements IBaseReposit
   }
 
   async findAll(): Promise<TDomain[]> {
-    const docs = await this.model.find().exec();
+    const docs = await this.model.find().sort({ createdAt: -1 }).exec();
     return Promise.all(docs.map((doc) => this.mapper.toDomain(doc)));
+  }
+
+
+
+  async count(): Promise<{ totalCount: number; }> {
+    const totalCount = await this.model.find().countDocuments();
+    return { totalCount }
   }
 
   async update(id: string, update: Partial<TDomain>): Promise<TDomain | null> {

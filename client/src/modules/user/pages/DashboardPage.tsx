@@ -1,5 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { Wallet, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, Star, Zap, BarChart3, Shield, Ban, Bot } from 'lucide-react';
+import { Wallet, TrendingDown, ArrowUpRight, ArrowDownRight, Star, Zap, BarChart3, Shield, Ban, Bot } from 'lucide-react';
 
 const DashboardPage = () => {
   return (

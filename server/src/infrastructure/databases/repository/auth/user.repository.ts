@@ -7,6 +7,7 @@ import {
 import { UserMapper } from "@infrastructure/mappers/user.mapper";
 import { injectable } from "inversify";
 import { BaseRepository } from "../base.repository";
+import { QueryOptions } from "mongoose";
 
 
 @injectable()
@@ -36,6 +37,39 @@ export class UserRepository extends BaseRepository<UserEntity, UserDocument> imp
       id,
       { $set: { password } }
     )
+  }
+
+  async findWithFilters(options: QueryOptions): Promise<UserEntity[]> {
+    const {
+      page = 1,
+      limit = 10,
+      filter = {},
+      search = "",
+      searchField = ["fullName", "email", "userCode"],
+      sortBy = "createdAt",
+      sortOrder = "desc",
+    } = options
+
+    const skip = (page - 1) * limit;
+
+    const finalFilter: any = { ...filter };
+    if (search.trim()) {
+      const searchRegex = { $regex: search.trim(), $options: "i" };
+      finalFilter.$or = searchField.map((field: any) => ({ [field]: searchRegex }));
+    }
+
+    const sort: Record<string, 1 | -1> = {
+      [sortBy]: sortOrder === "asc" ? 1 : -1
+    };
+
+    const docs = await this.model
+      .find(finalFilter)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .exec()
+
+    return Promise.all(docs.map((doc) => this.mapper.toDomain(doc)));
   }
 
 }

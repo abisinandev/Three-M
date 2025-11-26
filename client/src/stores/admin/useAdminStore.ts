@@ -1,16 +1,41 @@
-
 import type { AdminType } from '@shared/types/admin/AdminTypes';
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-type AdminStore = {
-    data: AdminType | null;
-    setData: (data: AdminType) => void;
-    logout: () => void;
+export interface AdminStore {
+  isAuthenticated: boolean;
+  role: string;
+  data: AdminType | null;
+  setData: (data: AdminType, role?: string) => void;
+  logout: () => void;
 }
 
+export const useAdminStore = create<AdminStore>()(
+  persist(
+    (set) => ({
+      data: null,
+      isAuthenticated: false,
+      role: "",
 
-export const useAdminStore = create<AdminStore>((set) => ({
-    data: null,
-    setData: (data) => set({ data }),
-    logout: () => set({ data: null }),
-}));
+      setData: (data, role) => set({
+        data,
+        isAuthenticated: true,
+        role: role ?? data.role ?? ""
+      }),
+
+      logout: () => set({
+        data: null,
+        isAuthenticated: false,
+        role: ""
+      }),
+    }),
+    {
+      name: 'admin-storage',
+      partialize: (state) => ({
+        data: state.data,
+        isAuthenticated: state.isAuthenticated,
+        role: state.role,
+      }),
+    }
+  )
+);

@@ -1,5 +1,4 @@
 import { inject, injectable } from "inversify";
-import type { IRefreshTokenUseCase } from "../interfaces/admin/admin-refresh-token.interface";
 import type { RefreshResponseDTO } from "@application/dto/auth/refresh-response.dto";
 import type { RefreshDTO } from "@application/dto/auth/refresh.dto";
 import { NotFoundError, ValidationError } from "@presentation/express/utils/error-handling";
@@ -10,6 +9,7 @@ import type { IAdminRepository } from "@application/interfaces/repositories/admi
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 import type { JwtPayload } from "@domain/types/jwt-payload.type";
+import type { IRefreshTokenUseCase } from "@application/use_cases/interfaces/admin/admin-refresh-token.interface";
 
 @injectable()
 export class AdminRefreshTokenUseCase implements IRefreshTokenUseCase {

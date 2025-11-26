@@ -1,7 +1,7 @@
 import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
 import { inject, injectable } from "inversify";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
-import type { ResponseUserDTO } from "@application/dto/auth/response-user.dto";
+import type { UserDTO } from "@application/dto/auth/response-user.dto";
 import type { IUserProfileInterface } from "../interfaces/user/user-profile-usecase.interface";
 import { toUserResponse } from "@application/mappers/user/user.mapper";
 import { UserEntity } from "@domain/entities/user.entity";
@@ -12,7 +12,7 @@ export class GetUserProfileUseCase implements IUserProfileInterface {
     @inject(USER_TYPES.UserRepository) private readonly _userRepository: IUserRepository,
   ) { }
 
-  async execute(data: { userId: string; }): Promise<ResponseUserDTO> {
+  async execute(data: { userId: string; }): Promise<UserDTO> {
     const user = await this._userRepository.findById(data.userId as string);
 
     // return {

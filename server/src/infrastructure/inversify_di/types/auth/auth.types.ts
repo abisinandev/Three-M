@@ -11,7 +11,6 @@ export const AUTH_TYPES = {
   SignupVerifyOtpUseCase: Symbol.for("SignupVerifyOtpUseCase"),
   ResendOtpUseCase: Symbol.for("ResendOtpUseCase"),
   RefreshTokenUseCase: Symbol.for("RefreshTokenUseCase"),
-  LogoutUseCase: Symbol.for("LogoutUseCase"),
   ForgotPasswordUseCase: Symbol.for("ForgotPasswordUseCase"),
   ForgotPasswordOtpVerifyUseCase: Symbol.for("ForgotPasswordOtpVerifyUseCase"),
   ForgotPasswordResendOtpUseCase: Symbol.for("ForgotPasswordResendOtpUseCase"),

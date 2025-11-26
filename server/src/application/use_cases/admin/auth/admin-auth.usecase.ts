@@ -1,5 +1,4 @@
 import { inject, injectable } from "inversify";
-import type { IAdminAuthUseCase } from "../interfaces/admin/admin-auth-usecase.interface";
 import type { AdminAuthDTO } from "@application/dto/admin/admin-auth.dto";
 import { ADMIN_TYPES } from "@infrastructure/inversify_di/types/admin/admin.types";
 import type { IAdminRepository } from "@application/interfaces/repositories/admin.repository.interface";
@@ -11,6 +10,7 @@ import { generateOtp } from "@shared/utils/otp-generator";
 import type { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 import type { AdminAuthReponseDTO } from "@application/dto/admin/admin-auth.response.dto";
+import type { IAdminAuthUseCase } from "@application/use_cases/interfaces/admin/admin-auth-usecase.interface";
 
 @injectable()
 export class AdminAuthUseCase implements IAdminAuthUseCase {

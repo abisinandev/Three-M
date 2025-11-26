@@ -9,7 +9,6 @@ import { ContainerModule } from "inversify";
 import type { IJwtProvider } from "@application/interfaces/services/auth/jwt.provider.interface";
 import { JwtProvider } from "@infrastructure/providers/jwt/jwt.provider";
 import { RefreshTokenUseCase } from "@application/use_cases/auth/refresh-token.usecase";
-import { LogoutUseCase } from "@application/use_cases/auth/user-logout.usecase";
 import { AuthController } from "@presentation/http/controllers/auth/auth.controller";
 import { TwoFactorAuthSetup } from "@infrastructure/providers/2fa-security/2fa-auth-setup.provider";
 import type { ITwoFactorAuthSetup } from "@application/interfaces/services/auth/2fa-auth-setup.interface";
@@ -28,7 +27,6 @@ import type { IRefreshTokenUseCase } from "@application/use_cases/interfaces/use
 import type { IForgotPasswordVerifyOtpUseCase } from "@application/use_cases/interfaces/user/forgot-pass-verify-otp-usecase.interface";
 import type { IForgotPasswordResendOtpUseCase } from "@application/use_cases/interfaces/user/forgot-pass-resend-otp-usecase.interface";
 import type { IResetPasswordUseCase } from "@application/use_cases/interfaces/user/reset-password-usecase.interface";
-import type { IUserLogoutUseCase } from "@application/use_cases/interfaces/user/user-logout-usecase.interface";
 import { IGoogleAuthService } from "@application/interfaces/services/auth/google-auth.service.interface";
 import { GoogleAuthService } from "@infrastructure/providers/google-auth/google-auth.service";
 import { IGoogleAuthUseCase } from "@application/use_cases/interfaces/user/google-auth.usecase.interface";
@@ -49,12 +47,11 @@ export const AuthModule = new ContainerModule(({ bind }) => {
   bind<ISignupResendOtpUseCase>(AUTH_TYPES.ResendOtpUseCase).to(ResendOtpUseCase);
   bind<IVerifyTwoFactorUseCase>(AUTH_TYPES.VerifyTwoFactorUseCase).to(VerifyTwoFactorUseCase);
   bind<IRefreshTokenUseCase>(AUTH_TYPES.RefreshTokenUseCase).to(RefreshTokenUseCase);
-  bind<IUserLogoutUseCase>(AUTH_TYPES.LogoutUseCase).to(LogoutUseCase);
   bind<IForgotPasswordUseCase>(AUTH_TYPES.ForgotPasswordUseCase).to(ForgotPasswordUseCase);
   bind<IForgotPasswordVerifyOtpUseCase>(AUTH_TYPES.ForgotPasswordOtpVerifyUseCase).to(ForgotPasswordOtpVerifyUseCase);
   bind<IForgotPasswordResendOtpUseCase>(AUTH_TYPES.ForgotPasswordResendOtpUseCase).to(ForgotPasswordResendOtpUseCase);
   bind<IResetPasswordUseCase>(AUTH_TYPES.ResetPasswordUseCase).to(ResetPasswordUseCase);
-  bind<IGoogleAuthUseCase>(AUTH_TYPES.GoogleAuthUseCase).to(GoogleAuthUseCase),
+  bind<IGoogleAuthUseCase>(AUTH_TYPES.GoogleAuthUseCase).to(GoogleAuthUseCase);
 
   //Controllers
   bind<AuthController>(AUTH_TYPES.AuthController).to(AuthController);

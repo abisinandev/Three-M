@@ -11,6 +11,8 @@ import type { IUserSignupUseCase } from "@application/use_cases/interfaces/user/
 import type { IUserLoginUseCase } from "@application/use_cases/interfaces/user/user-login-usecase.interface";
 import type { IChangePasswordUseCase } from "@application/use_cases/interfaces/user/change-password.usecase.interface";
 import type { IUserProfileInterface } from "@application/use_cases/interfaces/user/user-profile-usecase.interface";
+import type { IUserLogoutUseCase } from "@application/use_cases/interfaces/user/user-logout-usecase.interface";
+import { LogoutUseCase } from "@application/use_cases/auth/user-logout.usecase";
 
 export const UserModule = new ContainerModule(({ bind }) => {
   //Repository
@@ -22,6 +24,8 @@ export const UserModule = new ContainerModule(({ bind }) => {
   //Usecases
   bind<IUserLoginUseCase>(USER_TYPES.UserLoginUseCase).to(UserLoginUseCase);
   bind<IUserSignupUseCase>(USER_TYPES.UserSignupUseCase).to(UserSignupUseCase);
-  bind<IUserProfileInterface>(USER_TYPES.GetUserProfileUseCase).to(GetUserProfileUseCase)
-  bind<IChangePasswordUseCase>(USER_TYPES.ChangePasswordUseCase).to(ChangePasswordUseCase)
+  bind<IUserProfileInterface>(USER_TYPES.GetUserProfileUseCase).to(GetUserProfileUseCase);
+  bind<IChangePasswordUseCase>(USER_TYPES.ChangePasswordUseCase).to(ChangePasswordUseCase);
+  bind<IUserLogoutUseCase>(USER_TYPES.LogoutUseCase).to(LogoutUseCase);
+
 });

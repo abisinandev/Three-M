@@ -15,7 +15,6 @@ import { LOGIN_API } from "@shared/constants/userContants";
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
     const verify2faMutation = useVerify2FA();
-
     const [formData, setFormData] = useState<LoginType>({ email: "", password: "" });
     const [formErrors, setFormErrors] = useState<Record<keyof LoginType, string>>({ email: "", password: "" });
     const [is2faModalOpen, setIs2faModalOpen] = useState(false);

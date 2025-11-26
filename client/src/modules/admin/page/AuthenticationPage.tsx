@@ -166,9 +166,6 @@ const AuthenticationPage = () => {
                                     />
                                     <span className="text-gray-500">Remember me</span>
                                 </label>
-                                <a href="#" className="text-gray-500 hover:text-teal-green transition">
-                                    Forgot password?
-                                </a>
                             </div>
 
                             <button

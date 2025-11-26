@@ -1,5 +1,4 @@
 import { inject, injectable } from "inversify";
-import type { IAdminAuthVerifyOtpUseCase } from "../interfaces/admin/admin-auth-verify-otp.interface";
 import type { VerifyOtpDTO } from "@application/dto/auth/verify-otp.dto";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 import { NotFoundError, ValidationError } from "@presentation/express/utils/error-handling";
@@ -11,6 +10,7 @@ import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
 import type { IJwtProvider } from "@application/interfaces/services/auth/jwt.provider.interface";
 import { env } from "@presentation/express/utils/constants/env.constants";
 import type { VerifyOtpResponseDTO } from "@application/dto/auth/verify-otp-response.dto";
+import { IAdminAuthVerifyOtpUseCase } from "@application/use_cases/interfaces/admin/admin-auth-verify-otp.interface";
 
 @injectable()
 export class AdminAuthVerifyOtpUseCase implements IAdminAuthVerifyOtpUseCase {
