@@ -39,7 +39,8 @@ export class RefreshTokenUseCase implements IRefreshTokenUseCase {
             id: user.id as string,
             userCode: user.userCode,
             role: user.role,
-            email: user.email
+            email: user.email,
+            isBlocked: user.isBlocked
         };
         const newAccessToken = this._jwtProvider.generateAccessToken(payload);
         return { accessToken: newAccessToken }

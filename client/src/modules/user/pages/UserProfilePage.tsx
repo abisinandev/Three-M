@@ -67,7 +67,7 @@ const UserProfilePage = () => {
 
               <div className="space-y-5 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500 font-medium">Full Name</span>
+                  <span className="text-gray-500 font-medium">User code</span>
                   <span className="text-white font-semibold">{user?.userCode || '—'}</span>
                 </div>
                 <div className="flex justify-between">

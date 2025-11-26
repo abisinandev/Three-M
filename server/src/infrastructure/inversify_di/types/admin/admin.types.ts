@@ -8,8 +8,14 @@ export const ADMIN_TYPES = {
     AdminRefreshTokenUseCase: Symbol.for('AdminRefreshTokenUseCase'),
     AdminLogoutUseCase: Symbol.for('AdminLogoutUseCase'),
     AdminProfileUseCase: Symbol.for('AdminProfileUseCase'),
+    AdminResendOtpUseCase: Symbol.for("AdminResendOtpUseCase"),
+    FetchUserDetails: Symbol.for("FetchUserDetails"),
+    BlockUserUseCase: Symbol.for('BlockUserUseCase'),
+    UnblockUserUsecase: Symbol.for('UnblockUserUsecase'),
+
 
     AdminAuthController: Symbol.for("AdminAuthController"),
-    AdminController:Symbol.for("AdminController"),
+    AdminController: Symbol.for("AdminController"),
+    AdminUserController: Symbol.for('AdminUserController'),
 
 }

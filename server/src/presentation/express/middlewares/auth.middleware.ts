@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { env } from "../utils/constants/env.constants";
 import type { JwtPayload } from "@domain/types/jwt-payload.type";
 
-export const AuthMiddleware = ((req: Request, _res: Response, next: NextFunction) => {
+export const AuthMiddleware = ((req: Request, res: Response, next: NextFunction) => {
     try {
         const { accessToken } = req.cookies;
 
@@ -13,7 +13,14 @@ export const AuthMiddleware = ((req: Request, _res: Response, next: NextFunction
         }
 
         const decoded = jwt.verify(accessToken, env.ACCESS_SECRET) as JwtPayload;
+        
+        if (!decoded.isBlocked) {
+            res.clearCookie("accessToken", { httpOnly: true, sameSite: "lax" });
+            res.clearCookie("refreshToken", { httpOnly: true, sameSite: "lax" });
+        }
+        
         req.user = decoded;
+
         next();
     } catch (error) {
         next(error)

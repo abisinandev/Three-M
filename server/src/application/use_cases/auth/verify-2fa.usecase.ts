@@ -33,7 +33,8 @@ export class VerifyTwoFactorUseCase implements IVerifyTwoFactorUseCase {
             id: user.id as string,
             userCode: user.userCode,
             role: user.role,
-            email: user.email
+            email: user.email,
+            isBlocked: user.isBlocked,
         };
 
         const accessToken = this._jwtProvider.generateAccessToken(payload);

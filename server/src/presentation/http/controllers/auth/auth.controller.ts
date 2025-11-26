@@ -7,7 +7,6 @@ import type { IResetPasswordUseCase } from "@application/use_cases/interfaces/us
 import type { ISignupVerifyOtpUseCase } from "@application/use_cases/interfaces/user/signup-verify-otp-usecase.interface";
 import type { ISignupResendOtpUseCase } from "@application/use_cases/interfaces/user/singup-resend-otp-usecase.interface";
 import type { IUserLoginUseCase } from "@application/use_cases/interfaces/user/user-login-usecase.interface";
-import type { IUserLogoutUseCase } from "@application/use_cases/interfaces/user/user-logout-usecase.interface";
 import type { IUserSignupUseCase } from "@application/use_cases/interfaces/user/user-signup.usecase.interface";
 import type { IVerifyTwoFactorUseCase } from "@application/use_cases/interfaces/user/verify-2fa-usecase.interface";
 import { SuccessMessage } from "@domain/enum/express/messages/success.message";
@@ -17,7 +16,6 @@ import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
 import { ValidationError } from "@presentation/express/utils/error-handling";
 import type { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "inversify";
-import { success } from "zod";
 
 @injectable()
 export class AuthController {
@@ -26,7 +24,6 @@ export class AuthController {
         @inject(USER_TYPES.UserLoginUseCase) private readonly _userLoginUseCase: IUserLoginUseCase,
         @inject(AUTH_TYPES.VerifyTwoFactorUseCase) private readonly _verifyTwoFactorUseCase: IVerifyTwoFactorUseCase,
         @inject(AUTH_TYPES.RefreshTokenUseCase) private readonly _refreshTokenUseCase: IRefreshTokenUseCase,
-        @inject(AUTH_TYPES.LogoutUseCase) private readonly _logoutUseCase: IUserLogoutUseCase,
         @inject(AUTH_TYPES.ForgotPasswordUseCase) private readonly _forgotPasswordUseCase: IForgotPasswordUseCase,
         @inject(AUTH_TYPES.SignupVerifyOtpUseCase) private readonly _verifyOtpUseCase: ISignupVerifyOtpUseCase,
         @inject(AUTH_TYPES.ResendOtpUseCase) private readonly _resendOtpUseCase: ISignupResendOtpUseCase,
@@ -267,21 +264,4 @@ export class AuthController {
         }
     }
 
-    logout(req: Request, res: Response, next: NextFunction) {
-        try {
-            const userId = req.user?.id;
-            if (userId) {
-                this._logoutUseCase.execute({ userId })
-            }
-            res.clearCookie("accessToken", { httpOnly: true, sameSite: "lax" });
-            res.clearCookie("refreshToken", { httpOnly: true, sameSite: "lax" });
-
-            return res.status(HttpStatus.OK).json({
-                success: true,
-                message: SuccessMessage.LOGGED_OUT
-            });
-        } catch (error) {
-            next(error)
-        }
-    }
 }

@@ -48,7 +48,7 @@ adminApi.interceptors.response.use(
         isRefreshing = true;
 
         try {
-            await adminApi.post("/refresh");
+            await adminApi.post("/authentication/refresh");
             queue.forEach(p => p.resolve());
             queue = [];
             return adminApi(original);

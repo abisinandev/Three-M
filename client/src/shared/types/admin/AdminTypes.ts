@@ -3,4 +3,5 @@ export type AdminType = {
     fullName: string;
     email: string;
     role: string;
+    profile: string;
 }

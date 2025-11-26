@@ -1,3 +1,4 @@
+import { REFRESH_TOKEN_URL } from "@shared/constants/userContants";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -103,7 +104,7 @@ api.interceptors.response.use(
         isRefreshing = true;
 
         try {
-            await api.post("/auth/refresh");
+            await api.post(REFRESH_TOKEN_URL);
             processQueue();
             return api(originalRequest);
         } catch (refreshError) {

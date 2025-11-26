@@ -7,6 +7,7 @@ export const USER_TYPES = {
   UserLoginUseCase: Symbol.for("UserLoginUseCase"),
   GetUserProfileUseCase: Symbol.for("GetUserProfileUseCase"),
   ChangePasswordUseCase: Symbol.for("ChangePasswordUseCase"),
+  LogoutUseCase: Symbol.for("LogoutUseCase"),
 
   //Controller
   UserController: Symbol.for("UserController"),

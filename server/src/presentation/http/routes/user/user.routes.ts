@@ -15,5 +15,6 @@ const userController = container.get<UserController>(
 
 router.get(Routes.PROFILE, AuthMiddleware, userController.getProfile.bind(userController));
 router.post(Routes.CHANGE_PASSWORD, AuthMiddleware, validateDTO(ChangePasswordDTO), userController.ChangePassord.bind(userController));
+router.post(Routes.LOGOUT, AuthMiddleware, userController.logout.bind(userController));
 
 export default router

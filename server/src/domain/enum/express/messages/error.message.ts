@@ -29,4 +29,7 @@ export enum ErrorMessage {
   MAX_RESEND_REACHED = "Maximum resend attempts reached",
   
   EMAIL_NOT_VERIFIED_BY_GOOGLE = "Email not verified by Google",
+
+  USER_ALREADY_BLOCKED = "User already blocked",
+  USER_ALREADY_UNBLOCKED = "User already unblocked",
 }

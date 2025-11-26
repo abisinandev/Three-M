@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, Link, useNavigate } from '@tanstack/react-router';
+import { Outlet, Link, useNavigate } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import api from '@lib/axiosUser';
@@ -7,7 +7,7 @@ import { Wallet, ChevronDown, LogOut, User, Menu } from 'lucide-react';
 import { Footer } from '@shared/components/LandingPage/Footer';
 import { LOGOUT } from '@shared/constants/userContants';
 
-function UserLayout() {
+const UserLayout = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const { user, setUser, logout } = useUserStore();
@@ -40,6 +40,7 @@ function UserLayout() {
             try {
                 await api.post(LOGOUT);
                 logout();
+                useUserStore.persist.clearStorage();
                 navigate({ to: '/auth/login', replace: true });
                 toast.success('Logged out successfully');
             } catch (error) {
@@ -54,7 +55,7 @@ function UserLayout() {
                 <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between text-sm">
 
                     {/* Logo */}
-                    <Link to="/user/dashboard" className="flex items-center">
+                    <Link to="/user" className="flex items-center">
                         <h1 className="text-xl font-bold tracking-tighter">
                             <span className="text-white">three</span>
                             <span className="text-[#22C55E]">M</span>
@@ -63,7 +64,7 @@ function UserLayout() {
 
                     <nav className="hidden lg:flex items-center gap-8 font-medium text-gray-400">
                         {[
-                            { to: '/user/dashboard', label: 'Dashboard' },
+                            { to: '/user', label: 'Dashboard' },
                             { to: '/user/expenses', label: 'Expense tracker' },
                             { to: '/user/wallet', label: 'Wallet' },
                             { to: '/user/mutual-funds', label: 'Funds' },
@@ -71,7 +72,7 @@ function UserLayout() {
                             { to: '/user/algo', label: 'Algo trading' },
                             { to: '/user/portfolio', label: 'Portfolio' },
                             { to: '/user/news', label: "News" },
-                            {to:'/user/ai-bot',label:"AI bot"}
+                            { to: '/user/ai-bot', label: "AI bot" }
                         ].map((item) => (
                             <Link
                                 key={item.to}
@@ -148,6 +149,5 @@ function UserLayout() {
     );
 }
 
-export const Route = createFileRoute('/user')({
-    component: UserLayout,
-});
+
+export default UserLayout

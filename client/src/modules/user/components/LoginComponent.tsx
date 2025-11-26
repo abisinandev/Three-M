@@ -36,7 +36,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
         onSuccess: (res) => {
             setUser(res.data.user);
-            navigate({ to: "/user/dashboard", replace: true });
+            navigate({ to: "/user", replace: true });
         },
 
         onError: (err) => {

@@ -14,11 +14,11 @@ export class AdminController {
     async getProfile(req: Request, res: Response, next: NextFunction) {
         try {
             const adminId = req?.user?.id;
-            const response = await this._adminProfileUseCase.execute({ id: adminId as string })
+            const result = await this._adminProfileUseCase.execute({ id: adminId as string })
             res.status(HttpStatus.OK).json({
                 success: true,
                 message: SuccessMessage.DATA_FETCHED,
-                data: response
+                data: result
             })
         } catch (error) {
             next(error)
