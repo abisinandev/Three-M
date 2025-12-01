@@ -21,4 +21,7 @@ export const AUTH_TYPES = {
   TwoFactorAuthSetup: Symbol.for("TwoFactorAuthSetup"),
   TwoFactorAuthVerify: Symbol.for("TwoFactorAuthVerify"),
   VerifyTwoFactorUseCase: Symbol.for("VerifyTwoFactorUseCase"),
+
+  //Middleware
+  AuthMiddleware: Symbol.for("AuthMiddleware"),
 };

@@ -13,4 +13,9 @@ export enum PROTECTED_ROUTES {
     FETCH_USER = "/users",
     BLOCK_USER = "/user/block/:id",
     UNBLOCK_USER = "/user/unblock/:id",
+
+    FETCH_KYC_DATAS = '/kyc-management',
+    VIEW_KYC_DETAILS = '/view-kyc/:kycId',
+    VERIFY_KYC = '/verify-kyc/:kycId',
+    REJECT_KYC = '/reject-kyc/:kycId',
 }

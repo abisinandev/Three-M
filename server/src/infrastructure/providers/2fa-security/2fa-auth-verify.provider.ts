@@ -1,4 +1,4 @@
-import type { ITwoFactorAuthVerify } from "@application/interfaces/services/auth/2fa-auth-verify.interface";
+import type { ITwoFactorAuthVerify } from "@application/interfaces/services/externals/2fa-auth-verify.interface";
 import { injectable } from "inversify";
 import { authenticator } from 'otplib';
 

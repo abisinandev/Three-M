@@ -1,4 +1,4 @@
-import { UserDTO } from "@application/dto/auth/response-user.dto";
+import { UserDTO } from "@application/dto/user/user-dto";
 import { IFetchUserDetails } from "../../interfaces/admin/fetch-user-details";
 import { inject, injectable } from "inversify";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";

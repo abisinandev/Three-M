@@ -1,7 +1,7 @@
 import type { UserLoginDTO } from "@application/dto/auth/user-login.dto";
 import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
-import type { ITwoFactorAuthSetup } from "@application/interfaces/services/auth/2fa-auth-setup.interface";
-import type { IPasswordHashingService } from "@application/interfaces/services/auth/password-hashing.service.interface";
+import type { ITwoFactorAuthSetup } from "@application/interfaces/services/externals/2fa-auth-setup.interface";
+import type { IPasswordHashingService } from "@application/interfaces/services/externals/password-hashing.service.interface";
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";

@@ -1,5 +1,5 @@
 import { FetchDataResponseDTO } from "@application/dto/admin/fetch-data.response.dto";
-import { UserDTO } from "@application/dto/auth/response-user.dto";
+import { UserDTO } from "@application/dto/user/user-dto";
 import { QueryOptions } from "mongoose";
 
 export interface IFetchUserDetails {

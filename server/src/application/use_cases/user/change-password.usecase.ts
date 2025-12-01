@@ -5,7 +5,7 @@ import { NotFoundError, ValidationError } from "@presentation/express/utils/erro
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";
 import type { ChangePasswordDTO } from "@application/dto/user/change-password.dto";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import type { IPasswordHashingService } from "@application/interfaces/services/auth/password-hashing.service.interface";
+import type { IPasswordHashingService } from "@application/interfaces/services/externals/password-hashing.service.interface";
 import type { IChangePasswordUseCase } from "../interfaces/user/change-password.usecase.interface";
 
 @injectable()

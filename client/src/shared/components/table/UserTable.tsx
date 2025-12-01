@@ -1,13 +1,13 @@
 import type { Column } from "../interfaces/ITableColumn";
 import type { Action } from "../interfaces/ITableActions";
 
-interface UserTableProps<T> {
+interface TableProps<T> {
     columns: Column<T>[];
     data: T[];
     actions?: Action<T>[];
 }
 
-export function UserTable<T>({ columns, data, actions }: UserTableProps<T>) {
+export function TableComponent<T>({ columns, data, actions }: TableProps<T>) {
     // Handle empty state
     if (!data || data.length === 0) {
         return (

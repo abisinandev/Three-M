@@ -1,5 +1,5 @@
 import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
-import type { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
+import type { IEmailService } from "@application/interfaces/services/externals/email.service.interface";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";

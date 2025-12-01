@@ -7,7 +7,7 @@ import { ErrorMessage } from "@domain/enum/express/messages/error.message";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 import crypto from "node:crypto";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import type { IPasswordHashingService } from "@application/interfaces/services/auth/password-hashing.service.interface";
+import type { IPasswordHashingService } from "@application/interfaces/services/externals/password-hashing.service.interface";
 import type { IResetPasswordUseCase } from "../interfaces/user/reset-password-usecase.interface";
 
 @injectable()

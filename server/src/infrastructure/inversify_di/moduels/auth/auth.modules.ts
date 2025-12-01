@@ -1,18 +1,18 @@
-import type { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
-import type { IPasswordHashingService } from "@application/interfaces/services/auth/password-hashing.service.interface";
+import type { IEmailService } from "@application/interfaces/services/externals/email.service.interface";
+import type { IPasswordHashingService } from "@application/interfaces/services/externals/password-hashing.service.interface";
 import { ResendOtpUseCase } from "@application/use_cases/otp-verification/signup-resend-otp.usecase";
 import { SignupVerifyOtpUseCase } from "@application/use_cases/otp-verification/signup-verify-otp.usecase";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
 import { NodeMailerService } from "@infrastructure/providers/email/nodemailor.provider";
 import { PasswordHashingService } from "@infrastructure/providers/hashing/password-hashing.provider";
 import { ContainerModule } from "inversify";
-import type { IJwtProvider } from "@application/interfaces/services/auth/jwt.provider.interface";
+import type { IJwtProvider } from "@application/interfaces/services/externals/jwt.provider.interface";
 import { JwtProvider } from "@infrastructure/providers/jwt/jwt.provider";
 import { RefreshTokenUseCase } from "@application/use_cases/auth/refresh-token.usecase";
 import { AuthController } from "@presentation/http/controllers/auth/auth.controller";
 import { TwoFactorAuthSetup } from "@infrastructure/providers/2fa-security/2fa-auth-setup.provider";
-import type { ITwoFactorAuthSetup } from "@application/interfaces/services/auth/2fa-auth-setup.interface";
-import type { ITwoFactorAuthVerify } from "@application/interfaces/services/auth/2fa-auth-verify.interface";
+import type { ITwoFactorAuthSetup } from "@application/interfaces/services/externals/2fa-auth-setup.interface";
+import type { ITwoFactorAuthVerify } from "@application/interfaces/services/externals/2fa-auth-verify.interface";
 import { TwoFactorAuthVerify } from "@infrastructure/providers/2fa-security/2fa-auth-verify.provider";
 import { VerifyTwoFactorUseCase } from "@application/use_cases/auth/verify-2fa.usecase";
 import { ForgotPasswordUseCase } from "@application/use_cases/auth/forgot-password.usecase";
@@ -27,10 +27,11 @@ import type { IRefreshTokenUseCase } from "@application/use_cases/interfaces/use
 import type { IForgotPasswordVerifyOtpUseCase } from "@application/use_cases/interfaces/user/forgot-pass-verify-otp-usecase.interface";
 import type { IForgotPasswordResendOtpUseCase } from "@application/use_cases/interfaces/user/forgot-pass-resend-otp-usecase.interface";
 import type { IResetPasswordUseCase } from "@application/use_cases/interfaces/user/reset-password-usecase.interface";
-import { IGoogleAuthService } from "@application/interfaces/services/auth/google-auth.service.interface";
+import { IGoogleAuthService } from "@application/interfaces/services/externals/google-auth.service.interface";
 import { GoogleAuthService } from "@infrastructure/providers/google-auth/google-auth.service";
 import { IGoogleAuthUseCase } from "@application/use_cases/interfaces/user/google-auth.usecase.interface";
 import { GoogleAuthUseCase } from "@application/use_cases/auth/google-auth.usecase";
+import { AuthMiddleware } from "@presentation/express/middlewares/auth.middleware";
 
 export const AuthModule = new ContainerModule(({ bind }) => {
   //Providers
@@ -55,4 +56,7 @@ export const AuthModule = new ContainerModule(({ bind }) => {
 
   //Controllers
   bind<AuthController>(AUTH_TYPES.AuthController).to(AuthController);
+
+  //Middleware
+  bind<AuthMiddleware>(AUTH_TYPES.AuthMiddleware).to(AuthMiddleware);
 });

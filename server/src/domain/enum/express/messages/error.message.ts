@@ -32,4 +32,6 @@ export enum ErrorMessage {
 
   USER_ALREADY_BLOCKED = "User already blocked",
   USER_ALREADY_UNBLOCKED = "User already unblocked",
+
+  ACCOUNT_BLOCKED_ADMIN = "Account is blocked",
 }

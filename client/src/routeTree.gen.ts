@@ -11,19 +11,22 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UserRouteImport } from './routes/user'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AdminRouteRouteImport } from './routes/admin/route'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AdminAuthRouteRouteImport } from './routes/_admin-auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UserIndexRouteImport } from './routes/user/index'
 import { Route as UserProfileRouteImport } from './routes/user/profile'
+import { Route as UserKycVerificationRouteImport } from './routes/user/kyc-verification'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminUsersManagementRouteImport } from './routes/admin/users-management'
+import { Route as AdminKycManagementRouteImport } from './routes/admin/kyc-management'
 import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as AuthSignupIndexRouteImport } from './routes/auth/signup/index'
 import { Route as AuthResetPasswordIndexRouteImport } from './routes/auth/reset-password/index'
 import { Route as AuthForgotPasswordIndexRouteImport } from './routes/auth/forgot-password/index'
 import { Route as AuthSignupVerifyOtpRouteImport } from './routes/auth/signup/verify-otp'
 import { Route as AuthForgotPasswordVerifyOtpRouteImport } from './routes/auth/forgot-password/verify-otp'
+import { Route as AdminViewKycKycIdRouteImport } from './routes/admin/view-kyc/$kycId'
 import { Route as AdminAuthAdminAuthenticationIndexRouteImport } from './routes/_admin-auth/admin/authentication/index'
 import { Route as AdminAuthAdminAuthenticationVerifyOtpRouteImport } from './routes/_admin-auth/admin/authentication/verify-otp'
 
@@ -37,7 +40,7 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminRouteRoute = AdminRouteRouteImport.update({
+const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => rootRouteImport,
@@ -61,20 +64,30 @@ const UserProfileRoute = UserProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => UserRoute,
 } as any)
+const UserKycVerificationRoute = UserKycVerificationRouteImport.update({
+  id: '/kyc-verification',
+  path: '/kyc-verification',
+  getParentRoute: () => UserRoute,
+} as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
-const AdminUsersRoute = AdminUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => AdminRouteRoute,
+const AdminUsersManagementRoute = AdminUsersManagementRouteImport.update({
+  id: '/users-management',
+  path: '/users-management',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminKycManagementRoute = AdminKycManagementRouteImport.update({
+  id: '/kyc-management',
+  path: '/kyc-management',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => AdminRouteRoute,
+  getParentRoute: () => AdminRoute,
 } as any)
 const AuthSignupIndexRoute = AuthSignupIndexRouteImport.update({
   id: '/signup/',
@@ -102,6 +115,11 @@ const AuthForgotPasswordVerifyOtpRoute =
     path: '/forgot-password/verify-otp',
     getParentRoute: () => AuthRoute,
   } as any)
+const AdminViewKycKycIdRoute = AdminViewKycKycIdRouteImport.update({
+  id: '/view-kyc/$kycId',
+  path: '/view-kyc/$kycId',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAuthAdminAuthenticationIndexRoute =
   AdminAuthAdminAuthenticationIndexRouteImport.update({
     id: '/admin/authentication/',
@@ -117,14 +135,17 @@ const AdminAuthAdminAuthenticationVerifyOtpRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/user': typeof UserRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/users': typeof AdminUsersRoute
+  '/admin/kyc-management': typeof AdminKycManagementRoute
+  '/admin/users-management': typeof AdminUsersManagementRoute
   '/auth/login': typeof AuthLoginRoute
+  '/user/kyc-verification': typeof UserKycVerificationRoute
   '/user/profile': typeof UserProfileRoute
   '/user/': typeof UserIndexRoute
+  '/admin/view-kyc/$kycId': typeof AdminViewKycKycIdRoute
   '/auth/forgot-password/verify-otp': typeof AuthForgotPasswordVerifyOtpRoute
   '/auth/signup/verify-otp': typeof AuthSignupVerifyOtpRoute
   '/auth/forgot-password': typeof AuthForgotPasswordIndexRoute
@@ -135,13 +156,16 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/users': typeof AdminUsersRoute
+  '/admin/kyc-management': typeof AdminKycManagementRoute
+  '/admin/users-management': typeof AdminUsersManagementRoute
   '/auth/login': typeof AuthLoginRoute
+  '/user/kyc-verification': typeof UserKycVerificationRoute
   '/user/profile': typeof UserProfileRoute
   '/user': typeof UserIndexRoute
+  '/admin/view-kyc/$kycId': typeof AdminViewKycKycIdRoute
   '/auth/forgot-password/verify-otp': typeof AuthForgotPasswordVerifyOtpRoute
   '/auth/signup/verify-otp': typeof AuthSignupVerifyOtpRoute
   '/auth/forgot-password': typeof AuthForgotPasswordIndexRoute
@@ -154,14 +178,17 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_admin-auth': typeof AdminAuthRouteRouteWithChildren
-  '/admin': typeof AdminRouteRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/user': typeof UserRouteWithChildren
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/users': typeof AdminUsersRoute
+  '/admin/kyc-management': typeof AdminKycManagementRoute
+  '/admin/users-management': typeof AdminUsersManagementRoute
   '/auth/login': typeof AuthLoginRoute
+  '/user/kyc-verification': typeof UserKycVerificationRoute
   '/user/profile': typeof UserProfileRoute
   '/user/': typeof UserIndexRoute
+  '/admin/view-kyc/$kycId': typeof AdminViewKycKycIdRoute
   '/auth/forgot-password/verify-otp': typeof AuthForgotPasswordVerifyOtpRoute
   '/auth/signup/verify-otp': typeof AuthSignupVerifyOtpRoute
   '/auth/forgot-password/': typeof AuthForgotPasswordIndexRoute
@@ -178,10 +205,13 @@ export interface FileRouteTypes {
     | '/auth'
     | '/user'
     | '/admin/dashboard'
-    | '/admin/users'
+    | '/admin/kyc-management'
+    | '/admin/users-management'
     | '/auth/login'
+    | '/user/kyc-verification'
     | '/user/profile'
     | '/user/'
+    | '/admin/view-kyc/$kycId'
     | '/auth/forgot-password/verify-otp'
     | '/auth/signup/verify-otp'
     | '/auth/forgot-password'
@@ -195,10 +225,13 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/admin/dashboard'
-    | '/admin/users'
+    | '/admin/kyc-management'
+    | '/admin/users-management'
     | '/auth/login'
+    | '/user/kyc-verification'
     | '/user/profile'
     | '/user'
+    | '/admin/view-kyc/$kycId'
     | '/auth/forgot-password/verify-otp'
     | '/auth/signup/verify-otp'
     | '/auth/forgot-password'
@@ -214,10 +247,13 @@ export interface FileRouteTypes {
     | '/auth'
     | '/user'
     | '/admin/dashboard'
-    | '/admin/users'
+    | '/admin/kyc-management'
+    | '/admin/users-management'
     | '/auth/login'
+    | '/user/kyc-verification'
     | '/user/profile'
     | '/user/'
+    | '/admin/view-kyc/$kycId'
     | '/auth/forgot-password/verify-otp'
     | '/auth/signup/verify-otp'
     | '/auth/forgot-password/'
@@ -230,7 +266,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminAuthRouteRoute: typeof AdminAuthRouteRouteWithChildren
-  AdminRouteRoute: typeof AdminRouteRouteWithChildren
+  AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
   UserRoute: typeof UserRouteWithChildren
 }
@@ -255,7 +291,7 @@ declare module '@tanstack/react-router' {
       id: '/admin'
       path: '/admin'
       fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteRouteImport
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_admin-auth': {
@@ -286,6 +322,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UserProfileRouteImport
       parentRoute: typeof UserRoute
     }
+    '/user/kyc-verification': {
+      id: '/user/kyc-verification'
+      path: '/kyc-verification'
+      fullPath: '/user/kyc-verification'
+      preLoaderRoute: typeof UserKycVerificationRouteImport
+      parentRoute: typeof UserRoute
+    }
     '/auth/login': {
       id: '/auth/login'
       path: '/login'
@@ -293,19 +336,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/admin/users': {
-      id: '/admin/users'
-      path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminUsersRouteImport
-      parentRoute: typeof AdminRouteRoute
+    '/admin/users-management': {
+      id: '/admin/users-management'
+      path: '/users-management'
+      fullPath: '/admin/users-management'
+      preLoaderRoute: typeof AdminUsersManagementRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/kyc-management': {
+      id: '/admin/kyc-management'
+      path: '/kyc-management'
+      fullPath: '/admin/kyc-management'
+      preLoaderRoute: typeof AdminKycManagementRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/dashboard': {
       id: '/admin/dashboard'
       path: '/dashboard'
       fullPath: '/admin/dashboard'
       preLoaderRoute: typeof AdminDashboardRouteImport
-      parentRoute: typeof AdminRouteRoute
+      parentRoute: typeof AdminRoute
     }
     '/auth/signup/': {
       id: '/auth/signup/'
@@ -342,6 +392,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthForgotPasswordVerifyOtpRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/admin/view-kyc/$kycId': {
+      id: '/admin/view-kyc/$kycId'
+      path: '/view-kyc/$kycId'
+      fullPath: '/admin/view-kyc/$kycId'
+      preLoaderRoute: typeof AdminViewKycKycIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin-auth/admin/authentication/': {
       id: '/_admin-auth/admin/authentication/'
       path: '/admin/authentication'
@@ -375,19 +432,21 @@ const AdminAuthRouteRouteWithChildren = AdminAuthRouteRoute._addFileChildren(
   AdminAuthRouteRouteChildren,
 )
 
-interface AdminRouteRouteChildren {
+interface AdminRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
-  AdminUsersRoute: typeof AdminUsersRoute
+  AdminKycManagementRoute: typeof AdminKycManagementRoute
+  AdminUsersManagementRoute: typeof AdminUsersManagementRoute
+  AdminViewKycKycIdRoute: typeof AdminViewKycKycIdRoute
 }
 
-const AdminRouteRouteChildren: AdminRouteRouteChildren = {
+const AdminRouteChildren: AdminRouteChildren = {
   AdminDashboardRoute: AdminDashboardRoute,
-  AdminUsersRoute: AdminUsersRoute,
+  AdminKycManagementRoute: AdminKycManagementRoute,
+  AdminUsersManagementRoute: AdminUsersManagementRoute,
+  AdminViewKycKycIdRoute: AdminViewKycKycIdRoute,
 }
 
-const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
-  AdminRouteRouteChildren,
-)
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AuthRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
@@ -410,11 +469,13 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface UserRouteChildren {
+  UserKycVerificationRoute: typeof UserKycVerificationRoute
   UserProfileRoute: typeof UserProfileRoute
   UserIndexRoute: typeof UserIndexRoute
 }
 
 const UserRouteChildren: UserRouteChildren = {
+  UserKycVerificationRoute: UserKycVerificationRoute,
   UserProfileRoute: UserProfileRoute,
   UserIndexRoute: UserIndexRoute,
 }
@@ -424,7 +485,7 @@ const UserRouteWithChildren = UserRoute._addFileChildren(UserRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminAuthRouteRoute: AdminAuthRouteRouteWithChildren,
-  AdminRouteRoute: AdminRouteRouteWithChildren,
+  AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
   UserRoute: UserRouteWithChildren,
 }

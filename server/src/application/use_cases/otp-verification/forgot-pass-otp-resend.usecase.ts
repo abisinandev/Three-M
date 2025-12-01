@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import type { ResendOtpDTO } from "@application/dto/auth/resend-otp.dto";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
 import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
-import type { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
+import type { IEmailService } from "@application/interfaces/services/externals/email.service.interface";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
 import { HttpStatus } from "@domain/enum/express/status-code";
 import { NotFoundError } from "@presentation/express/utils/error-handling";

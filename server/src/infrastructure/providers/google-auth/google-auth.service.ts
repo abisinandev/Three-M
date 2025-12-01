@@ -1,5 +1,5 @@
 import { GoogleAuthDTO } from '@application/dto/auth/google-auth.dto';
-import type { IGoogleAuthService } from '@application/interfaces/services/auth/google-auth.service.interface';
+import type { IGoogleAuthService } from '@application/interfaces/services/externals/google-auth.service.interface';
 import { ErrorMessage } from '@domain/enum/express/messages/error.message';
 import { env } from '@presentation/express/utils/constants/env.constants';
 import { ValidationError } from '@presentation/express/utils/error-handling';

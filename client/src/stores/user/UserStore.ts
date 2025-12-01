@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware';
 
 export interface UserStore {
   isAuthenticated: boolean;
+  isBlocked: boolean;
   role: string;
   user: UserType | null;
   setUser: (user: UserType) => void;
@@ -15,13 +16,15 @@ export const useUserStore = create<UserStore>()(
     (set) => ({
       user: null,
       isAuthenticated: false,
+      isBlocked: false,
       role: "",
-      
+
       setUser: (user) =>
         set({
           user,
+          isBlocked: user.isBlocked,
           isAuthenticated: true,
-          role: "user",  
+          role: "user",
         }),
 
       logout: () =>

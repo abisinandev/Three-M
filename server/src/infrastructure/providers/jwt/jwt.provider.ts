@@ -1,4 +1,4 @@
-import type { IJwtProvider } from "@application/interfaces/services/auth/jwt.provider.interface";
+import type { IJwtProvider } from "@application/interfaces/services/externals/jwt.provider.interface";
 import { env } from "@presentation/express/utils/constants/env.constants";
 import jwt, { type Secret } from 'jsonwebtoken';
 

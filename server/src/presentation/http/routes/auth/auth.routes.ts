@@ -29,6 +29,5 @@ router.post(Routes.FORGOT_PASS_VERIFY_OTP, validateDTO(VerifyOtpDTO), authContro
 router.post(Routes.FORGOT_PASS_RESENT_OTP, validateDTO(ResendOtpDTO), authController.forgotPasswordResendOtp.bind(authController));
 router.post(Routes.RESET_PASSWORD, validateDTO(ResetPasswordDTO), authController.resetPassword.bind(authController));
 
-router.post(Routes.GOOGLE_AUTH,authController.googleAuth.bind(authController))
+router.post(Routes.GOOGLE_AUTH, authController.googleAuth.bind(authController))
 export default router;
-  

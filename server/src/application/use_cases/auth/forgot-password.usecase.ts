@@ -3,7 +3,7 @@ import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
 import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
 import { NotFoundError } from "@presentation/express/utils/error-handling";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import type { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
+import type { IEmailService } from "@application/interfaces/services/externals/email.service.interface";
 import { generateOtp } from "@shared/utils/otp-generator";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 import type { ForgotPasswordDTO } from "@application/dto/auth/forgot-password";

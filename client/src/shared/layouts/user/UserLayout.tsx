@@ -10,20 +10,8 @@ import { LOGOUT } from '@shared/constants/userContants';
 const UserLayout = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const { user, setUser, logout } = useUserStore();
+    const { user, logout, } = useUserStore();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                const response = await api.get('/user/profile/me', { withCredentials: true });
-                setUser(response.data.data);
-            } catch (error) {
-                navigate({ to: '/auth/login', replace: true });
-            }
-        };
-        fetchProfile();
-    }, [setUser, navigate]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -38,7 +26,7 @@ const UserLayout = () => {
     const handleLogout = async () => {
         if (window.confirm('Are you sure you want to logout?')) {
             try {
-                await api.post(LOGOUT);
+                await api.post(LOGOUT, {}, { withCredentials: true });
                 logout();
                 useUserStore.persist.clearStorage();
                 navigate({ to: '/auth/login', replace: true });

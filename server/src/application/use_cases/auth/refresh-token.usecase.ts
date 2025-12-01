@@ -3,7 +3,7 @@ import type { RefreshResponseDTO } from "@application/dto/auth/refresh-response.
 import { NotFoundError, ValidationError } from "@presentation/express/utils/error-handling";
 import { inject, injectable } from "inversify";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import type { IJwtProvider } from "@application/interfaces/services/auth/jwt.provider.interface";
+import type { IJwtProvider } from "@application/interfaces/services/externals/jwt.provider.interface";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
 import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
 import type { JwtPayload } from "@domain/types/jwt-payload.type";
@@ -33,6 +33,7 @@ export class RefreshTokenUseCase implements IRefreshTokenUseCase {
         }
 
         const user = await this._userRepository.findByField("email", decoded.email);
+        console.log(user)
         if (!user) throw new NotFoundError(ErrorMessage.USER_NOT_FOUND);
 
         const payload: JwtPayload = {

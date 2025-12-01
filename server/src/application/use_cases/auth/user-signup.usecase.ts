@@ -1,6 +1,6 @@
 import type { CreateUserDTO } from "@application/dto/auth/create-user.dto";
 import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
-import type { IPasswordHashingService } from "@application/interfaces/services/auth/password-hashing.service.interface";
+import type { IPasswordHashingService } from "@application/interfaces/services/externals/password-hashing.service.interface";
 import { toEntity } from "@application/mappers/user/user.mapper";
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
@@ -8,7 +8,7 @@ import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
 import { ConflictError } from '@presentation/express/utils/error-handling/index'
 import { inject, injectable } from "inversify";
 import { generateOtp } from "@shared/utils/otp-generator";
-import type { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
+import type { IEmailService } from "@application/interfaces/services/externals/email.service.interface";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 import type { IUserSignupUseCase } from "../interfaces/user/user-signup.usecase.interface";
 import type { SignupResponseDTO } from "@application/dto/auth/signup-response.dto";

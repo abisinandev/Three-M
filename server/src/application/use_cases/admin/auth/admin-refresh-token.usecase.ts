@@ -3,7 +3,7 @@ import type { RefreshResponseDTO } from "@application/dto/auth/refresh-response.
 import type { RefreshDTO } from "@application/dto/auth/refresh.dto";
 import { NotFoundError, ValidationError } from "@presentation/express/utils/error-handling";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import type { IJwtProvider } from "@application/interfaces/services/auth/jwt.provider.interface";
+import type { IJwtProvider } from "@application/interfaces/services/externals/jwt.provider.interface";
 import { ADMIN_TYPES } from "@infrastructure/inversify_di/types/admin/admin.types";
 import type { IAdminRepository } from "@application/interfaces/repositories/admin.repository.interface";
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";

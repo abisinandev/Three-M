@@ -1,0 +1,30 @@
+import { IKycRepository } from "@application/interfaces/repositories/kyc-repository.interface";
+import { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
+import { IVerifyKycUseCase } from "@application/use_cases/interfaces/admin/verify-kyc-usecase.interface";
+import { KycStatusType } from "@domain/enum/users/kyc-status.enum";
+import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
+import { NotFoundError } from "@presentation/express/utils/error-handling";
+import { inject, injectable } from "inversify";
+
+@injectable()
+export class VerifyKycUseCase implements IVerifyKycUseCase {
+    constructor(
+        @inject(USER_TYPES.KycRepository) private readonly _kycRepository: IKycRepository,
+        @inject(USER_TYPES.UserRepository) private readonly _userRepository: IUserRepository,
+    ) { }
+
+    async execute(kycId: string): Promise<void> {
+        const kyc = await this._kycRepository.findById(kycId);
+        if (!kyc) throw new NotFoundError('Kyc documents not found');
+
+        await this._kycRepository.updateKycDoc(kyc?.id as string, {
+            isKycVerified: true,
+            status: KycStatusType.VERIFIED
+        });
+        await this._userRepository.update(kyc.userId, {
+            kycStatus: KycStatusType.VERIFIED,
+            isVerified: true
+        })
+
+    }
+}

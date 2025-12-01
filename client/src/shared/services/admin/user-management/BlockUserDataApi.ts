@@ -1,7 +1,7 @@
 import adminApi from "@lib/axiosAdmin";
 
 export const BlockUserDataApi = async (id: string) => {
-    const response = await adminApi.get(`/user/block/${id}`, {
+    const response = await adminApi.patch(`/user/block/${id}`, {
         withCredentials: true,
     });
 

@@ -24,16 +24,15 @@ export class AdminAuthController {
     async authentication(req: Request, res: Response, next: NextFunction) {
         try {
             const { expiresAt, resendCount, email } = await this._adminAuthUseCase.execute(req.body);
-
             res.status(HttpStatus.OK).json({
                 success: true,
                 message: SuccessMessage.OTP_SEND,
                 data: { expiresAt, resendCount, email }
             })
         } catch (error) {
-            next(error)
-        }
-    }
+            next(error) 
+        }   
+    }   
 
 
     async veirfyOtp(req: Request, res: Response, next: NextFunction) {

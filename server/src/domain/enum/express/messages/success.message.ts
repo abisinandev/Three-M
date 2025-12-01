@@ -33,9 +33,13 @@ export enum SuccessMessage {
 
   LOGGED_OUT = "Logged out successfully",
   OTP_VERIFIED = "OTP verified. You can now reset your password.",
-  
+
   AUTHENTICATION_DONE = "Authentiation successfully done",
 
   BLOCKED_MSG = "User blocked done",
   UNBLOCK_MSG = "User unblocked done",
+
+  UPLOAD_SUCCESS = "File upload completed",
+  VERIFY_KYC = "Kyc verified successfully",
+  REJECT_KYC ='Kyc document rejected.',
 } 

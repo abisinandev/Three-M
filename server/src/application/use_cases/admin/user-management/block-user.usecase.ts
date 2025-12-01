@@ -19,6 +19,7 @@ export class BlockUserUseCase implements IBlockUserUseCase {
         if (user.isBlocked) throw new ValidationError(ErrorMessage.USER_ALREADY_BLOCKED);
 
         user.block();
-        await this._userRepository.update(user.id as string, user);
+        const res = await this._userRepository.update(user.id as string, user);
+        console.log("udpate ",user)
     }
 }

@@ -1,20 +1,9 @@
-import { createFileRoute, redirect, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_admin-auth')({
-    beforeLoad: async ({ location }) => {
-        const publicPathPrefix = '/admin/authentication';
-
-        if (location.pathname.startsWith(publicPathPrefix)) {
-            return;
-        }
-
-        const isAdmin = true; 
-        
-        if (!isAdmin) {
-            throw redirect({
-                to: publicPathPrefix,
-                search: { from: location.pathname }, 
-            });
+    beforeLoad: ({ context }) => {
+        if (context.admin?.data) {
+            throw redirect({ to: "/admin/dashboard" });
         }
     },
     component: () => (

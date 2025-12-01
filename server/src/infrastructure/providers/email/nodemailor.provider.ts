@@ -1,4 +1,4 @@
-import type { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
+import type { IEmailService } from "@application/interfaces/services/externals/email.service.interface";
 import { env } from "@presentation/express/utils/constants/env.constants";
 import nodemailer from "nodemailer";
 import { otpEmailTemplate } from "./templates/otp-email-template";

@@ -1,4 +1,4 @@
-import type { ITwoFactorAuthSetup } from "@application/interfaces/services/auth/2fa-auth-setup.interface";
+import type { ITwoFactorAuthSetup } from "@application/interfaces/services/externals/2fa-auth-setup.interface";
 import { injectable } from "inversify";
 import { authenticator } from 'otplib';
 import qrcode from 'qrcode';

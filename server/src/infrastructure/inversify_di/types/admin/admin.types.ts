@@ -12,10 +12,15 @@ export const ADMIN_TYPES = {
     FetchUserDetails: Symbol.for("FetchUserDetails"),
     BlockUserUseCase: Symbol.for('BlockUserUseCase'),
     UnblockUserUsecase: Symbol.for('UnblockUserUsecase'),
+    FetchAllKycDocsUseCase: Symbol.for("FetchAllKycDocsUseCase"),
+    ViewKycDetailsUseCase: Symbol.for("ViewKycDetailsUseCase"),
+    VerifyKycUseCase: Symbol.for("VerifyKycUseCase"),
+    RejectKycUseCase: Symbol.for("RejectKycUseCase"),
 
 
     AdminAuthController: Symbol.for("AdminAuthController"),
     AdminController: Symbol.for("AdminController"),
     AdminUserController: Symbol.for('AdminUserController'),
+    AdminKycController: Symbol.for("AdminKycController"),
 
 }

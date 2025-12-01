@@ -5,9 +5,9 @@ import type { IAdminRepository } from "@application/interfaces/repositories/admi
 import { NotFoundError, ValidationError } from "@presentation/express/utils/error-handling";
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import type { IPasswordHashingService } from "@application/interfaces/services/auth/password-hashing.service.interface";
+import type { IPasswordHashingService } from "@application/interfaces/services/externals/password-hashing.service.interface";
 import { generateOtp } from "@shared/utils/otp-generator";
-import type { IEmailService } from "@application/interfaces/services/auth/email.service.interface";
+import type { IEmailService } from "@application/interfaces/services/externals/email.service.interface";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 import type { AdminAuthReponseDTO } from "@application/dto/admin/admin-auth.response.dto";
 import type { IAdminAuthUseCase } from "@application/use_cases/interfaces/admin/admin-auth-usecase.interface";

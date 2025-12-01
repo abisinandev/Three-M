@@ -2,13 +2,13 @@ import { GoogleResponseDTO } from "@application/dto/auth/google-auth-reseponse.d
 import { IGoogleAuthUseCase } from "../interfaces/user/google-auth.usecase.interface";
 import { inject, injectable } from "inversify";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import { IGoogleAuthService } from "@application/interfaces/services/auth/google-auth.service.interface";
+import { IGoogleAuthService } from "@application/interfaces/services/externals/google-auth.service.interface";
 import { UnauthorizedError, ValidationError } from "@presentation/express/utils/error-handling";
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
 import { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
 import { AuthProvider } from "@domain/enum/users/auth-provider.enum";
-import { IJwtProvider } from "@application/interfaces/services/auth/jwt.provider.interface";
+import { IJwtProvider } from "@application/interfaces/services/externals/jwt.provider.interface";
 import { JwtPayload } from "@domain/types/jwt-payload.type";
 import { UserEntity } from "@domain/entities/user.entity";
 

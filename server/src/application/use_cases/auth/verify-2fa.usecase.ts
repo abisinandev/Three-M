@@ -5,9 +5,9 @@ import type { IUserRepository } from "@application/interfaces/repositories/user-
 import { ForbiddenError, UnauthorizedError } from "@presentation/express/utils/error-handling";
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";
 import type { Verify2faDTO } from "@application/dto/auth/2fa-verify-dto";
-import type { ITwoFactorAuthVerify } from "@application/interfaces/services/auth/2fa-auth-verify.interface";
+import type { ITwoFactorAuthVerify } from "@application/interfaces/services/externals/2fa-auth-verify.interface";
 import type { JwtPayload } from "@domain/types/jwt-payload.type";
-import type { IJwtProvider } from "@application/interfaces/services/auth/jwt.provider.interface";
+import type { IJwtProvider } from "@application/interfaces/services/externals/jwt.provider.interface";
 import { redisClient } from "@infrastructure/providers/redis/redis.provider";
 import { env } from "@presentation/express/utils/constants/env.constants";
 import type { VerifyOtpResponseDTO } from "@application/dto/auth/verify-otp-response.dto";

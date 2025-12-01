@@ -5,6 +5,10 @@ import { AdminLogoutUseCase } from "@application/use_cases/admin/auth/admin-logo
 import { AdminProfileUseCase } from "@application/use_cases/admin/auth/admin-profile.usecase";
 import { AdminRefreshTokenUseCase } from "@application/use_cases/admin/auth/admin-refresh-token.usecase";
 import { AdminResendOtpUseCase } from "@application/use_cases/admin/auth/admin-resend-otp-usecase";
+import { FetchAllKycDocsUseCase } from "@application/use_cases/admin/kyc-management/fetch-kyc-management.usecase";
+import { RejectKycUseCase } from "@application/use_cases/admin/kyc-management/reject-kyc-usecase";
+import { VerifyKycUseCase } from "@application/use_cases/admin/kyc-management/verify-kyc-usecase";
+import { ViewKycDetailsUseCase } from "@application/use_cases/admin/kyc-management/view-kyc-details.usecase";
 import { BlockUserUseCase } from "@application/use_cases/admin/user-management/block-user.usecase";
 import { FetchUserDetails } from "@application/use_cases/admin/user-management/fetch-user-details.usecase";
 import { UnblockUserUsecase } from "@application/use_cases/admin/user-management/unblock-user.usecase";
@@ -16,10 +20,15 @@ import type { IRefreshTokenUseCase } from "@application/use_cases/interfaces/adm
 import { IAdminResendOtpUseCase } from "@application/use_cases/interfaces/admin/admin-resend-otp-usecase-interface";
 import { IBlockUserUseCase } from "@application/use_cases/interfaces/admin/block-user-usecase.interface";
 import { IFetchUserDetails } from "@application/use_cases/interfaces/admin/fetch-user-details";
+import { IFetchAllKycDocsUseCase } from "@application/use_cases/interfaces/admin/kyc-management-usecase.interface";
+import { IRejectKycUseCase } from "@application/use_cases/interfaces/admin/reject-kyc-usecase.interface";
 import { IUnblockUserUsecase } from "@application/use_cases/interfaces/admin/unblock-user-usecase.interface";
+import { IVerifyKycUseCase } from "@application/use_cases/interfaces/admin/verify-kyc-usecase.interface";
+import { IViewKycDetailsUseCase } from "@application/use_cases/interfaces/admin/view-kyc-details-usecase.interface";
 import { AdminRepository } from "@infrastructure/databases/repository/auth/admin.repository";
 import { ADMIN_TYPES } from "@infrastructure/inversify_di/types/admin/admin.types";
 import { AdminAuthController } from "@presentation/http/controllers/admin/admin-auth.controller";
+import { AdminKycController } from "@presentation/http/controllers/admin/admin-kyc.controller";
 import { AdminUserController } from "@presentation/http/controllers/admin/admin-user.controller";
 import { AdminController } from "@presentation/http/controllers/admin/admin.controller";
 import { ContainerModule } from "inversify";
@@ -35,6 +44,7 @@ export const AdminModule = new ContainerModule(({ bind }) => {
     bind<IFetchUserDetails>(ADMIN_TYPES.FetchUserDetails).to(FetchUserDetails);
     bind<IBlockUserUseCase>(ADMIN_TYPES.BlockUserUseCase).to(BlockUserUseCase);
     bind<IUnblockUserUsecase>(ADMIN_TYPES.UnblockUserUsecase).to(UnblockUserUsecase);
+    bind<IFetchAllKycDocsUseCase>(ADMIN_TYPES.FetchAllKycDocsUseCase).to(FetchAllKycDocsUseCase);
 
     //Repository
     bind<IAdminRepository>(ADMIN_TYPES.AdminRepository).to(AdminRepository);
@@ -42,4 +52,8 @@ export const AdminModule = new ContainerModule(({ bind }) => {
     bind<AdminAuthController>(ADMIN_TYPES.AdminAuthController).to(AdminAuthController);
     bind<AdminController>(ADMIN_TYPES.AdminController).to(AdminController);
     bind<AdminUserController>(ADMIN_TYPES.AdminUserController).to(AdminUserController);
+    bind<AdminKycController>(ADMIN_TYPES.AdminKycController).to(AdminKycController);
+    bind<IViewKycDetailsUseCase>(ADMIN_TYPES.ViewKycDetailsUseCase).to(ViewKycDetailsUseCase);
+    bind<IVerifyKycUseCase>(ADMIN_TYPES.VerifyKycUseCase).to(VerifyKycUseCase);
+    bind<IRejectKycUseCase>(ADMIN_TYPES.RejectKycUseCase).to(RejectKycUseCase);
 })

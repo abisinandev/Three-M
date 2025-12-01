@@ -7,7 +7,7 @@ import { ADMIN_TYPES } from "@infrastructure/inversify_di/types/admin/admin.type
 import type { IAdminRepository } from "@application/interfaces/repositories/admin.repository.interface";
 import type { JwtPayload } from "@domain/types/jwt-payload.type";
 import { AUTH_TYPES } from "@infrastructure/inversify_di/types/auth/auth.types";
-import type { IJwtProvider } from "@application/interfaces/services/auth/jwt.provider.interface";
+import type { IJwtProvider } from "@application/interfaces/services/externals/jwt.provider.interface";
 import { env } from "@presentation/express/utils/constants/env.constants";
 import type { VerifyOtpResponseDTO } from "@application/dto/auth/verify-otp-response.dto";
 import { IAdminAuthVerifyOtpUseCase } from "@application/use_cases/interfaces/admin/admin-auth-verify-otp.interface";
