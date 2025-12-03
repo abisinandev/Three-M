@@ -7,8 +7,10 @@
     "start": "node -r tsconfig-paths/register dist/server.js",
     "dev": "nodemon -r tsconfig-paths/register src/presentation/express/settings/server.ts",
     "lint": "biome lint .",
+    "check": "biome check .",
     "format": "biome format . --write",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fix": "biome check . --fix"
   },
   "author": "Abisinan",
   "license": "ISC",
@@ -19,6 +21,7 @@
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "cloudinary": "^2.8.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",

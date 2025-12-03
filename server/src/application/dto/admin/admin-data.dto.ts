@@ -1,5 +1,5 @@
-export interface AdminDTO{
-    adminCode: string;
-    fullName: string;
-    email: string;
+export interface AdminDTO {
+  adminCode: string;
+  fullName: string;
+  email: string;
 }

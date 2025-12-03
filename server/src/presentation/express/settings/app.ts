@@ -1,5 +1,5 @@
-import { env } from "@presentation/express/utils/constants/env.constants";
 import { errorMiddleware } from "@presentation/express/middlewares/error-middleware";
+import { env } from "@presentation/express/utils/constants/env.constants";
 import cookieParser from "cookie-parser";
 
 import cors from "cors";
@@ -18,6 +18,7 @@ app.use(cookieParser());
 
 //protected routes
 import { RegisterRoutes } from "@presentation/http/routes";
+
 RegisterRoutes(app);
 
 //AppError middleware

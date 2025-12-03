@@ -3,8 +3,12 @@ import AppError from "@presentation/express/utils/error-handling/app.error";
 import { BaseError } from "@presentation/express/utils/error-handling/base-error";
 import type { NextFunction, Request, Response } from "express";
 
-export const errorMiddleware = (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-
+export const errorMiddleware = (
+  err: unknown,
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+) => {
   console.error("Error caught by middleware => ", err);
 
   if (err instanceof AppError) {
@@ -26,4 +30,4 @@ export const errorMiddleware = (err: unknown, _req: Request, res: Response, _nex
     status: false,
     message: "Something went wrong. Please try again later.",
   });
-}
+};

@@ -1,27 +1,24 @@
 export type UserType = {
     id: string;
-    userCode: string;             // like Zerodha client code (e.g., AB1234)
-    
-    // Basic Info
+    userCode: string;       
+
     fullName: string;
     email: string;
     phone: string;
     
-    // Auth & Security
     role: string;
-    isVerified: boolean;          // mobile verification
-    isEmailVerified: boolean;     // email verification
+    isVerified: boolean;   
+    isEmailVerified: boolean;  
+    kycId: string;
     isSubscribed: boolean;
+    isBlocked: boolean;
     
-    // KYC (mocked)
-    kycStatus: "NOT_STARTED" | "PENDING" | "VERIFIED" | "REJECTED";
-    kycLevel: "BASIC" | "FULL";   // like Paytm / CoinDCX
+    kycStatus: string;
     panNumber?: string;
-    aadhaarLast4?: string;        // never store full Aadhaar
-    dob?: string;                 // from KYC document
+    aadhaarNumber?: string; 
+    // dob?: string; 
     address?: {
-        line1: string;
-        line2?: string;
+        fullAddress?: string;
         city: string;
         state: string;
         pincode: string;
@@ -31,18 +28,3 @@ export type UserType = {
     profileImage?: string;
     createdAt: string;
 };
-
-
-
-// export type UserType = {
-//     id?: string,
-//     userCode:string,
-//     fullName: string;
-//     email: string;
-//     phone: string;
-//     role: string;
-//     isVerified: boolean;
-//     isEmailVerfied: boolean;
-//     isSubscribed: boolean;
-//     createdAt: string;
-// }

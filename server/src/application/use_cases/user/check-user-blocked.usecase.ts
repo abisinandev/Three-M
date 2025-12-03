@@ -1,0 +1,20 @@
+import { ErrorMessage } from "@domain/enum/express/messages/error.message";
+import type { UserRepository } from "@infrastructure/databases/repository/auth/user.repository";
+import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
+import { NotFoundError } from "@presentation/express/utils/error-handling";
+import { inject, injectable } from "inversify";
+import type { ICheckUserBlockedUseCase } from "../interfaces/user/check-user-blocked-usecase.interface";
+
+@injectable()
+export class CheckUserBlockedUseCase implements ICheckUserBlockedUseCase {
+  constructor(
+    @inject(USER_TYPES.UserRepository) private readonly _userRepository: UserRepository,
+  ) { }
+
+  async execute(id: string): Promise<boolean> {
+    const user = await this._userRepository.findById(id);
+    if (!user) throw new NotFoundError(ErrorMessage.USER_NOT_FOUND);
+
+    return user.isBlocked;
+  }
+}

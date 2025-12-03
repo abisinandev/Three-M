@@ -1,4 +1,4 @@
-import type { IPasswordHashingService } from "@application/interfaces/services/auth/password-hashing.service.interface";
+import type { IPasswordHashingService } from "@application/interfaces/services/externals/password-hashing.service.interface";
 import argon2 from "argon2";
 
 export class PasswordHashingService implements IPasswordHashingService {

@@ -159,13 +159,13 @@ const AuthenticationPage = () => {
                             </div>
 
                             <div className="flex items-center justify-between text-xs">
-                                <label className="flex items-center gap-2 cursor-pointer">
+                                {/* <label className="flex items-center gap-2 cursor-pointer">
                                     <input
                                         type="checkbox"
                                         className="w-3.5 h-3.5 rounded border-gray-600 bg-[#111111] text-teal-green focus:ring-teal-green/40"
                                     />
                                     <span className="text-gray-500">Remember me</span>
-                                </label>
+                                </label> */}
                             </div>
 
                             <button

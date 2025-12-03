@@ -4,7 +4,6 @@ import { KycStatusType } from "@domain/enum/users/kyc-status.enum";
 import { SubscriptionStatus } from "@domain/enum/users/subscription-status.enum";
 import type { UserDocument } from "@infrastructure/databases/mongo_db/models/schemas/user.schema";
 
-
 // Convert MongoDb -> Domain
 export const toDomain = (userDoc: UserDocument): UserEntity => {
   return UserEntity.reconstitute({
@@ -18,7 +17,8 @@ export const toDomain = (userDoc: UserDocument): UserEntity => {
     isEmailVerified: userDoc.isEmailVerified,
     isVerified: userDoc.isVerified,
     isBlocked: userDoc.isBlocked,
-    subscriptionStatus: userDoc.subscriptionStatus ?? SubscriptionStatus.INACTIVE,
+    subscriptionStatus:
+      userDoc.subscriptionStatus ?? SubscriptionStatus.INACTIVE,
     subscriptionPlan: userDoc.subscriptionPlan,
     currency: userDoc.currency ?? CurrencyTypes.INR,
     kycId: userDoc.kycId,
@@ -66,4 +66,4 @@ export const toPersistance = (user: UserEntity): Partial<UserDocument> => {
 export const UserMapper = {
   toDomain,
   toPersistance,
-}
+};

@@ -7,8 +7,16 @@ export const FORGOT_PASSWORD = "/auth/forgot-password"
 export const FORGOT_PASSWORD_VERIFY = "/auth/forgot-password/verify-otp";
 export const FORGOT_PASSWORD_RESEND = "/auth/forgot-password/resend-otp";
 export const RESET_PASSWORD = "/auth/reset-password";
-export const LOGOUT = '/auth/logout';
+export const LOGOUT = '/user/logout';
 export const GOOGLE_AUTH = '/auth/google/callback';
 export const CHANGE_PASSWORD = "/user/change-password";
-export const REFRESH_TOKEN_URL = "/auth/refresh";
 export const PROFILE_GET_API = '/user/profile/me';
+
+export const USER_REFRESH_TOKEN = "/auth/refresh";
+
+export const KYC_SIGN_URL = '/user/cloudinary/signature';
+export const KYC_SUMBIT_URL = '/user/kyc/submit';
+
+export const UPDATE_PROFILE = "/user/profile/update";
+export const SEND_EMAIL_OTP = "/user/profile/update/email/send-otp";
+export const VERIFY_EMAIL_OTP = '/user/profile/update/email/verify-otp';

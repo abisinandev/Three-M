@@ -1,4 +1,4 @@
-export interface SignupResponseDTO{
-    expiresAt: number;
-    isAlreadyCreated?: boolean;
+export interface SignupResponseDTO {
+  expiresAt: number;
+  isAlreadyCreated?: boolean;
 }

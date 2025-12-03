@@ -3,5 +3,5 @@ export interface OtpDTO {
   email: string;
   expiresAt: number;
   resendCount: number;
-  lastResendAt: number ;
+  lastResendAt: number;
 }

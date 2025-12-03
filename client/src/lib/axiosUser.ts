@@ -1,121 +1,74 @@
-import { REFRESH_TOKEN_URL } from "@shared/constants/userContants";
-import axios from "axios";
-import { toast } from "sonner";
+import axios from "axios"
+import { useUserStore } from "@stores/user/UserStore";
+import { redirect } from '@tanstack/react-router'
+import { USER_REFRESH_TOKEN } from "@shared/constants/userContants";
 
 const api = axios.create({
-    baseURL: "/api",
+    baseURL: import.meta.env.VITE_USER_BASE_URL,
     withCredentials: true,
-    headers: {
-        "Content-Type": "application/json",
-    },
-});
+    headers: { "Content-Type": "application/json" },
+})
+
 
 let isRefreshing = false;
-let failedQueue: Array<{
-    resolve: (value?: any) => void;
-    reject: (reason?: any) => void;
-}> = [];
-
-const processQueue = (error: any = null) => {
-    failedQueue.forEach((promise) => {
-        if (error) {
-            promise.reject(error);
-        } else {
-            promise.resolve();
-        }
-    });
-    failedQueue = [];
-};
-
-export const getErrorMessage = (error: any): string => {
-    const res = error.response;
-    if (!res) return "Network error! Check your internet connection.";
-
-    return (
-        res.data?.message ||
-        res.data?.error ||
-        (res.status === 404 ? "Requested resource not found." : "") ||
-        (res.status === 500 ? "Server error! Please try again later." : "") ||
-        "Unexpected error occurred."
-    );
-};
-
-const NO_REFRESH_URLS = [
-    "/auth/login",
-    "/auth/signup",
-    "/auth/two-factor-verify",
-    "/auth/verify-otp",
-    "/auth/resend-otp",
-    "/auth/refresh",
-    "/auth/forgot-password",
-    "/auth/reset-password",
-];
-
-
-//REQUEST INTERCEPTOR
-api.interceptors.request.use(
-    (config) => {
-        if (import.meta.env.DEV) {
-            console.log("➡️ Request:", config.method?.toUpperCase(), config.url);
-        }
-        return config;
-    },
-    (error) => {
-        console.error("❌ Request Error:", error);
-        return Promise.reject(error);
-    }
-);
-
-//RESPONSE INTERCEPTOR
 api.interceptors.response.use(
-    (response) => {
-        if (import.meta.env.DEV) {
-            console.log("✅ Response:", response.status, response.config.url);
+    res => res,
+    async (err) => {
+        const originalRequest = err.config;
+        console.log("originalRequest: ", originalRequest);
+
+        const isServerRestart =
+            err.code === "ECONNRESET" ||
+            err.code === "ECONNREFUSED" ||
+            err.code === 'ERR_BAD_RESPONSE' ||
+            err.message === "Network Error" ||
+            (err.response && err.response.status === 0) ||
+            (err.response && (
+                err.response.status === 0 ||
+                new Set([500, 502, 503]).has(err.response.status)
+            ));
+
+        if (isServerRestart) {
+            originalRequest._retryCount = originalRequest._retryCount || 0;
+
+            if (originalRequest._retryCount >= 3) {
+                console.log("Server unreachable after 3 retries");
+                return Promise.reject(err);
+            }
+
+            originalRequest._retryCount++;
+            const delay = 1000 * Math.pow(2, originalRequest._retryCount);
+
+            console.log("⚠ Server restarting… retrying in 2s");
+
+            return new Promise((resolve) =>
+                setTimeout(() => resolve(api(originalRequest)), delay)
+            );
         }
-        return response;
-    },
-    async (error) => {
-        const originalRequest = error.config;
 
-        const shouldSkipRefresh = NO_REFRESH_URLS.some(url =>
-            originalRequest.url?.includes(url)
-        );
-
-        if (shouldSkipRefresh || error.response?.status !== 401) {
-            return Promise.reject(error);
+        if (err.response.status === 403) {
+            useUserStore.getState().logout();
+            throw redirect({ to: "/auth/login" })
         }
 
-        if (originalRequest._retry) {
-            toast.error("Session expired. Please login again.");
-            window.dispatchEvent(new CustomEvent('auth:logout'));
-            return Promise.reject(error);
-        }
+        if (err.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
 
-        originalRequest._retry = true;
+            if (!isRefreshing) {
+                isRefreshing = true;
 
-        if (isRefreshing) {
-            return new Promise((resolve, reject) => {
-                failedQueue.push({ resolve, reject });
-            })
-                .then(() => api(originalRequest))
-                .catch(err => Promise.reject(err));
-        }
+                try {
+                    await api.post(USER_REFRESH_TOKEN, {}, { withCredentials: true });
+                } finally {
+                    isRefreshing = false
+                }
+            }
 
-        isRefreshing = true;
-
-        try {
-            await api.post(REFRESH_TOKEN_URL);
-            processQueue();
             return api(originalRequest);
-        } catch (refreshError) {
-            processQueue(refreshError);
-            toast.error("Session expired. Please login again.");
-            window.dispatchEvent(new CustomEvent('auth:logout'));
-            return Promise.reject(refreshError);
-        } finally {
-            isRefreshing = false;
         }
-    }
-);
 
-export default api;
+        return Promise.reject(err)
+    }
+)
+
+export default api

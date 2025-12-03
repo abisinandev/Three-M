@@ -1,16 +1,15 @@
 import { ErrorMessage } from "@domain/enum/express/messages/error.message";
 import { HttpStatus } from "@domain/enum/express/status-code";
 import AppError from "@presentation/express/utils/error-handling/app.error";
-import { plainToInstance } from "class-transformer";
 import type { ClassConstructor } from "class-transformer";
+import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import type { NextFunction, Request, Response } from "express";
 
-
-export const validateDTO = <T extends object>(dtoClass: ClassConstructor<T>) => {
-
+export const validateDTO = <T extends object>(
+  dtoClass: ClassConstructor<T>,
+) => {
   return async (req: Request, _res: Response, next: NextFunction) => {
-
     const dtoInstance = plainToInstance(dtoClass, req.body);
     console.log("dtoInstance: ", dtoInstance);
 
@@ -18,11 +17,10 @@ export const validateDTO = <T extends object>(dtoClass: ClassConstructor<T>) => 
       whitelist: true,
       forbidNonWhitelisted: true,
       validationError: { target: false },
-      skipMissingProperties: false
+      skipMissingProperties: false,
     });
 
     if (errors.length > 0) {
-
       const formattedErrors: Record<string, string> = {};
 
       errors.forEach((err) => {
@@ -39,6 +37,5 @@ export const validateDTO = <T extends object>(dtoClass: ClassConstructor<T>) => 
     }
     req.body = dtoInstance;
     next();
-
   };
 };

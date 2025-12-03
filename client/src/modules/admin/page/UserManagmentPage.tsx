@@ -1,7 +1,7 @@
 import { Users, Lock } from "lucide-react";
 import { useState } from "react";
-import { keepPreviousData, QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
-import { UserTable } from "@shared/components/table/UserTable";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
+import { TableComponent } from "@shared/components/table/UserTable";
 import { Pagination } from "@shared/components/pagination/Pagination";
 import { FiltersRow } from "@shared/components/filter/FilterComponent";
 import { StatsCard } from "@shared/components/cards/UserManagementStatCards";
@@ -162,7 +162,7 @@ export default function UserManagement() {
                     <div className="py-12 text-center text-red-400">Failed to load users</div>
                 ) : (
                     <>
-                        <UserTable columns={columns} data={users} actions={actions} />
+                        <TableComponent columns={columns} data={users} actions={actions} />
 
                         <Pagination
                             page={filters.page as number}

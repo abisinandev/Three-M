@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   LayoutDashboard,
   Users,
@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   Search,
+  BadgeCheck,
 } from 'lucide-react';
 import adminApi from '@lib/axiosAdmin';
 import { LOGOUT } from '@shared/constants/adminConstants';
@@ -22,7 +23,8 @@ import { useAdminStore } from '@stores/admin/useAdminStore';
 
 const navItems = [
   { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/admin/users', label: 'Users', icon: Users },
+  { to: '/admin/users-management', label: 'Users', icon: Users },
+  { to: '/admin/kyc-management', label: 'KYC Verification', icon: BadgeCheck },
   { to: '/admin/sips', label: 'SIPs', icon: DollarSign },
   { to: '/admin/mutual-funds', label: 'Mutual Funds', icon: TrendingUp },
   { to: '/admin/transactions', label: 'Transactions', icon: Receipt },
@@ -42,23 +44,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
-  const { data, setData, logout } = useAdminStore();
+  const { data, logout } = useAdminStore();
 
-  useEffect(() => {
-    const fetchAdminProfile = async () => {
-      try {
-        const response = await adminApi.get('/profile', { 
-          withCredentials: true 
-        });
-        setData(response.data.data);
-      } catch (error) {
-        console.error('Failed to fetch admin profile:', error);
-        navigate({ to: '/admin/authentication', replace: true });
-      }
-    };
-
-    fetchAdminProfile();
-  }, [setData, navigate]);
 
   const handleLogout = async () => {
     const confirmed = window.confirm('Are you sure you want to logout?');
@@ -85,14 +72,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const getInitials = (): string => {
     if (!data?.fullName) return 'AD';
-    
+
     return data.fullName
       .trim()
       .split(' ')
       .filter(Boolean)
       .map((word) => word[0])
       .join('')
-      .toUpperCase()
+      .toUpperCase() 
       .slice(0, 2);
   };
 
@@ -117,9 +104,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#111111] border-r border-neutral-800 transition-transform duration-300 lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#111111] border-r border-neutral-800 transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         {/* Logo Header */}
         <div className="flex items-center justify-between p-5 border-b border-neutral-800">
@@ -136,7 +122,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </button>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto h-[calc(100vh-180px)]">
+        <nav className="flex-1 p-4 space-y-1 h-[calc(100vh-180px)]">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActiveRoute(item.to);
@@ -146,11 +132,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 key={item.to}
                 to={item.to}
                 onClick={closeSidebar}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  active
-                    ? 'bg-teal-green/10 text-teal-green border border-teal-green/30'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
-                }`}
+                className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${active
+                  ? 'bg-teal-green/10 text-teal-green border border-teal-green/30'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  }`}
               >
                 <Icon size={18} className="shrink-0" />
                 <span>{item.label}</span>

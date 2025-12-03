@@ -4,7 +4,6 @@ import type { LoginType } from "@shared/types/user/LoginTypes";
 import { useNavigate } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import api from "@lib/axiosUser";
-import { useUserStore } from "@stores/user/UserStore";
 import { GOOGLE_AUTH } from "@shared/constants/userContants";
 import { GoogleLogin } from "@react-oauth/google";
 
@@ -24,7 +23,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     isLoading,
 }) => {
     const navigate = useNavigate();
-    const { setUser } = useUserStore();
 
     const googleMutation = useMutation({
         mutationFn: async (credential: string) =>
@@ -34,9 +32,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 { withCredentials: true }
             ),
 
-        onSuccess: (res) => {
-            setUser(res.data.user);
-            navigate({ to: "/user", replace: true });
+        onSuccess: () => {
+            setTimeout(() => {
+                navigate({ to: "/user", replace: true });
+            }, 1000); 
         },
 
         onError: (err) => {

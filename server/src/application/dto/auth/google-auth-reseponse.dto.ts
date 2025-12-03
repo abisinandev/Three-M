@@ -1,4 +1,4 @@
 export interface GoogleResponseDTO {
-    accessToken: string;
-    refreshToken: string;
+  accessToken: string;
+  refreshToken: string;
 }
