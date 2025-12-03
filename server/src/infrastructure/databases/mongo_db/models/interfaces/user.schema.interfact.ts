@@ -1,4 +1,4 @@
-import { AuthProvider } from "@domain/enum/users/auth-provider.enum";
+import type { AuthProvider } from "@domain/enum/users/auth-provider.enum";
 import type { CurrencyTypes } from "@domain/enum/users/currency-enum";
 import type { KycStatusType } from "@domain/enum/users/kyc-status.enum";
 import type { SubscripionPlan } from "@domain/enum/users/subscription-plan.enum";
@@ -34,6 +34,6 @@ export interface IUserSchema {
   createdAt?: Date | null;
 
   authProvider: AuthProvider;
-  avatar: string | null
-  googleId: string | null
+  avatar: string | null;
+  googleId: string | null;
 }

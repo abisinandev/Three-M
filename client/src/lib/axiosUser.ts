@@ -1,7 +1,7 @@
 import axios from "axios"
-import { REFRESH_TOKEN_URL } from "@shared/constants/userContants";
 import { useUserStore } from "@stores/user/UserStore";
 import { redirect } from '@tanstack/react-router'
+import { USER_REFRESH_TOKEN } from "@shared/constants/userContants";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_USER_BASE_URL,
@@ -58,7 +58,7 @@ api.interceptors.response.use(
                 isRefreshing = true;
 
                 try {
-                    await api.post(REFRESH_TOKEN_URL, {}, { withCredentials: true });
+                    await api.post(USER_REFRESH_TOKEN, {}, { withCredentials: true });
                 } finally {
                     isRefreshing = false
                 }

@@ -1,40 +1,43 @@
-import { FetchDataResponseDTO } from "@application/dto/admin/fetch-data.response.dto";
-import { KycResponseDTO } from "@application/dto/user/kyc-response.dto";
-import { IKycRepository } from "@application/interfaces/repositories/kyc-repository.interface";
-import { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
+import type { FetchDataResponseDTO } from "@application/dto/admin/fetch-data.response.dto";
+import type { KycResponseDTO } from "@application/dto/user/kyc-response.dto";
+import type { IKycRepository } from "@application/interfaces/repositories/kyc-repository.interface";
+import type { IUserRepository } from "@application/interfaces/repositories/user-repository.interface";
 import { toKycResponse } from "@application/mappers/user/kyc.mapper";
-import { IFetchAllKycDocsUseCase } from "@application/use_cases/interfaces/admin/kyc-management-usecase.interface";
-import { UserEntity } from "@domain/entities/user.entity";
+import type { IFetchAllKycDocsUseCase } from "@application/use_cases/interfaces/admin/kyc-management-usecase.interface";
+import type { UserEntity } from "@domain/entities/user.entity";
 import { USER_TYPES } from "@infrastructure/inversify_di/types/user/user.types";
 import { inject, injectable } from "inversify";
-import { QueryOptions } from "mongoose";
+import type { QueryOptions } from "mongoose";
 
 @injectable()
 export class FetchAllKycDocsUseCase implements IFetchAllKycDocsUseCase {
-    constructor(
-        @inject(USER_TYPES.KycRepository) private readonly _kycRepository: IKycRepository,
-        @inject(USER_TYPES.UserRepository) private readonly _userRepository: IUserRepository,
-    ) { }
+  constructor(
+    @inject(USER_TYPES.KycRepository) private readonly _kycRepository: IKycRepository,
+    @inject(USER_TYPES.UserRepository) private readonly _userRepository: IUserRepository,
+  ) {}
 
-    async execute(options: QueryOptions): Promise<FetchDataResponseDTO<KycResponseDTO>> {
+  async execute(
+    options: QueryOptions,
+  ): Promise<FetchDataResponseDTO<KycResponseDTO>> {
+    const allDocs = await this._kycRepository.findWithFilters(options);
 
-        const allDocs = await this._kycRepository.findWithFilters(options);
+    const fullData = await Promise.all(
+      allDocs.map(async (doc) => {
+        const user = await this._userRepository.findById(doc.userId);
+        return { kyc: doc, user };
+      }),
+    );
 
-        const fullData = await Promise.all(
-            allDocs.map(async (doc) => {
-                const user = await this._userRepository.findById(doc.userId);
-                return { kyc: doc, user }
-            })
-        )
-
-        const { totalCount } = await this._kycRepository.count(); 
-        console.log(fullData)
-        return {
-            data: fullData.map(({ kyc, user }) => toKycResponse(kyc, user as UserEntity)),
-            total: totalCount,
-            page: options.page || 1,
-            limit: options.limit || 10,
-            totalPages: Math.ceil(totalCount / (options.limit || 10)) 
-        };
-    }
-}     
+    const { totalCount } = await this._kycRepository.count();
+    console.log(fullData);
+    return {
+      data: fullData.map(({ kyc, user }) =>
+        toKycResponse(kyc, user as UserEntity),
+      ),
+      total: totalCount,
+      page: options.page || 1,
+      limit: options.limit || 10,
+      totalPages: Math.ceil(totalCount / (options.limit || 10)),
+    };
+  }
+}

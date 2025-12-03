@@ -9,7 +9,7 @@ const connectDB = async () => {
   if (!env.MONGO_URI) {
     throw new AppError(
       ErrorMessage.DB_CONNECTION_FAILED,
-      HttpStatusCode.InternalServerError
+      HttpStatusCode.InternalServerError,
     );
   }
 

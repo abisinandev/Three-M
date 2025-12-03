@@ -1,7 +1,7 @@
-import { FetchDataResponseDTO } from "@application/dto/admin/fetch-data.response.dto";
-import { KycResponseDTO } from "@application/dto/user/kyc-response.dto";
-import { QueryOptions } from "mongoose";
+import type { FetchDataResponseDTO } from "@application/dto/admin/fetch-data.response.dto";
+import type { KycResponseDTO } from "@application/dto/user/kyc-response.dto";
+import type { QueryOptions } from "mongoose";
 
 export interface IFetchAllKycDocsUseCase {
-    execute(data: QueryOptions): Promise<FetchDataResponseDTO<KycResponseDTO>>
+  execute(data: QueryOptions): Promise<FetchDataResponseDTO<KycResponseDTO>>;
 }

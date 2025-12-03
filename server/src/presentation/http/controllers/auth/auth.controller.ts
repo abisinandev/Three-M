@@ -1,7 +1,7 @@
 import type { IForgotPasswordResendOtpUseCase } from "@application/use_cases/interfaces/user/forgot-pass-resend-otp-usecase.interface";
 import type { IForgotPasswordVerifyOtpUseCase } from "@application/use_cases/interfaces/user/forgot-pass-verify-otp-usecase.interface";
 import type { IForgotPasswordUseCase } from "@application/use_cases/interfaces/user/forgot-password-usecase.interface";
-import { IGoogleAuthUseCase } from "@application/use_cases/interfaces/user/google-auth.usecase.interface";
+import type { IGoogleAuthUseCase } from "@application/use_cases/interfaces/user/google-auth.usecase.interface";
 import type { IRefreshTokenUseCase } from "@application/use_cases/interfaces/user/refresh-token-usecase.interface";
 import type { IResetPasswordUseCase } from "@application/use_cases/interfaces/user/reset-password-usecase.interface";
 import type { ISignupVerifyOtpUseCase } from "@application/use_cases/interfaces/user/signup-verify-otp-usecase.interface";
@@ -20,249 +20,238 @@ import { inject, injectable } from "inversify";
 
 @injectable()
 export class AuthController {
-    constructor(
-        @inject(USER_TYPES.UserSignupUseCase) private readonly _userSignupUseCase: IUserSignupUseCase,
-        @inject(USER_TYPES.UserLoginUseCase) private readonly _userLoginUseCase: IUserLoginUseCase,
-        @inject(AUTH_TYPES.VerifyTwoFactorUseCase) private readonly _verifyTwoFactorUseCase: IVerifyTwoFactorUseCase,
-        @inject(AUTH_TYPES.RefreshTokenUseCase) private readonly _refreshTokenUseCase: IRefreshTokenUseCase,
-        @inject(AUTH_TYPES.ForgotPasswordUseCase) private readonly _forgotPasswordUseCase: IForgotPasswordUseCase,
-        @inject(AUTH_TYPES.SignupVerifyOtpUseCase) private readonly _verifyOtpUseCase: ISignupVerifyOtpUseCase,
-        @inject(AUTH_TYPES.ResendOtpUseCase) private readonly _resendOtpUseCase: ISignupResendOtpUseCase,
-        @inject(AUTH_TYPES.ForgotPasswordOtpVerifyUseCase) private readonly _forgotPassVerifyOtp: IForgotPasswordVerifyOtpUseCase,
-        @inject(AUTH_TYPES.ForgotPasswordResendOtpUseCase) private readonly _forgotPasswordResendOtp: IForgotPasswordResendOtpUseCase,
-        @inject(AUTH_TYPES.ResetPasswordUseCase) private readonly _resetPassword: IResetPasswordUseCase,
-        @inject(AUTH_TYPES.GoogleAuthUseCase) private readonly _googleAuthUseCase: IGoogleAuthUseCase,
-    ) { }
+  constructor(
+    @inject(USER_TYPES.UserSignupUseCase) private readonly _userSignupUseCase: IUserSignupUseCase,
+    @inject(USER_TYPES.UserLoginUseCase) private readonly _userLoginUseCase: IUserLoginUseCase,
+    @inject(AUTH_TYPES.VerifyTwoFactorUseCase) private readonly _verifyTwoFactorUseCase: IVerifyTwoFactorUseCase,
+    @inject(AUTH_TYPES.RefreshTokenUseCase) private readonly _refreshTokenUseCase: IRefreshTokenUseCase,
+    @inject(AUTH_TYPES.ForgotPasswordUseCase) private readonly _forgotPasswordUseCase: IForgotPasswordUseCase,
+    @inject(AUTH_TYPES.SignupVerifyOtpUseCase) private readonly _verifyOtpUseCase: ISignupVerifyOtpUseCase,
+    @inject(AUTH_TYPES.ResendOtpUseCase) private readonly _resendOtpUseCase: ISignupResendOtpUseCase,
+    @inject(AUTH_TYPES.ForgotPasswordOtpVerifyUseCase) private readonly _forgotPassVerifyOtp: IForgotPasswordVerifyOtpUseCase,
+    @inject(AUTH_TYPES.ForgotPasswordResendOtpUseCase) private readonly _forgotPasswordResendOtp: IForgotPasswordResendOtpUseCase,
+    @inject(AUTH_TYPES.ResetPasswordUseCase) private readonly _resetPassword: IResetPasswordUseCase,
+    @inject(AUTH_TYPES.GoogleAuthUseCase) private readonly _googleAuthUseCase: IGoogleAuthUseCase,
+  ) { }
 
-    async signup(req: Request, res: Response, next: NextFunction) {
-        try {
-            const dto = { ...req.body };
-            const result = await this._userSignupUseCase.execute(dto);
+  async signup(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dto = { ...req.body };
+      const result = await this._userSignupUseCase.execute(dto);
 
-            if (result.isAlreadyCreated) {
-                return res.status(HttpStatus.CREATED).json({
-                    success: true,
-                    message: SuccessMessage.ACCOUNT_EXISTS_EMAIL_NOT_VERIFIED,
-                    data: { expiresAt: result.expiresAt }
-                })
-            }
+      if (result.isAlreadyCreated) {
+        return res.status(HttpStatus.CREATED).json({
+          success: true,
+          message: SuccessMessage.ACCOUNT_EXISTS_EMAIL_NOT_VERIFIED,
+          data: { expiresAt: result.expiresAt },
+        });
+      }
 
-            return res.status(HttpStatus.CREATED).json({
-                success: true,
-                message: SuccessMessage.OTP_SEND,
-                data: { expiresAt: result.expiresAt }
-            })
-
-        } catch (error) {
-            next(error)
-        }
+      return res.status(HttpStatus.CREATED).json({
+        success: true,
+        message: SuccessMessage.OTP_SEND,
+        data: { expiresAt: result.expiresAt },
+      });
+    } catch (error) {
+      next(error);
     }
+  }
 
+  async login(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dto = { ...req.body };
+      const result = await this._userLoginUseCase.execute(dto);
 
-    async login(req: Request, res: Response, next: NextFunction) {
-        try {
-            const dto = { ...req.body };
-            const result = await this._userLoginUseCase.execute(dto);
+      if (result.required2FASetup) {
+        return res.status(HttpStatus.CREATED).json({
+          success: true,
+          message: SuccessMessage.TWO_FA_REQUIRED,
+          data: { qrCode: result.qrCode },
+        });
+      }
 
-            if (result.required2FASetup) {
-
-                return res.status(HttpStatus.CREATED).json({
-                    success: true,
-                    message: SuccessMessage.TWO_FA_REQUIRED,
-                    data: { qrCode: result.qrCode }
-                })
-
-            }
-
-            return res.status(HttpStatus.CREATED).json({
-                success: true,
-                message: SuccessMessage.PLEASE_VERIFY_2FA_CODE,
-                data: { qrCode: result.qrCode }
-            })
-
-        } catch (error) {
-            next(error);
-        }
+      return res.status(HttpStatus.CREATED).json({
+        success: true,
+        message: SuccessMessage.PLEASE_VERIFY_2FA_CODE,
+        data: { qrCode: result.qrCode },
+      });
+    } catch (error) {
+      next(error);
     }
+  }
 
+  async verifyTwoFactor(req: Request, res: Response, next: NextFunction) {
+    try {
+      const email = req.query.email as string;
+      const { token } = { ...req.body };
 
-    async verifyTwoFactor(req: Request, res: Response, next: NextFunction) {
-        try {
-            const email = req.query.email as string;
-            const { token } = { ...req.body };
+      const result = await this._verifyTwoFactorUseCase.execute({
+        email,
+        token,
+      });
 
-            const result = await this._verifyTwoFactorUseCase.execute({ email, token });
+      res.cookie("refreshToken", result.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
 
-            res.cookie("refreshToken", result.refreshToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "lax",
-                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-            });
+      res.cookie("accessToken", result.accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        maxAge: 15 * 60 * 1000, // 15 minutes
+      });
 
-            res.cookie("accessToken", result.accessToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "lax",
-                maxAge: 15 * 60 * 1000, // 15 minutes
-            });
-
-
-            return res.status(HttpStatus.OK).json({
-                success: true,
-                message: SuccessMessage.LOGGED_IN_SUCCESS,
-                data: { accessToken: "Created" }
-            })
-
-        } catch (error) {
-            next(error)
-        }
+      return res.status(HttpStatus.OK).json({
+        success: true,
+        message: SuccessMessage.LOGGED_IN_SUCCESS,
+        data: { accessToken: "Created" },
+      });
+    } catch (error) {
+      next(error);
     }
+  }
 
-    async verifySignupOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const dto = { ...req.body }
-            await this._verifyOtpUseCase.execute(dto);
-            res.status(HttpStatus.OK).json({
-                success: HttpStatus.OK,
-                message: SuccessMessage.EMAIL_VERIFIED,
-            });
-        } catch (err) {
-            next(err)
-        }
+  async verifySignupOtp(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const dto = { ...req.body };
+      await this._verifyOtpUseCase.execute(dto);
+      res.status(HttpStatus.OK).json({
+        success: HttpStatus.OK,
+        message: SuccessMessage.EMAIL_VERIFIED,
+      });
+    } catch (err) {
+      next(err);
     }
+  }
 
+  async resendOtp(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dto = { ...req.body };
+      const result = await this._resendOtpUseCase.execute(dto);
 
-    async resendOtp(req: Request, res: Response, next: NextFunction) {
-        try {
-            const dto = { ...req.body };
-            const result = await this._resendOtpUseCase.execute(dto)
-
-            return res.status(HttpStatus.OK).json({
-                success: true,
-                message: SuccessMessage.RESEND_OTP_MSG,
-                data: { ...result }
-            });
-        } catch (err) {
-            next(err)
-        }
+      return res.status(HttpStatus.OK).json({
+        success: true,
+        message: SuccessMessage.RESEND_OTP_MSG,
+        data: { ...result },
+      });
+    } catch (err) {
+      next(err);
     }
+  }
 
-    async refresh(req: Request, res: Response, next: NextFunction) {
-        try {
-            const refreshToken = req.cookies.refreshToken;
-            console.log('Refresh : ', refreshToken)
-            if (!refreshToken) throw new ValidationError("No refresh token provided");
+  async refresh(req: Request, res: Response, next: NextFunction) {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+      console.log("Refresh : ", refreshToken);
+      if (!refreshToken) throw new ValidationError("No refresh token provided");
 
-            const result = await this._refreshTokenUseCase.execute({ refreshToken })
+      const result = await this._refreshTokenUseCase.execute({ refreshToken });
 
-            res.cookie("accessToken", result.accessToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "lax",
-                maxAge: 15 * 60 * 1000, // 15 minutes
-            });
+      res.cookie("accessToken", result.accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        maxAge: 15 * 60 * 1000, // 15 minutes
+      });
 
-            return res.status(HttpStatus.CREATED).json(
-                {
-                    success: true,
-                    message: SuccessMessage.ACCESS_TOKEN_UPDATED
-                })
-
-        } catch (error) {
-            next(error)
-        }
+      return res.status(HttpStatus.CREATED).json({
+        success: true,
+        message: SuccessMessage.ACCESS_TOKEN_UPDATED,
+      });
+    } catch (error) {
+      next(error);
     }
+  }
 
-
-    async forgotPassword(req: Request, res: Response, next: NextFunction) {
-        try {
-            const dto = { ...req.body };
-            await this._forgotPasswordUseCase.execute(dto);
-            return res.status(HttpStatus.OK).json({
-                success: true,
-                message: SuccessMessage.VERIFYCATION_CODE_SEND,
-            });
-        } catch (error) {
-            next(error)
-        }
+  async forgotPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dto = { ...req.body };
+      await this._forgotPasswordUseCase.execute(dto);
+      return res.status(HttpStatus.OK).json({
+        success: true,
+        message: SuccessMessage.VERIFYCATION_CODE_SEND,
+      });
+    } catch (error) {
+      next(error);
     }
+  }
 
-    async forgotPasswordVeirfyOtp(req: Request, res: Response, next: NextFunction) {
-        try {
-            const dto = { ...req.body };
-            const result = await this._forgotPassVerifyOtp.execute(dto);
+  async forgotPasswordVeirfyOtp(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dto = { ...req.body };
+      const result = await this._forgotPassVerifyOtp.execute(dto);
 
-            return res.status(HttpStatus.OK).json({
-                success: true,
-                message: SuccessMessage.OTP_VERIFIED,
-                data: { resetToken: result.resetToken }
-            });
-        } catch (error) {
-            next(error)
-        }
+      return res.status(HttpStatus.OK).json({
+        success: true,
+        message: SuccessMessage.OTP_VERIFIED,
+        data: { resetToken: result.resetToken },
+      });
+    } catch (error) {
+      next(error);
     }
+  }
 
-    async forgotPasswordResendOtp(req: Request, res: Response, next: NextFunction) {
-        try {
-            const dto = { ...req.body }
-            const result = await this._forgotPasswordResendOtp.execute(dto);
+  async forgotPasswordResendOtp(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dto = { ...req.body };
+      const result = await this._forgotPasswordResendOtp.execute(dto);
 
-            res.status(HttpStatus.OK).json({
-                success: true,
-                message: SuccessMessage.RESEND_OTP_MSG,
-                data: {
-                    expiresAt: result.expiresAt,
-                    resendCount: result.resendCount,
-                }
-            })
-        } catch (err) {
-            next(err)
-        }
+      res.status(HttpStatus.OK).json({
+        success: true,
+        message: SuccessMessage.RESEND_OTP_MSG,
+        data: {
+          expiresAt: result.expiresAt,
+          resendCount: result.resendCount,
+        },
+      });
+    } catch (err) {
+      next(err);
     }
+  }
 
-    async resetPassword(req: Request, res: Response, next: NextFunction) {
-        try {
-            const dto = { ...req.body }
-            await this._resetPassword.execute(dto)
+  async resetPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dto = { ...req.body };
+      await this._resetPassword.execute(dto);
 
-            return res.status(HttpStatus.OK).json({
-                success: true,
-                message: SuccessMessage.PASSWORD_RESET_SUCCESS
-            });
-        } catch (error) {
-            next(error)
-        }
+      return res.status(HttpStatus.OK).json({
+        success: true,
+        message: SuccessMessage.PASSWORD_RESET_SUCCESS,
+      });
+    } catch (error) {
+      next(error);
     }
+  }
 
+  async googleAuth(req: Request, res: Response, next: NextFunction) {
+    try {
+      const dto = { ...req.body };
+      const result = await this._googleAuthUseCase.execute(dto);
 
-    async googleAuth(req: Request, res: Response, next: NextFunction) {
-        try {
-            const dto = { ...req.body };
-            const result = await this._googleAuthUseCase.execute(dto);
+      res.cookie("refreshToken", result.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
 
-            res.cookie("refreshToken", result.refreshToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "lax",
-                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-            });
+      res.cookie("accessToken", result.accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        maxAge: 15 * 60 * 1000, // 15 minutes
+      });
 
-            res.cookie("accessToken", result.accessToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "lax",
-                maxAge: 15 * 60 * 1000, // 15 minutes
-            });
-
-            return res.status(200).json({
-                success: true,
-                message: SuccessMessage.LOGGED_IN_SUCCESS,
-                data: { accessToken: "created" }
-            })
-        } catch (error) {
-            next(error)
-        }
+      return res.status(200).json({
+        success: true,
+        message: SuccessMessage.LOGGED_IN_SUCCESS,
+        data: { accessToken: "created" },
+      });
+    } catch (error) {
+      next(error);
     }
-
+  }
 }

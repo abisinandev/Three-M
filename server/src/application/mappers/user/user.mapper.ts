@@ -1,12 +1,15 @@
 import type { CreateUserDTO } from "@application/dto/auth/create-user.dto";
 import type { UserDTO } from "@application/dto/user/user-dto";
-import { KycEntity } from "@domain/entities/kyc.entity";
+import type { KycEntity } from "@domain/entities/kyc.entity";
 import { UserEntity } from "@domain/entities/user.entity";
 import { KycStatusType } from "@domain/enum/users/kyc-status.enum";
 import { SubscripionPlan } from "@domain/enum/users/subscription-plan.enum";
 
 // Dto => Domain
-export function toEntity(dto: CreateUserDTO, hashedPassword: string): UserEntity {
+export function toEntity(
+  dto: CreateUserDTO,
+  hashedPassword: string,
+): UserEntity {
   return UserEntity.create({
     fullName: dto.fullName,
     email: dto.email,
@@ -16,7 +19,10 @@ export function toEntity(dto: CreateUserDTO, hashedPassword: string): UserEntity
   });
 }
 
-export function toUserResponse(entity: UserEntity, kycDetails?: KycEntity): UserDTO {
+export function toUserResponse(
+  entity: UserEntity,
+  kycDetails?: KycEntity,
+): UserDTO {
   return {
     id: entity.id as string,
     userCode: entity.userCode,
@@ -36,22 +42,21 @@ export function toUserResponse(entity: UserEntity, kycDetails?: KycEntity): User
     isVerified: entity.isVerified ?? false,
     isBlocked: entity.isBlocked ?? false,
     subscriptionStatus: entity.subscriptionStatus ?? SubscripionPlan.FREE,
-    createdAt: entity.createdAt?.toLocaleDateString() as string ?? null,
+    createdAt: (entity.createdAt?.toLocaleDateString() as string) ?? null,
     panNumber: kycDetails?.panNumber ?? null,
     aadhaarNumber: kycDetails?.adhaarNumber ?? null,
     address: kycDetails?.address
       ? {
-        fullAddress: kycDetails.address.fullAddress,
-        city: kycDetails.address.city,
-        state: kycDetails.address.state,
-        pinCode: kycDetails.address.pincode,
-      }
+          fullAddress: kycDetails.address.fullAddress,
+          city: kycDetails.address.city,
+          state: kycDetails.address.state,
+          pinCode: kycDetails.address.pincode,
+        }
       : {
-        fullAddress: "",
-        city: "",
-        state: "",
-        pinCode: "",
-      },
+          fullAddress: "",
+          city: "",
+          state: "",
+          pinCode: "",
+        },
   };
-};
-
+}

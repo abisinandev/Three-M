@@ -1,4 +1,4 @@
-import { IStorageProvider } from "@application/interfaces/services/externals/storage-provider.interface";
+import type { IStorageProvider } from "@application/interfaces/services/externals/storage-provider.interface";
 import { env } from "@presentation/express/utils/constants/env.constants";
 import { v2 as cloudinary } from "cloudinary";
 import crypto from "crypto";

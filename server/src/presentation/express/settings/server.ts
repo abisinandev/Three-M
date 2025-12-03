@@ -1,11 +1,10 @@
 import connectDB from "@infrastructure/databases/mongo_db/mongo.db";
+import { logger } from "@infrastructure/providers/logger/winston.logger";
 import { env } from "@presentation/express/utils/constants/env.constants";
 import app from "./app";
-import { logger } from "@infrastructure/providers/logger/winston.logger";
-
 
 const bootstrap = async () => {
-  try {  
+  try {
     await connectDB();
 
     app.listen(env.PORT, () => {
@@ -16,5 +15,5 @@ const bootstrap = async () => {
     process.exit(1);
   }
 };
- 
+
 bootstrap();

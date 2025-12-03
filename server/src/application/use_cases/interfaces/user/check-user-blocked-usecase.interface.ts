@@ -1,3 +1,3 @@
 export interface ICheckUserBlockedUseCase {
-    execute(id: string): Promise<boolean>
+  execute(id: string): Promise<boolean>;
 }

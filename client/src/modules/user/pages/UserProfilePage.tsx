@@ -4,11 +4,13 @@ import { Camera, CheckCircle } from 'lucide-react';
 import ChangePasswordModal from '@shared/components/modals/ChangePasswordModal';
 import { format } from 'date-fns';
 import { useNavigate } from '@tanstack/react-router';
+import EditProfileModal from '@shared/components/modals/UserProfileEditModal';
 
 const UserProfilePage = () => {
   const { user } = useUserStore();
-  
+
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const navigate = useNavigate();
 
   const getInitials = (name: string) =>
@@ -84,32 +86,46 @@ const UserProfilePage = () => {
       <div className="max-w-3xl mx-auto px-4 py-6">
         <div className="bg-[#0a0a0a] rounded-2xl border border-[#1f1f1f] overflow-hidden">
 
-          <div className="bg-gradient-to-r from-[#0f0f0f] to-[#111] px-6 py-8 text-center border-b border-[#222]">
-            <div className="relative inline-block group mb-4">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#22C55E] to-[#16a34a] p-0.5">
-                <div className="w-full h-full rounded-full bg-[#0f0f0f] flex items-center justify-center text-2xl font-semibold text-white">
+          <div className="relative bg-gradient-to-r from-[#0f0f0f] to-[#111] px-6 py-10 text-center border-b border-[#222] overflow-hidden">
+
+            {user?.isVerified && (
+              <div className="absolute top-0 right-0 z-10">
+                <div className="relative">
+                  <div className="relative bg-gradient-to-br from-green-600 to-green-500 text-white font-bold text-xs tracking-wider px-10 py-2 transform rotate-45 translate-x-8 translate-y-6 shadow-2xl">
+                    VERIFIED
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="relative inline-block group mb-5">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#22C55E] via-[#16a34a] to-[#15803d] p-1 shadow-2xl ring-4 ring-[#22C55E]/20">
+                <div className="w-full h-full rounded-full bg-[#0f0f0f] flex items-center justify-center text-3xl font-bold text-white">
                   {user?.fullName ? getInitials(user.fullName) : 'U'}
                 </div>
               </div>
-              <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                <Camera className="w-5 h-5 text-white" />
+              <div className="absolute inset-0 rounded-full bg-black/70 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-sm">
+                <Camera className="w-6 h-6 text-white" />
               </div>
               <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" />
             </div>
 
-            <h1 className="text-xl font-semibold text-white">{user?.fullName || 'User'}</h1>
-            <p className="text-gray-400 text-xs mt-1">{user?.email || 'user@example.com'}</p>
-            <span className="inline-block mt-2 text-xs text-gray-500 bg-[#1A1A1A] px-2.5 py-1 rounded-full border border-[#333]">
+            <h1 className="text-2xl font-bold text-white tracking-tight">{user?.fullName || 'User'}</h1>
+            <p className="text-gray-400 text-sm mt-2">{user?.email || 'user@example.com'}</p>
+
+            <span className="inline-block mt-3 text-xs font-medium text-gray-400 bg-[#1A1A1A] px-4 py-1.5 rounded-full border border-[#333]">
               Member since {formatJoinDate(user?.createdAt)}
             </span>
           </div>
-
           <div className="p-6 space-y-6">
 
             <section className="bg-[#111111] rounded-xl p-5 border border-[#222]">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-semibold text-white">Personal Information</h3>
-                <button className="text-xs font-semibold px-4 py-1.5 bg-[#22C55E] hover:bg-[#1ea853] text-white rounded-lg">
+                <button
+                  onClick={() => setShowEditModal(true)}
+                  className="text-xs font-semibold px-4 py-1.5 bg-[#22C55E] hover:bg-[#1ea853] text-white rounded-lg transition"
+                >
                   Edit
                 </button>
               </div>
@@ -199,6 +215,12 @@ const UserProfilePage = () => {
         isOpen={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}
       />
+      {showEditModal && (
+        <EditProfileModal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+        />
+      )}
     </>
   );
 };

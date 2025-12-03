@@ -23,7 +23,6 @@ export class Password extends ValueObjectBase<PasswordProps> {
     return new Password({ value });
   }
 
-
   get value(): string {
     return this.props.value;
   }

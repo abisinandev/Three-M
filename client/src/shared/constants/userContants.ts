@@ -12,7 +12,11 @@ export const GOOGLE_AUTH = '/auth/google/callback';
 export const CHANGE_PASSWORD = "/user/change-password";
 export const PROFILE_GET_API = '/user/profile/me';
 
-export const REFRESH_TOKEN_URL = "/api/auth/refresh";
+export const USER_REFRESH_TOKEN = "/auth/refresh";
 
 export const KYC_SIGN_URL = '/user/cloudinary/signature';
 export const KYC_SUMBIT_URL = '/user/kyc/submit';
+
+export const UPDATE_PROFILE = "/user/profile/update";
+export const SEND_EMAIL_OTP = "/user/profile/update/email/send-otp";
+export const VERIFY_EMAIL_OTP = '/user/profile/update/email/verify-otp';

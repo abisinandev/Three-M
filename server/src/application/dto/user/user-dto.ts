@@ -21,9 +21,9 @@ export type UserDTO = {
   panNumber?: string | null;
   aadhaarNumber?: string | null;
   address?: {
-    fullAddress: string,
-    city: string,
-    state: string,
-    pinCode: string,
-  }
+    fullAddress: string;
+    city: string;
+    state: string;
+    pinCode: string;
+  };
 };

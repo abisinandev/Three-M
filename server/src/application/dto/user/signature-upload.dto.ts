@@ -1,4 +1,4 @@
 export class SignatureUploadDTO {
-    folder!: string;   
-    userId!: string;
+  folder!: string;
+  userId!: string;
 }

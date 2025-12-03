@@ -1,6 +1,7 @@
 export const USER_TYPES = {
   // Repository
   UserRepository: Symbol.for("UserRepository"),
+  KycRepository: Symbol.for("KycRepository"),
 
   //Usecases
   UserSignupUseCase: Symbol.for("UserSignupUseCase"),
@@ -10,14 +11,15 @@ export const USER_TYPES = {
   LogoutUseCase: Symbol.for("LogoutUseCase"),
   CheckUserBlockedUseCase: Symbol.for("CheckUserBlockedUseCase"),
   KycSubmitUseCase: Symbol.for("KycSubmitUseCase"),
-  KycRepository: Symbol.for("KycRepository"),
+  EditProfileUseCase: Symbol.for("EditProfileUseCase"),
+  ChangeEmailVerifyOtpUseCase: Symbol.for(" ChangeEmailVerifyOtpUseCase"),
+  ChangeEmailSendOtpUseCase: Symbol.for('ChangeEmailSendOtpUseCase'),
   
+
   //providers
   SignatureUploadUseCase: Symbol.for("SignatureUploadUseCase"),
   CloudinaryStorageProvider: Symbol.for("CloudinaryStorageProvider"),
 
   //Controller
   UserController: Symbol.for("UserController"),
-
-
 };

@@ -1,4 +1,4 @@
 export interface VerifyOtpResponseDTO {
-    accessToken: string;
-    refreshToken: string;
+  accessToken: string;
+  refreshToken: string;
 }

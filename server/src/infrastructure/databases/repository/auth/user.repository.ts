@@ -6,9 +6,8 @@ import {
 } from "@infrastructure/databases/mongo_db/models/schemas/user.schema";
 import { UserMapper } from "@infrastructure/mappers/user.mapper";
 import { injectable } from "inversify";
+import type { QueryOptions } from "mongoose";
 import { BaseRepository } from "../base.repository";
-import { QueryOptions } from "mongoose";
-
 
 @injectable()
 export class UserRepository extends BaseRepository<UserEntity, UserDocument> implements IUserRepository {
@@ -33,10 +32,7 @@ export class UserRepository extends BaseRepository<UserEntity, UserDocument> imp
   }
 
   async updatePassword(id: string, password: string): Promise<void> {
-    await this.model.findByIdAndUpdate(
-      id,
-      { $set: { password } }
-    )
+    await this.model.findByIdAndUpdate(id, { $set: { password } });
   }
 
   async findWithFilters(options: QueryOptions): Promise<UserEntity[]> {
@@ -48,18 +44,20 @@ export class UserRepository extends BaseRepository<UserEntity, UserDocument> imp
       searchField = ["fullName", "email", "userCode"],
       sortBy = "createdAt",
       sortOrder = "desc",
-    } = options
+    } = options;
 
     const skip = (page - 1) * limit;
 
     const finalFilter: any = { ...filter };
     if (search.trim()) {
       const searchRegex = { $regex: search.trim(), $options: "i" };
-      finalFilter.$or = searchField.map((field: any) => ({ [field]: searchRegex }));
+      finalFilter.$or = searchField.map((field: any) => ({
+        [field]: searchRegex,
+      }));
     }
 
     const sort: Record<string, 1 | -1> = {
-      [sortBy]: sortOrder === "asc" ? 1 : -1
+      [sortBy]: sortOrder === "asc" ? 1 : -1,
     };
 
     const docs = await this.model
@@ -67,9 +65,8 @@ export class UserRepository extends BaseRepository<UserEntity, UserDocument> imp
       .sort(sort)
       .skip(skip)
       .limit(limit)
-      .exec()
+      .exec();
 
     return Promise.all(docs.map((doc) => this.mapper.toDomain(doc)));
   }
-
 }

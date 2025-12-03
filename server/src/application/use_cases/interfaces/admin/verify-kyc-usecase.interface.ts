@@ -1,3 +1,3 @@
 export interface IVerifyKycUseCase {
-    execute(kycId: string): Promise<void>
+  execute(kycId: string): Promise<void>;
 }

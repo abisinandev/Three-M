@@ -5,7 +5,7 @@ export const AUTH_TYPES = {
   // Interfaces
   IEmailService: Symbol.for("IEmailService"),
   IPasswordHashingService: Symbol.for("IPasswordHashingService"),
-  IJwtProvider: Symbol.for('IJwtProvider'),
+  IJwtProvider: Symbol.for("IJwtProvider"),
   GoogleAuthService: Symbol.for("GoogleAuthService"),
   // Use Cases
   SignupVerifyOtpUseCase: Symbol.for("SignupVerifyOtpUseCase"),

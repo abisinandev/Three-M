@@ -8,7 +8,7 @@ import { TableComponent } from "@shared/components/table/UserTable";
 import { Pagination } from "@shared/components/pagination/Pagination";
 import { useNavigate } from "@tanstack/react-router";
 import type { KycUser } from "@shared/types/user/KycUserType";
-import { fetchKycUsers } from "@shared/services/admin/user-management/FetchKycDocsApi";
+import { fetchKycUsers } from "@shared/services/admin/user-management/KycApis";
 
 const StatusBadge = ({ status }: { status: KycUser["status"] }) => {
   switch (status) {

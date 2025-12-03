@@ -1,6 +1,6 @@
 export interface ResendOtpResponseDTO {
-    expiresAt: number;
-    resendCount: number;
-    accessToken?: string;
-    refreshToken?: string
+  expiresAt: number;
+  resendCount: number;
+  accessToken?: string;
+  refreshToken?: string;
 }

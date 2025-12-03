@@ -1,8 +1,8 @@
 import type { IBaseRepository } from "@application/interfaces/repositories/base-repository.interface";
 import type { Model, QueryOptions, UpdateQuery } from "mongoose";
 
-export abstract class BaseRepository<TDomain, TDocument> implements IBaseRepository<TDomain> {
-
+export abstract class BaseRepository<TDomain, TDocument>
+  implements IBaseRepository<TDomain> {
   constructor(
     protected readonly model: Model<TDocument>,
     protected readonly mapper: {
@@ -31,26 +31,26 @@ export abstract class BaseRepository<TDomain, TDocument> implements IBaseReposit
     return Promise.all(docs.map((doc) => this.mapper.toDomain(doc)));
   }
 
-
-
-  async count(): Promise<{ totalCount: number; }> {
+  async count(): Promise<{ totalCount: number }> {
     const totalCount = await this.model.find().countDocuments();
-    return { totalCount }
+    return { totalCount };
   }
 
   async update(id: string, update: Partial<TDomain>): Promise<TDomain | null> {
-    const mappedUpdate = this.mapper.toPersistance(update as unknown as TDomain);
-    const updateQuery: UpdateQuery<TDocument> = { $set: mappedUpdate } as UpdateQuery<TDocument>;
-    const doc = await this.model.findByIdAndUpdate(
-      id,
-      updateQuery,
-      { new: true }
-    );
+    const mappedUpdate = this.mapper.toPersistance(update as TDomain);
+
+    const updateQuery: UpdateQuery<TDocument> = {
+      $set: mappedUpdate,
+    };
+
+    const doc = await this.model.findByIdAndUpdate(id, updateQuery, {
+      new: true,
+    });
+
     return doc ? this.mapper.toDomain(doc) : null;
   }
 
   async delete(id: string): Promise<void> {
     await this.model.findByIdAndDelete(id);
   }
-
 }

@@ -9,7 +9,6 @@ import { Password } from "@domain/value-objects/user/password.vo";
 import { Phone } from "@domain/value-objects/user/phone.vo";
 import { UserCode } from "@domain/value-objects/user/user-code.vo";
 
-
 export class UserEntity {
   private readonly _id?: string;
   private readonly _userCode: UserCode;
@@ -62,7 +61,6 @@ export class UserEntity {
     avatar?: string | null;
     googleId?: string | null;
   }) {
-
     if (!props.fullName || props.fullName.length < 2) {
       throw new Error("Full name must be at least 2 characters");
     }
@@ -121,7 +119,6 @@ export class UserEntity {
     });
   }
 
-
   static createSocialUser(data: {
     fullName: string;
     email: string;
@@ -176,7 +173,6 @@ export class UserEntity {
     authProvider: AuthProvider;
     avatar?: string | null;
     googleId?: string | null;
-
   }): UserEntity {
     return new UserEntity({
       id: props.id,
@@ -206,33 +202,78 @@ export class UserEntity {
     });
   }
 
-
-
-
-  get id() { return this._id; };
-  get userCode() { return this._userCode.value; };
-  get fullName() { return this._fullName; };
-  get email() { return this._email.value; };
-  get phone() { return this._phone?.value ?? null; };
-  get password() { return this._password?.value ?? null; };
-  get role() { return this._role; };
-  get currency() { return this._currency; };
-  get walletBalance() { return this._walletBalance; };
-  get kycStatus() { return this._kycStatus; };
-  get isTwoFactorEnabled() { return this._isTwoFactorEnabled; };
-  get isEmailVerified() { return this._isEmailVerified };
-  get isBlocked() { return this._isBlocked };
-  get isVerified() { return this._isVerified };
-  get subscriptionStatus() { return this._subscriptionStatus };
-  get subscriptionPlan() { return this._subscriptionPlan };
-  get walletId() { return this._walletId ?? null; };
-  get kycId() { return this._kycId ?? null; };
-  get twoFactorSecret() { return this._twoFactorSecret ?? null; };
-  get qrCodeUrl() { return this._qrCodeUrl ?? null; };
-  get createdAt() { return this._createdAt ?? null; };
-  get authProvider() { return this._authProvider };
-  get avatar() { return this._avatar ?? null; };
-  get googleId() { return this._googleId ?? null; };
+  get id() {
+    return this._id;
+  }
+  get userCode() {
+    return this._userCode.value;
+  }
+  get fullName() {
+    return this._fullName;
+  }
+  get email() {
+    return this._email.value;
+  }
+  get phone() {
+    return this._phone?.value ?? null;
+  }
+  get password() {
+    return this._password?.value ?? null;
+  }
+  get role() {
+    return this._role;
+  }
+  get currency() {
+    return this._currency;
+  }
+  get walletBalance() {
+    return this._walletBalance;
+  }
+  get kycStatus() {
+    return this._kycStatus;
+  }
+  get isTwoFactorEnabled() {
+    return this._isTwoFactorEnabled;
+  }
+  get isEmailVerified() {
+    return this._isEmailVerified;
+  }
+  get isBlocked() {
+    return this._isBlocked;
+  }
+  get isVerified() {
+    return this._isVerified;
+  }
+  get subscriptionStatus() {
+    return this._subscriptionStatus;
+  }
+  get subscriptionPlan() {
+    return this._subscriptionPlan;
+  }
+  get walletId() {
+    return this._walletId ?? null;
+  }
+  get kycId() {
+    return this._kycId ?? null;
+  }
+  get twoFactorSecret() {
+    return this._twoFactorSecret ?? null;
+  }
+  get qrCodeUrl() {
+    return this._qrCodeUrl ?? null;
+  }
+  get createdAt() {
+    return this._createdAt ?? null;
+  }
+  get authProvider() {
+    return this._authProvider;
+  }
+  get avatar() {
+    return this._avatar ?? null;
+  }
+  get googleId() {
+    return this._googleId ?? null;
+  }
 
   changePassword(newPassword: string): void {
     this._password = Password.create(newPassword);
@@ -252,29 +293,28 @@ export class UserEntity {
 
   enable2FA(secret: string): void {
     this._twoFactorSecret = secret;
-  };
+  }
 
   setPending2FA(secret: string): void {
-    this._qrCodeUrl = secret
-  };
+    this._qrCodeUrl = secret;
+  }
 
   setQrCode(qrCode: string): void {
-    this._qrCodeUrl = qrCode
-  };
+    this._qrCodeUrl = qrCode;
+  }
 
   updateKycStatus(status: KycStatusType): void {
     this._kycStatus = status;
-  };
+  }
 
   creditWallet(amount: number): void {
     if (amount <= 0) throw new Error("Amount must be positive");
     this._walletBalance += amount;
-  };
+  }
 
   debitWallet(amount: number): void {
     if (amount <= 0) throw new Error("Amount must be positive");
     if (this._walletBalance < amount) throw new Error("Insufficient balance");
-    this._walletBalance -= amount
-  };
-
+    this._walletBalance -= amount;
+  }
 }
